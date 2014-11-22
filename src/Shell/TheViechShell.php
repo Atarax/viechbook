@@ -14,9 +14,8 @@ use Ratchet\Server\IoServer;
 
 class TheViechShell extends Shell {
     public function main() {
-        $this->out('
-
-        ');
+        $asciViech = file_get_contents("asciViech.txt");
+        $this->out($asciViech);
         $this->out('Starting The Viech (Ratchet Server)...');
 
         $server = IoServer::factory(
