@@ -108,7 +108,7 @@
 
 <script src="/js/Vendor/datatables/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
-    /*
+
     var theViech = function() {
         var registrations = [];
 
@@ -134,6 +134,6 @@
     viech.register(0, testCallback);
 
     var testMessage = { type: 0, content: "ablub" };
-    */
-    //var connection = new WebSocket('ws://viechbook.dev://thesource', ['soap']);
+
+    var connection = new WebSocket('ws://viechbook.dev://thesource', ['soap']);
 </script>

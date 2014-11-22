@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'React\\Stream\\' => array($vendorDir . '/react/stream/src'),
+    'React\\Socket\\' => array($vendorDir . '/react/socket/src'),
+    'React\\EventLoop\\' => array($vendorDir . '/react/event-loop'),
     'DebugKit\\Test\\Fixture\\' => array($baseDir . '/plugins/DebugKit/tests/Fixture'),
     'DebugKit\\' => array($baseDir . '/plugins/DebugKit/src'),
     'Cake\\Test\\Fixture\\' => array($vendorDir . '/cakephp/cakephp/tests/Fixture'),
