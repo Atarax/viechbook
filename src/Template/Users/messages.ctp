@@ -33,7 +33,7 @@
     <div class="container padded">
         <div class="box">
         <div class="box-header">
-            <div class="title" id="chat-box-title">No Messages</div>
+            <div class="title" id="chat-box-title">Choose Conversation</div>
         </div>
 
         <div id="chat-box-div" class="box-content" style="overflow-y: auto; height: 410px;">
@@ -63,10 +63,19 @@
 
 <script type="text/javascript">
     $(document).ready( function() {
-        getConversations();
+        updateConversationsBox();
+
+        viech.register('newmessages', function() {
+            updateConversationsBox();
+        })
+
+        viech.register('newmessages', function() {
+            updateChatBox(currentConversationId);
+        })
     });
 
     function updateChatBox( conversationId ) {
+        currentConversationId = conversationId;
         $.getJSON( "/messages/getByConversation/" + conversationId, function( messages ) {
             var chatBox = $("#chat-box");
             chatBox.html("");
@@ -105,7 +114,7 @@
             $.each(messages, function (index, message) {
                 var areWeSender = message.user_id == <?= $currentUser['id'] ?>;
                 var liClass = areWeSender ? "arrow-box-left" : "arrow-box-right gray"
-                console.debug(message);
+
                 var li = $("<li/>", {
                     "class" : liClass
                 });
@@ -147,20 +156,22 @@
         });
     }
 
-    function getConversations() {
+    var currentConversationId = null;
+
+    function updateConversationsBox() {
         $.getJSON( "/conversations/listAll", function( conversations ) {
-            if(conversations.length > 0) {
-                updateChatBox(conversations[0].id);
-            }
-            else {
+            if(conversations.length == 0) {
                 addBoxNewsElement(
                     'conversations',
                     'No Conversations :(',
                     'Maybe you should talk to someone :P'
                 );
             }
+
+            var conversationsContainer = $("#conversations");
+            conversationsContainer.html('');
+
             $.each(conversations, function( index, conversation) {
-                var conversationsContainer = $("#conversations");
                 var users = [];
 
                 $.each(conversation.withUsers, function(index, user) {
@@ -168,7 +179,13 @@
                 } )
                 var usernames = users.join(",");
 
-                addBoxNewsElement('conversations', usernames, conversation.lastMessage.content, 'updateChatBox("' + conversation.id + '");');
+                addBoxNewsElement(
+                    'conversations',
+                    usernames + ' (' + conversation.unreadMessageCount + ')',
+                    conversation.lastMessage.content,
+                    'updateChatBox("' + conversation.id + '");'
+                );
+
             });
         });
     }
@@ -219,7 +236,7 @@
 
         $.post("/conversations/addMessage/" + conversationId,{
                 content: content
-            }, function( data ) {
+            }, function() {
                 updateChatBox(conversationId);
                 $("#chat-input").val("");
         });

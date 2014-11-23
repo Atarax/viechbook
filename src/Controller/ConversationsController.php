@@ -5,6 +5,7 @@ use App\Model\Entity\Message;
 use App\Model\Entity\User;
 use App\Model\Table\ConversationsTable;
 use Cake\Network\Exception\NotFoundException;
+use ZMQContext;
 
 /**
  * Created by PhpStorm.
@@ -14,18 +15,6 @@ use Cake\Network\Exception\NotFoundException;
  * @property ConversationsTable Conversations
  */
 class ConversationsController extends AppController {
-
-    public function index() {}
-
-    public function view($id = null) {
-        /*
-        $this->Message->id = $id;
-        if (!$this->Message->exists()) {
-            throw new NotFoundException(__('Invalid message id given!'));
-        }
-        $this->set('user', $this->Message->read(null, $id));
-        */
-    }
 
     /**
      * basically sends a message to a given receiver, taking into account that there might not exists a conversation yet
@@ -66,18 +55,32 @@ class ConversationsController extends AppController {
      */
     public function listAll() {
         $currentUser = $this->Auth->user();
-        $currentUser = $this->Conversations->Users->findById($currentUser['id'])->contain( ['Conversations'] )->first();
+        $currentUser = $this->Conversations->Users
+            ->findById($currentUser['id'])
+            ->contain( ['Conversations'] )
+            ->order(['modified' => 'DESC'])
+            ->first();
 
         $result = [];
         foreach($currentUser->get('conversations') as $conversation) {
             /** @var Conversation $conversation */
-            $conversation = $this->Conversations->findById( $conversation->get('id') )->contain( ['Messages', 'Users'] )->first();
+            $conversation = $this->Conversations
+                ->findById( $conversation->get('id') )
+                ->contain( ['Messages', 'Users'] )
+                ->first();
 
             /** @var Message $lastMessage
              * get the message with the biggest id, resulting hopefully in newest message
              */
-            $lastMessage = $conversation->messages[ count($conversation->messages) - 1 ];
+            $messageCount = count($conversation->messages);
+            $lastMessage = $conversation->messages[ $messageCount - 1 ];
+            $unreadMessageCount = 0;
 
+            foreach($conversation->messages as $message) {
+                if( !$message->get('read') ) {
+                    $unreadMessageCount++;
+                }
+            }
             /**
              * find out with whom we got a conversation
              */
@@ -91,7 +94,8 @@ class ConversationsController extends AppController {
             $result[] = array(
                     'id' => $conversation->get('id'),
                     'lastMessage' => $lastMessage,
-                    'withUsers' => $withUsers
+                    'withUsers' => $withUsers,
+                    'unreadMessageCount' => $unreadMessageCount
             );
         }
 
@@ -118,7 +122,7 @@ class ConversationsController extends AppController {
 
     public function addMessage($conversationId) {
         /** @var Conversation $conversation */
-        $conversation = $this->Conversations->findById($conversationId)->first();
+        $conversation = $this->Conversations->findById($conversationId)->contain( ['Users'] )->first();
 
         if( !is_object($conversation) ) {
             throw new NotFoundException(__('Conversation not found! (maybe improper id given)'));
@@ -126,18 +130,17 @@ class ConversationsController extends AppController {
 
         $result = null;
 
+        $currentUser = $this->Auth->user();
+
         if( $this->request->is('post') ) {
-            $currentUser = $this->Auth->user();
             $user = $this->Conversations->Users->findById($currentUser['id'])->first();
 
-            $message = new Message($this->request->data());
-            $message->set('conversation', $conversation);
-            $message->set('user', $user);
-
-            $result = $this->Conversations->Messages->save($message);
+            $this->createMessage($conversation, $user);
         }
 
-        die(json_encode($result));
+        $this->notifyParticipants($conversation);
+
+        die(json_encode(true));
     }
 
     /**
@@ -193,5 +196,20 @@ class ConversationsController extends AppController {
         $message->set('user', $sender);
 
         $this->Conversations->Messages->save($message);
+    }
+
+    /**
+     * @param $conversation
+     */
+    private function notifyParticipants($conversation) {
+        foreach ($conversation->get('users') as $participant) {
+            $entryData = array(
+                'category' => '' . $participant->get('id'),
+                'type' => 'newmessages'
+            );
+
+            $socket = AppController::getZMQSocket();
+            $socket->send(json_encode($entryData));
+        }
     }
 }

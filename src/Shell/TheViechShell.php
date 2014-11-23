@@ -9,33 +9,57 @@ namespace App\Shell;
 
 use App\Model\TheViech;
 use Cake\Console\Shell;
+use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
+use Ratchet\Wamp\WampServer;
+use Ratchet\WebSocket\WsServer;
+use React\EventLoop\Factory;
+use React\Socket\Server;
+use React\ZMQ\Context;
 
+require 'vendor/autoload.php';
 
 class TheViechShell extends Shell {
     public function main() {
-        $asciViech = file_get_contents("asciViech.txt");
-        $this->out($asciViech);
-        $this->out('Starting The Viech (Ratchet Server)...');
+        $this->displayStartMessage();
 
-        $server = IoServer::factory(
-            new TheViech(),
-            8080
+        $loop   = Factory::create();
+        $pusher = new TheViech();
+
+        // Listen for the web server to make a ZeroMQ push after an ajax request
+        $context = new Context($loop);
+
+        $pull = $context->getSocket(\ZMQ::SOCKET_PULL);
+        $pull->bind('tcp://127.0.0.1:5555'); // Binding to 127.0.0.1 means the only client that can connect is itself
+        $pull->on('message', array($pusher, 'onBlogEntry'));
+
+        // Set up our WebSocket server for clients wanting real-time updates
+        $webSock = new Server($loop);
+        $webSock->listen(8080, '0.0.0.0'); // Binding to 0.0.0.0 means remotes can connect
+        new IoServer(
+            new HttpServer(
+                new WsServer(
+                    new WampServer(
+                        $pusher
+                    )
+                )
+            ),
+            $webSock
         );
 
-        $server->run();
-    }
-    public function onOpen(ConnectionInterface $conn) {
+        $loop->run();
     }
 
-    public function onMessage(ConnectionInterface $from, $msg) {
-    }
+    private function displayStartMessage() {
+        try{
+            $asciiViech = file_get_contents("asciiViech.txt");
+            $this->out($asciiViech);
+        }
+        catch(Exception $e){
+            $this->out($asciiViech);
+        }
+        $this->out('Starting The Viech (Ratchet Server)...');
 
-    public function onClose(ConnectionInterface $conn) {
     }
-
-    public function onError(ConnectionInterface $conn, \Exception $e) {
-    }
-
 
 }

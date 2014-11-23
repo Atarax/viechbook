@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use ZMQContext;
 
 /**
  * Application Controller
@@ -50,5 +51,13 @@ class AppController extends Controller {
         $this->Auth->allow('login');
         $this->Auth->allow('add');
         $this->set("currentUser", $this->Auth->user());
+    }
+
+    public static function getZMQSocket() {
+        $context = new ZMQContext();
+        $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'new message pusher');
+        $socket->connect("tcp://localhost:5555");
+
+        return $socket;
     }
 }

@@ -107,18 +107,17 @@
 </div>
 
 <script src="/js/Vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="http://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
 <script type="text/javascript">
-
     var theViech = function() {
         var registrations = [];
 
-        this.register = function(messageType, callback) {
-            registrations.push( {type: messageType, callback: callback} );
+        this.register = function(type, callback) {
+            registrations.push( {type: type, callback: callback} );
         };
 
         this.receive = function(message) {
             $.each(registrations, function (index, registration) {
-                console.debug(registrations);
                 if( registration.type == message.type ) {
                     registration.callback(message);
                 }
@@ -131,9 +130,25 @@
     }
 
     var viech = new theViech();
-    viech.register(0, testCallback);
 
-    var testMessage = { type: 0, content: "ablub" };
 
-    var connection = new WebSocket('ws://viechbook.dev://thesource', ['soap']);
+
+    var connection = new ab.Session('ws://viechbook.dev:8080',
+        function() {
+            connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
+                // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
+                viech.receive(data);
+                console.log('New article published to category "' + topic + '" : ' + data.title);
+            });
+
+            console.log('Connected to the big viech...');
+        },
+        function() {
+            console.warn('WebSocket connection closed');
+        },
+        {'skipSubprotocolCheck': true}
+    );
+
+
+
 </script>

@@ -4,7 +4,7 @@
  * @link        http://mobiledetect.net
  *
  * Compile the providers list.
- * The providers list is updated weekly. 
+ * The providers list is updated weekly.
  * You can contribute by adding new user agents and tests.
  */
 
@@ -13,9 +13,9 @@ $includeBasePath = dirname(__FILE__) . '/providers/vendors';
 $list = array();
 
 // Scan.
-$dir = new \DirectoryIterator($includeBasePath);
+$dir = new DirectoryIterator($includeBasePath);
 foreach ($dir as $fileInfo) {
-    if ($fileInfo->isDot()) { 
+    if ($fileInfo->isDot()) {
         continue;
     }
     $listNew = include $includeBasePath . '/' . $fileInfo->getFilename();
