@@ -138,7 +138,7 @@ class ConversationsController extends AppController {
             $this->createMessage($conversation, $user);
         }
 
-        $this->notifyParticipants($conversation);
+        $this->notifyParticipants($conversation, "newmessages");
 
         die(json_encode(true));
     }
@@ -201,15 +201,25 @@ class ConversationsController extends AppController {
     /**
      * @param $conversation
      */
-    private function notifyParticipants($conversation) {
+    private function notifyParticipants($conversation, $type, $data = []) {
         foreach ($conversation->get('users') as $participant) {
             $entryData = array(
                 'category' => '' . $participant->get('id'),
-                'type' => 'newmessages'
+                'type' => $type,
+                'data' => $data
             );
 
             $socket = AppController::getZMQSocket();
             $socket->send(json_encode($entryData));
+        }
+    }
+
+    public function markAllMessagesRead($conversationId) {
+        $conversation = $this->Conversations->findById($conversationId)->contain( ['Messages'] )->first();
+
+        foreach($conversation->messages as $message) {
+            $message->set('read', true);
+            $message->save();
         }
     }
 }

@@ -138,7 +138,7 @@
             connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
                 // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
                 viech.receive(data);
-                console.log('New article published to category "' + topic + '" : ' + data.title);
+                console.log('New article published to category "' + topic + '" : ' + data);
             });
 
             console.log('Connected to the big viech...');
@@ -151,4 +151,4 @@
 
 
 
-</script>
+</script>x

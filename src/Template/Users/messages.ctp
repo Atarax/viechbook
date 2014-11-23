@@ -70,7 +70,9 @@
         })
 
         viech.register('newmessages', function() {
-            updateChatBox(currentConversationId);
+            if(currentConversationId != null) {
+                updateChatBox(currentConversationId);
+            }
         })
     });
 
