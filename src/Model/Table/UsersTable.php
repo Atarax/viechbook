@@ -15,12 +15,15 @@ use Cake\Validation\Validator;
  * Class UsersTable
  * @package App\Model\Table
  *
+ * @property NotificationsTable Notifications
+ * @property MessagesTable Messages
  */
 class UsersTable extends Table {
 
     public function initialize(array $config) {
         $this->belongsToMany('Conversations');
         $this->hasMany('Messages');
+        $this->hasMany('Notifications');
     }
 
     public function validationDefault(Validator $validator) {

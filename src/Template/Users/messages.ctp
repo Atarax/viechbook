@@ -48,7 +48,7 @@
                     <li>
                         <span class="pull-right">
                             <form>
-                                <input type="submit" id="send-button" href="#" class="btn btn-default btn-sm" value="Send">
+                               <input type="submit" id="send-button" href="#" class="btn btn-default btn-sm" value="Send">
                             </form>
                         </span>
                      <!--   <button id="chat-send-button" class="btn btn-blue">Send</button> -->
@@ -92,6 +92,7 @@
             $("#chat-input").off();
             $("#chat-input").keyup( function(event) {
                 if(event.keyCode == 13) {
+                    $("#chat-input").val('');
                     sendMessage(conversationId);
                 }
             });
@@ -161,7 +162,7 @@
     var currentConversationId = null;
 
     function updateConversationsBox() {
-        $.getJSON( "/conversations/listAll", function( conversations ) {
+        $.getJSON( "/conversations/listAllByUser/" + <?= $currentUser['id'] ?>, function( conversations ) {
             if(conversations.length == 0) {
                 addBoxNewsElement(
                     'conversations',

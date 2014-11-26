@@ -2,9 +2,12 @@
 namespace App\Controller;
 use App\Model\Entity\Conversation;
 use App\Model\Entity\Message;
+use App\Model\Entity\Notification;
 use App\Model\Entity\User;
 use App\Model\Table\ConversationsTable;
+use App\Model\Table\UsersTable;
 use Cake\Network\Exception\NotFoundException;
+use JsonSchema\Constraints\Object;
 use ZMQContext;
 
 /**
@@ -13,6 +16,7 @@ use ZMQContext;
  * Date: 4/27/14
  * Time: 12:59 AM
  * @property ConversationsTable Conversations
+ * @property UsersTable Users
  */
 class ConversationsController extends AppController {
 
@@ -53,7 +57,7 @@ class ConversationsController extends AppController {
     /**
      * return all Conversations for current User as json
      */
-    public function listAll() {
+    public function listAllByUser() {
         $currentUser = $this->Auth->user();
         $currentUser = $this->Conversations->Users
             ->findById($currentUser['id'])
@@ -81,6 +85,7 @@ class ConversationsController extends AppController {
                     $unreadMessageCount++;
                 }
             }
+
             /**
              * find out with whom we got a conversation
              */
@@ -133,6 +138,7 @@ class ConversationsController extends AppController {
         $currentUser = $this->Auth->user();
 
         if( $this->request->is('post') ) {
+            /** @var User $user */
             $user = $this->Conversations->Users->findById($currentUser['id'])->first();
 
             $this->createMessage($conversation, $user);
@@ -194,27 +200,56 @@ class ConversationsController extends AppController {
         $message = new Message($this->request->data);
         $message->set('conversation', $commonConversation);
         $message->set('user', $sender);
-
+        var_dump($message);
+        die();
         $this->Conversations->Messages->save($message);
     }
 
     /**
      * @param $conversation
+     * @param $type
+     * @param array $data
      */
     private function notifyParticipants($conversation, $type, $data = []) {
+
+        $socket = AppController::getZMQSocket();
+
+        /** @var User $participant */
+        /** @var Conversation $conversation */
         foreach ($conversation->get('users') as $participant) {
+            /**
+             * notify participants via websocket
+             */
             $entryData = array(
                 'category' => '' . $participant->get('id'),
                 'type' => $type,
                 'data' => $data
             );
 
-            $socket = AppController::getZMQSocket();
+            /**  */
             $socket->send(json_encode($entryData));
-        }
+
+            /**
+             * notify them persistently
+             */
+            $content = new \stdClass();
+            /** @var int conversation_id */
+            $content->conversation_id = $conversation->get('id');
+
+            $notification = new Notification();
+            $notification->set('user_id', $participant->get('id') );
+            $notification->set('content', json_encode($content) );
+            $notification->set('type', Notification::TYPE_NEWMESSAGE);
+            $this->Conversations->Users->Notifications->save($notification);
+       }
     }
 
+    /**
+     * @deprecated
+     * @param $conversationId
+     */
     public function markAllMessagesRead($conversationId) {
+        /** @var Conversation $conversation */
         $conversation = $this->Conversations->findById($conversationId)->contain( ['Messages'] )->first();
 
         foreach($conversation->messages as $message) {

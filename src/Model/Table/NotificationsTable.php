@@ -19,15 +19,12 @@ use Cake\Validation\Validator;
 class NotificationsTable extends Table {
 
     public function initialize(array $config) {
-        $this->belongsToMany('Conversations');
-        $this->hasMany('Messages');
-        $this->hasMany('Notifications');
+        $this->belongsTo('Users');
     }
 
     public function validationDefault(Validator $validator) {
         return $validator
-            ->notEmpty('username', 'A username is required')
-            ->notEmpty('password', 'A password is required')
-            ->notEmpty('email', 'An email is required');
+            ->notEmpty('type', 'A type is required')
+            ->notEmpty('user_id', 'A user is required');
     }
 }

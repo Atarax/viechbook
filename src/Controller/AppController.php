@@ -53,6 +53,9 @@ class AppController extends Controller {
         $this->set("currentUser", $this->Auth->user());
     }
 
+    /**
+     * @return mixed
+     */
     public static function getZMQSocket() {
         $context = new ZMQContext();
         $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'new message pusher');
