@@ -194,6 +194,20 @@
 
             $("#profile-notification-count").text( totalNotifications > 0 ? totalNotifications : '' );
             $("#profile-conversation-notification-count").text(totalUpdatedConversations > 0 ? totalUpdatedConversations : '');
+
+            /**
+             * CAAAARE! we are setting the title here xD
+             */
+            var title;
+
+            if(totalNotifications > 0) {
+                title  = '(' + totalNotifications + ') Viechbook';
+            }
+            else {
+                title = 'Viechbook';
+            }
+
+            $(document).prop('title', title);
         });
     }
 </script>
