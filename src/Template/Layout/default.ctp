@@ -164,15 +164,11 @@
      * @TODO make register take an array instead or both?
      **/
     viech.register(<?= \App\Model\Entity\Notification::TYPE_NOTIFICATION_CHANGED ?> , function() {
-        if(currentConversationId != null) {
-            updateUserMenuNotifications();
-        }
+        updateUserMenuNotifications();
     });
 
     viech.register(<?= \App\Model\Entity\Notification::TYPE_NEW_MESSAGE ?> , function() {
-        if(currentConversationId != null) {
-            updateUserMenuNotifications();
-        }
+        updateUserMenuNotifications();
     });
 
     var updateUserMenuNotifications = function() {
