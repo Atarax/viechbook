@@ -5,6 +5,7 @@ use App\Model\Entity\Message;
 use App\Model\Entity\Notification;
 use App\Model\Entity\User;
 use App\Model\Table\ConversationsTable;
+use App\Model\TheViechNotifier;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use ZMQContext;
@@ -60,10 +61,12 @@ class ConversationsController extends AppController {
         $currentUser = $this->Conversations->Users
             ->findById($currentUser['id'])
             ->contain( ['Conversations'] )
+            ->contain( ['Notifications'] )
             ->order(['modified' => 'DESC'])
             ->first();
 
-        $result = [];
+        $conversations = [];
+
         foreach($currentUser->get('conversations') as $conversation) {
             /** @var Conversation $conversation */
             $conversation = $this->Conversations
@@ -76,13 +79,7 @@ class ConversationsController extends AppController {
              */
             $messageCount = count($conversation->messages);
             $lastMessage = $conversation->messages[ $messageCount - 1 ];
-            $unreadMessageCount = 0;
 
-            foreach($conversation->messages as $message) {
-                if( !$message->get('read') ) {
-                    $unreadMessageCount++;
-                }
-            }
             /**
              * find out with whom we got a conversation
              */
@@ -93,15 +90,18 @@ class ConversationsController extends AppController {
                     $withUsers[] = array( 'id' => $user->get('id'), 'username' => $user->get('username') );
                 }
             }
-            $result[] = array(
+            $conversations[] = array(
                 'id' => $conversation->get('id'),
                 'lastMessage' => $lastMessage,
-                'withUsers' => $withUsers,
-                'unreadMessageCount' => $unreadMessageCount
+                'withUsers' => $withUsers
             );
         }
 
-        die( json_encode($result) );
+        $response = new \stdClass();
+        $response->conversations = $conversations;
+        $response->notifications = $currentUser->get('notifications');
+
+        die( json_encode($response) );
     }
 
     /**
@@ -140,7 +140,7 @@ class ConversationsController extends AppController {
             $this->createMessage($conversation, $user);
         }
 
-        $this->notifyParticipants($conversation, "newmessages");
+        $this->notifyParticipants($conversation, Notification::TYPE_NEW_MESSAGE);
 
         die(json_encode(true));
     }
@@ -202,24 +202,28 @@ class ConversationsController extends AppController {
 
     /**
      * @param $conversation
+     * @param $type
+     * @param array $data
      */
     private function notifyParticipants($conversation, $type, $data = []) {
         foreach ($conversation->get('users') as $participant) {
-            $entryData = array(
-                'category' => '' . $participant->get('id'),
-                'type' => $type,
-                'data' => $data
-            );
+            if( $participant->get('id') == $this->Auth->user()['id'] ){
+                continue;
+            }
 
-            $socket = AppController::getZMQSocket();
-            $socket->send(json_encode($entryData));
+            $realTimeNotifier = new TheViechNotifier();
+            $realTimeNotifier->notify(
+                $participant->get('id'),
+                $type,
+                $data
+            );
 
             /**
              * notify them persistently
              * but first have a look if the user is already informed
              */
             $notifcationsTable = TableRegistry::get('Notifications');
-            $notifications = $notifcationsTable->findAllByTypeAndUser_id(Notification::TYPE_NEWMESSAGE, $participant->get('id') );
+            $notifications = $notifcationsTable->findAllByTypeAndUser_id(Notification::TYPE_NEW_MESSAGE, $participant->get('id') );
 
             $participantInformed = false;
 
@@ -238,7 +242,7 @@ class ConversationsController extends AppController {
                 $newNotification = new Notification();
                 $newNotification->set('user_id', $participant->get('id') );
                 $newNotification->set('content', json_encode($content) );
-                $newNotification->set('type', Notification::TYPE_NEWMESSAGE);
+                $newNotification->set('type', Notification::TYPE_NEW_MESSAGE);
                 $this->Conversations->Users->Notifications->save($newNotification);
             }
         }
@@ -251,5 +255,25 @@ class ConversationsController extends AppController {
             $message->set('read', true);
             $message->save();
         }
+    }
+
+    public function clearNotifications($conversationId) {
+        $notificationsTable = TableRegistry::get('Notifications');
+        $currentUserId = $this->Auth->user()['id'];
+        $query = $notificationsTable->findAllByTypeAndUser_id(Notification::TYPE_NEW_MESSAGE, $currentUserId)->contain('Users');
+
+        foreach($query as $notification) {
+            $content = json_decode($notification->content);
+
+            if($content->conversation_id == $conversationId) {
+                $notificationsTable->delete($notification);
+                $notifier = new TheViechNotifier();
+                $notifier->notify($currentUserId, Notification::TYPE_NOTIFICATION_CHANGED);
+                // only got one notification per conversation and user
+                break;
+            }
+        }
+
+        die( json_encode(true) );
     }
 }

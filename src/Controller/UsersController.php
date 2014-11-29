@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
@@ -115,5 +116,13 @@ class UsersController extends AppController {
         $query = $users->find();
         $query->select(['id', 'username', 'email']);
         die( json_encode( ['data' => $query->all()->toArray()]) );
+    }
+
+    public function getNotifications() {
+        /** @var UsersTable $users */
+        $users = TableRegistry::get('Users');
+        $user = $users->findById($this->Auth->user()['id'] )->contain( ['Notifications'] )->first();
+
+        die( json_encode( $user->notifications ) );
     }
 }

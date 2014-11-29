@@ -39,7 +39,7 @@
                     <a href="#" class="dropdown-toggle dropdown-avatar" data-toggle="dropdown">
               <span>
                 <?= $this->Html->image('avatar1.jpg', array('class' => 'menu-avatar') ) ?><span><?= $currentUser["username"] ?><i class="icon-caret-down"></i></span>
-                <span class="badge badge-dark-red"></span>
+                <span id="profile-notification-count" class="badge badge-dark-red"></span>
               </span>
                     </a>
                     <ul class="dropdown-menu">
@@ -49,7 +49,7 @@
                         <li><a href="#"><i class="icon-user"></i> <span>Profile</span></a></li>
                         <li><a href="#"><i class="icon-cog"></i> <span>Settings</span></a></li>
  						*/ ?>
-                        <li><a href="/users/messages"><i class="icon-envelope"></i> <span>Messages</span> <span class="label label-dark-red pull-right">1</span></a></li>
+                        <li><a href="/users/messages"><i class="icon-envelope"></i> <span>Messages</span> <span id="profile-conversation-notification-count" class="label label-dark-red pull-right"></span></a></li>
 						<li><a href="/users/profile/<?= $currentUser['id'] ?>"><i class="icon-user"></i> <span>Profile</span></a></li>
 						<li><a href="/users/logout"><i class="icon-off"></i> <span>Logout</span></a></li>
                     </ul>
@@ -89,6 +89,20 @@
             </a>
         </li>
 
+        <li class="">
+            <a href="/pages/events">
+                <i class="icon-book icon-2x"></i>
+                <span>Minutes</span>
+            </a>
+        </li>
+
+        <li class="">
+            <a href="/pages/events">
+                <i class="icon-money icon-2x"></i>
+                <span>Till</span>
+            </a>
+        </li>
+
     </ul>
 </div>
 
@@ -125,18 +139,11 @@
         };
     };
 
-    function testCallback(message) {
-        alert(message.content);
-    }
-
     var viech = new theViech();
 
-
-
-    var connection = new ab.Session('ws://viechbook.dev:8080',
+    var connection = new ab.Session('ws://192.168.178.20:8080',
         function() {
             connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
-                // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
                 viech.receive(data);
                 console.log('New article published to category "' + topic + '" : ' + data);
             });
@@ -149,6 +156,44 @@
         {'skipSubprotocolCheck': true}
     );
 
+    $(document).ready( function() {
+        updateUserMenuNotifications();
+    });
 
+    /**
+     * @TODO make register take an array instead or both?
+     **/
+    viech.register(<?= \App\Model\Entity\Notification::TYPE_NOTIFICATION_CHANGED ?> , function() {
+        if(currentConversationId != null) {
+            updateUserMenuNotifications();
+        }
+    });
 
-</script>x
+    viech.register(<?= \App\Model\Entity\Notification::TYPE_NEW_MESSAGE ?> , function() {
+        if(currentConversationId != null) {
+            updateUserMenuNotifications();
+        }
+    });
+
+    var updateUserMenuNotifications = function() {
+        $.getJSON( "/users/getNotifications/" , function( notifications ) {
+            var totalNotifications = 0;
+            var totalUpdatedConversations = 0;
+
+            $.each( notifications, function(index, notification) {
+                if( notification.type == <?= \App\Model\Entity\Notification::TYPE_NEW_MESSAGE ?> ) {
+                    totalUpdatedConversations++;
+                }
+            });
+
+            /**
+             * only got these atm
+             * @type {number}
+             */
+            totalNotifications = totalUpdatedConversations;
+
+            $("#profile-notification-count").text( totalNotifications > 0 ? totalNotifications : '' );
+            $("#profile-conversation-notification-count").text(totalUpdatedConversations > 0 ? totalUpdatedConversations : '');
+        });
+    }
+</script>

@@ -43,13 +43,11 @@
 
                 <div class="box-footer flat padded">
                     <div class="input-group addon-right">
-                        <input type="text" id="chat-input" placeholder="type here..."/>
+                        <input type="text" id="chat-input" autocomplete="off" placeholder="type here..."/>
                         <ul class="input-group-addon">
                             <li>
                         <span class="pull-right">
-                            <form>
-                                <input type="submit" id="send-button" href="#" class="btn btn-default btn-sm" value="Send">
-                            </form>
+                            <input type="submit" id="send-button" href="#" class="btn btn-default btn-sm" value="Send">
                         </span>
                                 <!--   <button id="chat-send-button" class="btn btn-blue">Send</button> -->
                             </li>
@@ -65,11 +63,11 @@
     $(document).ready( function() {
         updateConversationsBox();
 
-        viech.register('newmessages', function() {
+        viech.register(<?= \App\Model\Entity\Notification::TYPE_NEW_MESSAGE ?>, function() {
             updateConversationsBox();
         })
 
-        viech.register('newmessages', function() {
+        viech.register(<?= \App\Model\Entity\Notification::TYPE_NEW_MESSAGE ?>, function() {
             if(currentConversationId != null) {
                 updateChatBox(currentConversationId);
             }
@@ -94,6 +92,10 @@
                 if(event.keyCode == 13) {
                     sendMessage(conversationId);
                 }
+            });
+
+            $("#chat-input").click( function() {
+                clearNotifications(conversationId);
             });
 
             // set title
@@ -161,7 +163,9 @@
     var currentConversationId = null;
 
     function updateConversationsBox() {
-        $.getJSON( "/conversations/listAll", function( conversations ) {
+        $.getJSON( "/conversations/listAll", function( response ) {
+            var conversations = response.conversations;
+
             if(conversations.length == 0) {
                 addBoxNewsElement(
                     'conversations',
@@ -175,33 +179,60 @@
 
             $.each(conversations, function( index, conversation) {
                 var users = [];
+                var showNotifyTooltip = false;
 
+                /**
+                 * create title
+                 **/
                 $.each(conversation.withUsers, function(index, user) {
                     users.push(user.username);
                 } )
                 var usernames = users.join(",");
 
-                addBoxNewsElement(
-                    'conversations',
-                    usernames + ' (' + conversation.unreadMessageCount + ')',
-                    conversation.lastMessage.content,
-                    'updateChatBox("' + conversation.id + '");'
-                );
+                /**
+                 * check if conversation got new messages
+                **/
+                $.each(response.notifications, function(index, notification) {
+                    if(notification.type == <?= \App\Model\Entity\Notification::TYPE_NEW_MESSAGE ?>) {
+                        var content = $.parseJSON(notification.content);
 
+                        if( content.conversation_id == conversation.id ) {
+                            showNotifyTooltip = true;
+                        }
+
+
+                    }
+                });
+
+                addBoxNewsElement(
+                    conversation.id,
+                    'conversations',
+                    usernames,
+                    conversation.lastMessage.content,
+                    showNotifyTooltip,
+                    'updateChatBox(' + conversation.id + '); clearNotifications("' + conversation.id + '");'
+                );
             });
         });
     }
 
+    function clearNotifications(conversationId) {
+        $.getJSON( "/conversations/clearNotifications/" + conversationId, function( response ) {
+            if(response == true) {
+                $('#notification-for-conversation-' + conversationId).text('');
+            }
+        });
+    }
 
     /**
      * add a news element to a box container
-     * @param id the id of the container
+     * @param elementId the id of the container
      * @param title the title of the element
      * @param text the element text
      * @param titleOnClick here you can pass an onclick-javascript event as string (ugly)
      * @returns {*|jQuery|HTMLElement} the created element
      */
-    function addBoxNewsElement(id, title, text, titleOnClick) {
+    function addBoxNewsElement(conversationId, elementId, title, text, notificate, titleOnClick) {
         if(titleOnClick == undefined) titleOnClick = '';
 
         var sectionDiv = $("<div/>", {
@@ -216,14 +247,21 @@
             "class" : 'news-title'
         });
 
+        var notificationSpan = $('<span/>', {
+            id : 'notification-for-conversation-' + conversationId,
+            class : 'label label-dark-red pull-right',
+            text : notificate ? '!' : ''
+        });
+
         titleDiv.append("<a href='#' onclick='" + titleOnClick + "'>" + title + "</a>");
+        titleDiv.append(notificationSpan);
 
         var textDiv = $("<div/>", {
             "class" : 'news-text',
             "text" : text
         });
 
-        var newsContainer = $('#'+id);
+        var newsContainer = $('#'+elementId);
 
         contentDiv.append(titleDiv);
         contentDiv.append(textDiv);

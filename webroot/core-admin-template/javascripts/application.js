@@ -34762,7 +34762,8 @@ window['rangy'] = (function() {
             if (areHostMethods(testRange, domRangeMethods) && areHostProperties(testRange, domRangeProperties)) {
                 implementsDomRange = true;
             }
-            testRange.detach();
+            // 'Range.detach' is now a no-op, as per DOM (http://dom.spec.whatwg.org/#dom-range-detach).
+            //testRange.detach();
         }
 
         var body = isHostObject(document, "body") ? document.body : document.getElementsByTagName("body")[0];
@@ -36940,8 +36941,9 @@ rangy.createModule("DomUtil", function(api, module) {
 
             // Clean up
             dom.getBody(document).removeChild(testTextNode);
-            range.detach();
-            range2.detach();
+	    // 'Range.detach' is now a no-op, as per DOM (http://dom.spec.whatwg.org/#dom-range-detach).
+            //range.detach();
+            //range2.detach();
         })();
 
         api.createNativeRange = function(doc) {
@@ -37155,8 +37157,8 @@ rangy.createModule("DomUtil", function(api, module) {
             selectionSupportsMultipleRanges = (sel.rangeCount == 2);
 
             // Clean up
-            r1.detach();
-            r2.detach();
+            //r1.detach();
+            //r2.detach();
 
             body.removeChild(iframe);
         })();

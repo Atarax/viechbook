@@ -84,4 +84,6 @@ class TheViech implements MessageComponentInterface, WampServerInterface {
         // re-send the data to all the clients subscribed to that category
         $topic->broadcast($entryData);
     }
+
+
 }
