@@ -99,7 +99,7 @@
         <li class="">
             <a href="/pages/events">
                 <i class="icon-money icon-2x"></i>
-                <span>Till</span>
+                <span>Tills</span>
             </a>
         </li>
 
