@@ -9,56 +9,56 @@
 
 <div class="row">
 
-<div class="col-md-4">
-    <div class="container padded">
-        <div class="input-group addon-left">
-            <a class="input-group-addon" href="#">
-                <i class="icon-search"></i>
-            </a>
-            <input type="text" placeholder="Search Conversations...">
+    <div class="col-md-4">
+        <div class="container padded">
+            <div class="input-group addon-left">
+                <a class="input-group-addon" href="#">
+                    <i class="icon-search"></i>
+                </a>
+                <input type="text" placeholder="Search Conversations...">
+            </div>
         </div>
-    </div>
 
-    <div class="box">
-        <div class="box-header">
-            <span class="title">Conversations</span>
-        </div>
-        <div id="conversations" class="box-content scrollable" style="height: 424px; overflow-y: auto"> </div>
-    </div>
-</div>
-
-<div class="col-md-8">
-
-    <!-- find me in partials/small_chat -->
-    <div class="container padded">
         <div class="box">
-        <div class="box-header">
-            <div class="title" id="chat-box-title">Choose Conversation</div>
+            <div class="box-header">
+                <span class="title">Conversations</span>
+            </div>
+            <div id="conversations" class="box-content scrollable" style="height: 424px; overflow-y: auto"> </div>
         </div>
+    </div>
 
-        <div id="chat-box-div" class="box-content" style="overflow-y: auto; height: 410px;">
-            <ul class="chat-box" id="chat-box">
-            </ul>
-        </div>
+    <div class="col-md-8">
 
-        <div class="box-footer flat padded">
-            <div class="input-group addon-right">
-                <input type="text" id="chat-input" placeholder="type here..."/>
-                <ul class="input-group-addon">
-                    <li>
+        <!-- find me in partials/small_chat -->
+        <div class="container padded">
+            <div class="box">
+                <div class="box-header">
+                    <div class="title" id="chat-box-title">Choose Conversation</div>
+                </div>
+
+                <div id="chat-box-div" class="box-content" style="overflow-y: auto; height: 410px;">
+                    <ul class="chat-box" id="chat-box">
+                    </ul>
+                </div>
+
+                <div class="box-footer flat padded">
+                    <div class="input-group addon-right">
+                        <input type="text" id="chat-input" placeholder="type here..."/>
+                        <ul class="input-group-addon">
+                            <li>
                         <span class="pull-right">
                             <form>
-                               <input type="submit" id="send-button" href="#" class="btn btn-default btn-sm" value="Send">
+                                <input type="submit" id="send-button" href="#" class="btn btn-default btn-sm" value="Send">
                             </form>
                         </span>
-                     <!--   <button id="chat-send-button" class="btn btn-blue">Send</button> -->
-                    </li>
-                </ul>
+                                <!--   <button id="chat-send-button" class="btn btn-blue">Send</button> -->
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    </div>
-</div>
 </div>
 
 <script type="text/javascript">
@@ -86,13 +86,12 @@
 
             $("#send-button").off();
             $("#send-button").click( function() {
-               sendMessage(conversationId);
+                sendMessage(conversationId);
             });
 
             $("#chat-input").off();
             $("#chat-input").keyup( function(event) {
                 if(event.keyCode == 13) {
-                    $("#chat-input").val('');
                     sendMessage(conversationId);
                 }
             });
@@ -162,7 +161,7 @@
     var currentConversationId = null;
 
     function updateConversationsBox() {
-        $.getJSON( "/conversations/listAllByUser/" + <?= $currentUser['id'] ?>, function( conversations ) {
+        $.getJSON( "/conversations/listAll", function( conversations ) {
             if(conversations.length == 0) {
                 addBoxNewsElement(
                     'conversations',
@@ -238,10 +237,10 @@
         var content = $("#chat-input").val();
 
         $.post("/conversations/addMessage/" + conversationId,{
-                content: content
-            }, function() {
-                updateChatBox(conversationId);
-                $("#chat-input").val("");
+            content: content
+        }, function() {
+            updateChatBox(conversationId);
+            $("#chat-input").val("");
         });
     }
 </script>
