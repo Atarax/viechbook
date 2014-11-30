@@ -53,9 +53,9 @@ class PagesController extends AppController {
 
     }
 
-    public function news() {}
+    public function balance() {}
 
-    public function files() {}
+    public function minutes() {}
 
     public function users() {}
 

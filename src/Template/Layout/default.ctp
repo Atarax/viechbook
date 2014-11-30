@@ -90,16 +90,16 @@
         </li>
 
         <li class="">
-            <a href="/pages/events">
+            <a href="/pages/minutes">
                 <i class="icon-book icon-2x"></i>
                 <span>Minutes</span>
             </a>
         </li>
 
         <li class="">
-            <a href="/pages/events">
+            <a href="/pages/balance">
                 <i class="icon-money icon-2x"></i>
-                <span>Tills</span>
+                <span>Balance</span>
             </a>
         </li>
 
