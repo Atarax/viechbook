@@ -90,16 +90,16 @@
         </li>
 
         <li class="">
-            <a href="/pages/events">
+            <a href="/pages/minutes">
                 <i class="icon-book icon-2x"></i>
                 <span>Minutes</span>
             </a>
         </li>
 
         <li class="">
-            <a href="/pages/events">
+            <a href="/pages/balance">
                 <i class="icon-money icon-2x"></i>
-                <span>Till</span>
+                <span>Balance</span>
             </a>
         </li>
 
@@ -190,6 +190,20 @@
 
             $("#profile-notification-count").text( totalNotifications > 0 ? totalNotifications : '' );
             $("#profile-conversation-notification-count").text(totalUpdatedConversations > 0 ? totalUpdatedConversations : '');
+
+            /**
+             * CAAAARE! we are setting the title here xD
+             */
+            var title;
+
+            if(totalNotifications > 0) {
+                title  = '(' + totalNotifications + ') Viechbook';
+            }
+            else {
+                title = 'Viechbook';
+            }
+
+            $(document).prop('title', title);
         });
     }
 </script>

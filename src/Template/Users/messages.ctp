@@ -94,7 +94,7 @@
                 }
             });
 
-            $("#chat-input").click( function() {
+            $("#chat-input").focus( function() {
                 clearNotifications(conversationId);
             });
 

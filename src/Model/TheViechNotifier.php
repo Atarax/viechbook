@@ -9,13 +9,13 @@
 namespace App\Model;
 
 
-use App\Controller\AppController;
+use ZMQContext;
 
 class TheViechNotifier {
     private $socket;
 
     public function __construct() {
-        $this->socket = AppController::getZMQSocket();
+        $this->socket = $this->getZMQSocket();
     }
 
     public function notify($userId, $type, $message = null) {
@@ -26,5 +26,16 @@ class TheViechNotifier {
         );
 
         $this->socket->send(json_encode($notification));
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getZMQSocket() {
+        $context = new ZMQContext();
+        $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'new message pusher');
+        $socket->connect("tcp://localhost:5555");
+
+        return $socket;
     }
 } 
