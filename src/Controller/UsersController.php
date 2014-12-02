@@ -15,6 +15,7 @@
 namespace App\Controller;
 
 use App\Model\Table\UsersTable;
+use Cake\Auth\PasswordHasherFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
@@ -33,6 +34,7 @@ class UsersController extends AppController {
     public function add() {
         if ($this->request->is('post')) {
             $user = $this->Users->newEntity($this->request->data);
+
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved'));
                 return $this->redirect(array('action' => 'index'));
