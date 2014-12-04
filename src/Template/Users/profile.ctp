@@ -2,7 +2,7 @@
     <div class="pull-left header">
         <h3 class="title">
             <i class="icon-user"></i>
-            <?= $user['User']['username'] ?>
+            Profile
         </h3>
     </div>
 </div>
@@ -13,7 +13,7 @@
 			<div class="box-content">
 				<div class="padded">
 					<div class="form-group">
-						<label class="control-label col-lg-2">Avatar</label>
+						<label class="control-label col-lg-2"></label>
 						<div class="col-lg-10">
 							<?//= $currentUser["avatar"] ?>
 						</div>
@@ -23,7 +23,7 @@
 					<div class="form-group">
 						<label class="control-label col-lg-2">Username</label>
 						<div class="col-lg-10">
-							<?= $user['User']['username'] ?>
+							<?= $user->username ?>
 						</div>
 					</div>
 				</div>
@@ -31,7 +31,7 @@
 					<div class="form-group">
 						<label class="control-label col-lg-2">Email</label>
 						<div class="col-lg-10">
-							<?= $user['User']["email"] ?>
+							<?= $user->password ?>
 						</div>
 					</div>
 				</div>
@@ -40,13 +40,13 @@
         <ul class="action-nav-normal" style="text-align: left;">
 
             <li class="action-nav-button">
-                <a href="/messages/send/<?= $user['User']['id'] ?>" class="tip" title="" data-original-title="Messages">
+                <a href="/messages/send/<?= $user->id ?>" class="tip" title="" data-original-title="Messages">
                     <i class="icon-comments-alt"></i>
                 </a>
             </li>
-            <? if($user['User']['id'] == $currentUser['id']) { ?>
+            <? if($user->id == $currentUser['id']) { ?>
                 <li class="action-nav-button">
-                    <a href="/users/edit/<?= $user['User']['id'] ?>" class="tip" title="" data-original-title="Messages">
+                    <a href="/users/edit/<?= $user->id ?>" class="tip" title="" data-original-title="Edit">
                         <i class="icon-edit"></i>
                     </a>
                 </li>

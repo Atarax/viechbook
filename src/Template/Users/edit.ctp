@@ -14,21 +14,14 @@
 					<div class="form-group">
 						<label class="control-label col-lg-2">Avatar</label>
 						<div class="col-lg-10">
-							<input type="text" name="data[User][avatar]" class="validate[required]" value="<?= $user['User']['username'] ?>" data-prompt-position="topLeft"/>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label class="control-label col-lg-2">Username</label>
-						<div class="col-lg-10">
-							<input type="text" name="data[User][username]" class="validate[required]" value="<?= $user['User']['username'] ?>" data-prompt-position="topLeft"/>
+							<!-- <input type="text" name="data[User][avatar]" class="validate[required]" value="<?= $user->username ?>" data-prompt-position="topLeft"/> -->
 						</div>
 					</div>
 
 					<div class="form-group">
 						<label class="control-label col-lg-2">Email</label>
 						<div class="col-lg-10">
-							<input type="text" name="data[User][email]" class="validate[required]" value="<?= $user['User']['email'] ?>" data-prompt-position="topLeft"/>
+							<input type="text" name="data[User][email]" class="validate[required]" value="<?= $user->password ?>" data-prompt-position="topLeft"/>
 						</div>
 					</div>
 

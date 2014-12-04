@@ -45,26 +45,26 @@ class UsersController extends AppController {
 
 
     public function edit($id = null) {
-        if($id != $this->Auth->user()['id']) {
+		$user = TableRegistry::get('Users')->findById($id)->first();
+
+		if($id != $this->Auth->user()['id']) {
             throw new Exception(__('You are not allowed to change another users profile!'));
         }
 
-        $this->User->id = $id;
-        if (!$this->User->exists()) {
+        if( !is_object($user) ) {
             throw new Exception(__('User not found or unproper userid given!'));
         }
-        if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('Your profile has been updated!'));
+
+        if( $this->request->is('post') || $this->request->is('put') ) {
+			$user = new User($this->request->data);
+            if ($this->Users->save($user)) {
+                $this->Session->Flash->success(__('Your profile has been updated!'));
                 return $this->redirect(array('controller' => 'pages', 'action' => 'users'));
             }
-            $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
-        } else {
-            $this->request->data = $this->User->read(null, $id);
-            unset($this->request->data['User']['password']);
+            $this->Session->Flash->error(__('The user could not be saved. Please, try again.'));
         }
 
-        $this->set('user', $this->User->read(null, $id));
+        $this->set('user', $user);
     }
 
     public function delete($id = null) {
@@ -105,12 +105,13 @@ class UsersController extends AppController {
     }
 
     public function profile($id) {
-        $this->User->id = $id;
-        if (!$this->User->exists()) {
+        $user = TableRegistry::get('Users')->findById($id)->first();
+
+        if( !is_object($user) ) {
             throw new Exception(__('User not found or unproper userid given!'));
         }
 
-        $this->set('user', $this->User->read(null, $id));
+        $this->set('user', $user);
     }
 
     public function listAll() {
