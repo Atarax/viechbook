@@ -45,7 +45,8 @@ class UsersController extends AppController {
 
 
     public function edit($id = null) {
-		$user = TableRegistry::get('Users')->findById($id)->first();
+		$usersTable = TableRegistry::get('Users');
+		$user = $usersTable->findById($id)->first();
 
 		if($id != $this->Auth->user()['id']) {
             throw new Exception(__('You are not allowed to change another users profile!'));
@@ -56,9 +57,10 @@ class UsersController extends AppController {
         }
 
         if( $this->request->is('post') || $this->request->is('put') ) {
-			$user = new User($this->request->data);
-            if ($this->Users->save($user)) {
-                $this->Session->Flash->success(__('Your profile has been updated!'));
+			$usersTable->patchEntity($user, $this->request->data);
+
+            if ($usersTable->save($user)) {
+                $this->Flash->success(__('Your profile has been updated!'));
                 return $this->redirect(array('controller' => 'pages', 'action' => 'users'));
             }
             $this->Session->Flash->error(__('The user could not be saved. Please, try again.'));

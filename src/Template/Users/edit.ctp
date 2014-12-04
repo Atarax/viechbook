@@ -21,7 +21,7 @@
 					<div class="form-group">
 						<label class="control-label col-lg-2">Email</label>
 						<div class="col-lg-10">
-							<input type="text" name="data[User][email]" class="validate[required]" value="<?= $user->password ?>" data-prompt-position="topLeft"/>
+							<input type="text" name="email" class="validate[required]" value="<?= $user->email ?>" data-prompt-position="topLeft"/>
 						</div>
 					</div>
 

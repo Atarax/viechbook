@@ -31,7 +31,7 @@
 					<div class="form-group">
 						<label class="control-label col-lg-2">Email</label>
 						<div class="col-lg-10">
-							<?= $user->password ?>
+							<?= $user->email ?>
 						</div>
 					</div>
 				</div>
