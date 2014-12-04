@@ -117,23 +117,25 @@
             // display messages
             $.each(messages, function (index, message) {
                 var areWeSender = message.user_id == <?= $currentUser['id'] ?>;
-                var liClass = areWeSender ? "arrow-box-left" : "arrow-box-right gray"
+                var liClass = areWeSender ? "arrow-box-right gray" : "arrow-box-left";
 
                 var li = $("<li/>", {
                     "class" : liClass
                 });
 
-                var avatarDiv = $("<div/>", {
-                    "class" : "avatar"
-                });
+                if(!areWeSender) { // if not we are sender ! xD
+                    var avatarDiv = $("<div/>", {
+                        "class" : "avatar"
+                    });
 
-                var avatarImg = $("<img/>", {
-                    "class" : "avatar-small",
-                    "src" : "/img/avatar1.jpg"
-                });
+                    var avatarImg = $("<img/>", {
+                        "class" : "avatar-small",
+                        "src" : "/img/avatar1.jpg"
+                    });
 
-                li.append(avatarDiv);
-                avatarDiv.append(avatarImg);
+                    li.append(avatarDiv);
+                    avatarDiv.append(avatarImg);
+                }
 
                 var infoDiv = $("<div/>", {
                     "class": "info"

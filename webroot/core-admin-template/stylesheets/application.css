@@ -12153,13 +12153,12 @@ disabled look for disabled choices in the results dropdown
 
 /* line 82, /home/andrei/core-admin-release/core-admin/source/stylesheets/_arrow.scss */
 .arrow-box-left:after {
-  border-right-color: #2D353C;
   border-width: 6px;
   top: 7px; }
 
 /* line 94, /home/andrei/core-admin-release/core-admin/source/stylesheets/_arrow.scss */
 .arrow-box-left:before {
-  border-right-color: #2D353C;
+  border-right-color: #252729;
   border-width: 7px;
   top: 6px; }
 
@@ -12197,7 +12196,6 @@ disabled look for disabled choices in the results dropdown
 
 /* line 82, /home/andrei/core-admin-release/core-admin/source/stylesheets/_arrow.scss */
 .arrow-box-right:after {
-  border-left-color: #2D353C;
   border-width: 6px;
   top: 7px; }
 
@@ -12210,10 +12208,10 @@ disabled look for disabled choices in the results dropdown
 /* line 19, /home/andrei/core-admin-release/core-admin/source/stylesheets/chat-box.scss */
 
 .arrow-box-right.gray {
-  border-color: #2D353C; }
+  border-color: #252729; }
   /* line 26, /home/andrei/core-admin-release/core-admin/source/stylesheets/_arrow.scss */
   .arrow-box-right.gray:before {
-    border-left-color: #2D353C;; }
+    border-left-color: #252729; }
 
 /* line 24, /home/andrei/core-admin-release/core-admin/source/stylesheets/chat-box.scss */
 .arrow-box-right {
@@ -12295,8 +12293,8 @@ disabled look for disabled choices in the results dropdown
   .chat-box .arrow-box-left {
     color: #999999;
     margin-left: 65px;
-    background: #2D353C;
-    margin-right: 15px; }
+    background: #252729;
+    margin-right: 35px; }
     /* line 105, /home/andrei/core-admin-release/core-admin/source/stylesheets/chat-box.scss */
     .chat-box .arrow-box-left .avatar {
       left: -50px; }
@@ -12305,10 +12303,10 @@ disabled look for disabled choices in the results dropdown
       color: #393939; }
   /* line 101, /home/andrei/core-admin-release/core-admin/source/stylesheets/chat-box.scss */
   .chat-box .arrow-box-right {
-    background: #2D353C;
+    background: #252729;
     color: #999999;
-    margin-right: 65px;
-    margin-left: 15px; }
+    margin-right: 15px;
+    margin-left: 35px; }
     /* line 105, /home/andrei/core-admin-release/core-admin/source/stylesheets/chat-box.scss */
     .chat-box .arrow-box-right .avatar {
       right: -50px; }
