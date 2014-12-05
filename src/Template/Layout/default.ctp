@@ -1,3 +1,13 @@
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-57298752-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 <!doctype html>
 <html>
 <head>
@@ -141,7 +151,7 @@
 
     var viech = new theViech();
 
-    var connection = new ab.Session('ws://192.168.178.20:8080',
+	var connection = new ab.Session('ws://92.222.47.186:8080',
         function() {
             connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
                 viech.receive(data);
