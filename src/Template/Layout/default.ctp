@@ -151,7 +151,7 @@
 
     var viech = new theViech();
 
-	var connection = new ab.Session('ws://92.222.47.186:8080',
+	var connection = new ab.Session('ws://92.222.47.186:8088',
         function() {
             connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
                 viech.receive(data);
