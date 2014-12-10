@@ -51,30 +51,6 @@ A platform for the soundviecher community with [CakePHP](http://cakephp.org) 3.0
 
 This is an unstable repository and should be treated as an alpha.
 
-## Ratchet-server (theViech) setup:
-
-Creating a daemon in Linux is as simple as creating a BASH/SH script in /etc/init.d. BASH is NOT part of this short tutorial so I won't go into the details of the script itself.
-
-To create a daemon create a script in /etc/init.d. To simplify the creation you can copy the skeleton script in /etc/init.d/skeleton. Your script need to handle the following daemon commands:
-start
-stop
-restart/reload
-force-reload
-status
-
-cp /etc/init.d/skeleton /etc/init.d/daemonName
-sudo chmod 775 /etc/init.d/daemonName
-
-To enable the daemon to start at boot:
-update-rc.d daemonName defaults 97 03
-
-http://manpages.ubuntu.com/manpages/hardy/man8/update-rc.d.8.html
-
-
-To disable the daemon from starting at boot:
-
-update-rc.d -f daemonName remove
-
 ## Installation
 
 1. Download [Composer](http://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
@@ -87,6 +63,18 @@ composer create-project --prefer-dist -s dev cakephp/app [app_name]
 
 You should now be able to visit the path to where you installed the app and see
 the setup traffic lights.
+
+## Ratchet-server (theViech) setup:
+
+To add a function to the initialization procedure:
+Write a script that performs the desired function.
+Test the script to make certain it behaves as expected. Be sure any environment variables used in the script are defined at startup.
+Name the file so that it begins with the uppercase letter ``P'', ``S'', ``I'', or ``K'' followed by a two-digit number indicating the order in which it should be executed relative to the other files in the directory, and ends with a name that describes the script's function. For example, S80lp handles print service startup. It will be executed after any script that begins with S79, and before any that begins with S81. You must follow this naming convention to ensure that your script is executed at the proper time.
+Note that a set of scripts whose names start with P77, P78, and P79 will be executed concurrently. S80lp will not start until they have all exited.
+
+Copy the script into the /etc/rc2.d directory so that it is executed by rc2 when the system enters (or leaves) multiuser mode.
+
+
 
 ## Configuration
 
