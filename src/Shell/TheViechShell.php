@@ -35,7 +35,7 @@ class TheViechShell extends Shell {
 
         // Set up our WebSocket server for clients wanting real-time updates
         $webSock = new Server($loop);
-        $webSock->listen(8080, '0.0.0.0'); // Binding to 0.0.0.0 means remotes can connect
+        $webSock->listen(8088, '0.0.0.0'); // Binding to 0.0.0.0 means remotes can connect
         new IoServer(
             new HttpServer(
                 new WsServer(
