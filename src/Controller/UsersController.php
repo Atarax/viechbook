@@ -15,7 +15,6 @@
 namespace App\Controller;
 
 use App\Model\Table\UsersTable;
-use Cake\Auth\PasswordHasherFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
@@ -45,6 +44,7 @@ class UsersController extends AppController {
 
 
     public function edit($id = null) {
+		var_dump($_FILES);
 		$usersTable = TableRegistry::get('Users');
 		$user = $usersTable->findById($id)->first();
 
@@ -61,12 +61,13 @@ class UsersController extends AppController {
 
             if ($usersTable->save($user)) {
                 $this->Flash->success(__('Your profile has been updated!'));
-                return $this->redirect(array('controller' => 'pages', 'action' => 'users'));
+                //return $this->redirect(array('controller' => 'pages', 'action' => 'users'));
             }
-            $this->Session->Flash->error(__('The user could not be saved. Please, try again.'));
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
 
         $this->set('user', $user);
+		$this->layout = false;
     }
 
     public function delete($id = null) {

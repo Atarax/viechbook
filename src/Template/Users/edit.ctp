@@ -2,7 +2,7 @@
 
 <h3>Edit Profile</h3><br>
 
-<?= $this->Form->create('User', array("class" => "form-horizontal fill-up validatable")); ?>
+<?= $this->Form->create('User', array('id' => 'profile-form', "class" => "form-horizontal fill-up validatable")); ?>
 <div class="row">
 	<div class="col-lg-6">
 
@@ -14,14 +14,14 @@
 					<div class="form-group">
 						<label class="control-label col-lg-2">Avatar</label>
 						<div class="col-lg-10">
-							<!-- <input type="text" name="data[User][avatar]" class="validate[required]" value="<?= $user->username ?>" data-prompt-position="topLeft"/> -->
+							<input type="file" name="avatar" class="validate[required]" data-prompt-position="topLeft"/>
 						</div>
 					</div>
 
 					<div class="form-group">
 						<label class="control-label col-lg-2">Email</label>
 						<div class="col-lg-10">
-							<input type="text" name="email" class="validate[required]" value="<?= $user->email ?>" data-prompt-position="topLeft"/>
+							<input type="text" name="email" value="<?= $user->email ?>"/>
 						</div>
 					</div>
 
@@ -37,3 +37,10 @@
 
 	</div>
 </div>
+<script type="text/javascript">
+	$(document).ready( function(){
+		$('#profile-form').submit( function() {
+			this.submit();
+		});
+	});
+</script>

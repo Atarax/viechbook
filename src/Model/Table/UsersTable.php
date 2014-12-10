@@ -24,7 +24,11 @@ class UsersTable extends Table {
         $this->belongsToMany('Conversations');
         $this->hasMany('Messages');
         $this->hasMany('Notifications');
-    }
+
+		$this->hasOne('Picture', [
+			'propertyName' => 'profilePicture'
+		]);
+	}
 
     public function validationDefault(Validator $validator) {
         return $validator
