@@ -59,9 +59,9 @@
                         <li><a href="#"><i class="icon-user"></i> <span>Profile</span></a></li>
                         <li><a href="#"><i class="icon-cog"></i> <span>Settings</span></a></li>
  						*/ ?>
-                        <li><a href="/users/messages"><i class="icon-envelope"></i> <span>Messages</span> <span id="profile-conversation-notification-count" class="label label-dark-red pull-right"></span></a></li>
-						<li><a href="/users/profile/<?= $currentUser['id'] ?>"><i class="icon-user"></i> <span>Profile</span></a></li>
-						<li><a href="/users/logout"><i class="icon-off"></i> <span>Logout</span></a></li>
+                        <li><a href="/Users/messages"><i class="icon-envelope"></i> <span>Messages</span> <span id="profile-conversation-notification-count" class="label label-dark-red pull-right"></span></a></li>
+						<li><a href="/Users/profile/<?= $currentUser['id'] ?>"><i class="icon-user"></i> <span>Profile</span></a></li>
+						<li><a href="/Users/logout"><i class="icon-off"></i> <span>Logout</span></a></li>
                     </ul>
                 </li>
             </ul>
@@ -86,28 +86,28 @@
     </a>
     <ul class="nav navbar-collapse collapse navbar-collapse-primary">
         <li class="">
-            <a href="/pages/users">
+            <a href="/Pages/users">
                 <i class="icon-user icon-2x"></i>
                 <span>Users</span>
             </a>
         </li>
 
         <li class="">
-            <a href="/pages/events">
+            <a href="/Pages/events">
                 <i class="icon-calendar icon-2x"></i>
                 <span>Events</span>
             </a>
         </li>
 
         <li class="">
-            <a href="/pages/minutes">
+            <a href="/Pages/minutes">
                 <i class="icon-book icon-2x"></i>
                 <span>Minutes</span>
             </a>
         </li>
 
         <li class="">
-            <a href="/pages/balance">
+            <a href="/Pages/balance">
                 <i class="icon-money icon-2x"></i>
                 <span>Balance</span>
             </a>
@@ -182,7 +182,7 @@
     });
 
     var updateUserMenuNotifications = function() {
-        $.getJSON( "/users/getNotifications/" , function( notifications ) {
+        $.getJSON( "/Users/getNotifications/" , function( notifications ) {
             var totalNotifications = 0;
             var totalUpdatedConversations = 0;
 

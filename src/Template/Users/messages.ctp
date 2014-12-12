@@ -76,7 +76,7 @@
 
     function updateChatBox( conversationId ) {
         currentConversationId = conversationId;
-        $.getJSON( "/messages/getByConversation/" + conversationId, function( messages ) {
+        $.getJSON( "/Messages/getByConversation/" + conversationId, function( messages ) {
             var chatBox = $("#chat-box");
             chatBox.html("");
 
@@ -99,7 +99,7 @@
             });
 
             // set title
-            $.getJSON( "/conversations/getParticipants/" + conversationId, function( users ) {
+            $.getJSON( "/Conversations/getParticipants/" + conversationId, function( users ) {
                 $.each( users, function(index, user) {
                     if( user.id != <?= $currentUser['id'] ?> ) {
                         foreignParticipants.push(user.username);
@@ -165,7 +165,7 @@
     var currentConversationId = null;
 
     function updateConversationsBox() {
-        $.getJSON( "/conversations/listAll", function( response ) {
+        $.getJSON( "/Conversations/listAll", function( response ) {
             var conversations = response.conversations;
 
             if(conversations.length == 0) {
@@ -219,7 +219,7 @@
     }
 
     function clearNotifications(conversationId) {
-        $.getJSON( "/conversations/clearNotifications/" + conversationId, function( response ) {
+        $.getJSON( "/Conversations/clearNotifications/" + conversationId, function( response ) {
             if(response == true) {
                 $('#notification-for-conversation-' + conversationId).text('');
             }
@@ -276,7 +276,7 @@
     function sendMessage(conversationId) {
         var content = $("#chat-input").val();
 
-        $.post("/conversations/addMessage/" + conversationId,{
+        $.post("/Conversations/addMessage/" + conversationId,{
             content: content
         }, function() {
             updateChatBox(conversationId);

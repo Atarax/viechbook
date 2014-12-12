@@ -27,7 +27,7 @@ Router::scope('/', function ($routes) {
  * its action called 'display', and we pass a param to select the view file
  * to use (in this case, src/Template/Pages/home.ctp)...
  */
-	$routes->connect('/', ['controller' => 'Pages', 'action' => 'users', 'home']);
+	$routes->connect('/', ['controller' => 'Pages', 'action' => 'Users', 'home']);
 
 /**
  * Connect a route for the index action of any controller.

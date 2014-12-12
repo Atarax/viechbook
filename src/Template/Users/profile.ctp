@@ -40,13 +40,13 @@
         <ul class="action-nav-normal" style="text-align: left;">
 
             <li class="action-nav-button">
-                <a href="/messages/send/<?= $user->id ?>" class="tip" title="" data-original-title="Messages">
+                <a href="/Messages/send/<?= $user->id ?>" class="tip" title="" data-original-title="Messages">
                     <i class="icon-comments-alt"></i>
                 </a>
             </li>
             <? if($user->id == $currentUser['id']) { ?>
                 <li class="action-nav-button">
-                    <a href="/users/edit/<?= $user->id ?>" class="tip" title="" data-original-title="Edit">
+                    <a href="/Users/edit/<?= $user->id ?>" class="tip" title="" data-original-title="Edit">
                         <i class="icon-edit"></i>
                     </a>
                 </li>

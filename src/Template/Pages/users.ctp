@@ -25,13 +25,13 @@
             "bAutoWidth": false,
             "sPaginationType": "full_numbers",
             "sDom": "<\"table-header\"fl>t<\"table-footer\"ip>",
-            "ajax": "/users/listAll",
+            "ajax": "/Users/listAll",
             "columns": [
                 {
                     "title": "Name",
                     "data": "username",
                     "render": function( data, type, row ) {
-                        return "<a href='/conversations/addMessageByReceiver/" + row.id + "'>" + row.username + "</a>";
+                        return "<a href='/Conversations/addMessageByReceiver/" + row.id + "'>" + row.username + "</a>";
                     }
                 },
                 {
