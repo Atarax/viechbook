@@ -53,8 +53,11 @@ This is an unstable repository and should be treated as an alpha.
 
 ## Installation
 
+Install zero-mq:
+http://php.net/manual/de/zmq.setup.php
+
 1. Download [Composer](http://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist -s dev cakephp/app [app_name]`.
+2. Run `php composer.phar install`.
 
 If Composer is installed globally, run
 ```bash
