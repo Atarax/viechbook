@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "77531162d5507f6b45ddae6de72077da",
+    "hash": "a8c7d8054a1851088787f80d37026318",
     "packages": [
         {
             "name": "aura/installer-default",
@@ -131,12 +131,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "6c64bcf3896dc220019e08cac5ca1d15f9df1443"
+                "reference": "ef0ad443b7b3550863f3029b2852e1c4763e3be1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/6c64bcf3896dc220019e08cac5ca1d15f9df1443",
-                "reference": "6c64bcf3896dc220019e08cac5ca1d15f9df1443",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/ef0ad443b7b3550863f3029b2852e1c4763e3be1",
+                "reference": "ef0ad443b7b3550863f3029b2852e1c4763e3be1",
                 "shasum": ""
             },
             "require": {
@@ -188,7 +188,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2014-12-12 03:21:27"
+            "time": "2014-12-15 07:16:18"
         },
         {
             "name": "cakephp/debug_kit",
@@ -721,6 +721,50 @@
             "time": "2014-09-26 02:52:02"
         },
         {
+            "name": "phalcon/devtools",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phalcon/phalcon-devtools.git",
+                "reference": "070c3c3a51c81944ae241267e271ee9ce8ebf066"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phalcon/phalcon-devtools/zipball/070c3c3a51c81944ae241267e271ee9ce8ebf066",
+                "reference": "070c3c3a51c81944ae241267e271ee9ce8ebf066",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.6"
+            },
+            "bin": [
+                "phalcon.php"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Phalcon": "scripts/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3"
+            ],
+            "authors": [
+                {
+                    "name": "Phalcon Team",
+                    "email": "team@phalconphp.com"
+                }
+            ],
+            "description": "This tools provide you useful scripts to generate code helping to develop faster and easy applications that use with Phalcon framework.",
+            "homepage": "http://phalconphp.com",
+            "keywords": [
+                "framework",
+                "phalcon"
+            ],
+            "time": "2014-12-11 14:36:33"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -1154,7 +1198,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cakephp/cakephp": 20,
-        "cakephp/debug_kit": 20
+        "cakephp/debug_kit": 20,
+        "phalcon/devtools": 20
     },
     "prefer-stable": true,
     "platform": {
