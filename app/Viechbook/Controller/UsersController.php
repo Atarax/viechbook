@@ -1,36 +1,19 @@
 <?php
-/**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-namespace App\Controller;
 
-use App\Model\Table\UsersTable;
-use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
+namespace Viechbook\Controller;
 
 /**
- * Static content controller
- *
- * This controller will render views from Template/Pages/
- *
- * @property UsersTable Users
- * @link http://book.cakephp.org/3.0/en/controllers/pages-controller.html
+ * Created by PhpStorm.
+ * User: cite
+ * Date: 16.12.14
+ * Time: 00:24
  */
-class UsersController extends AppController {
+
+class UsersController extends ControllerBase {
 
     public function index() {}
 
-    public function add() {
+    public function addAction() {
         if ($this->request->is('post')) {
             $user = $this->Users->newEntity($this->request->data);
 
@@ -117,7 +100,7 @@ class UsersController extends AppController {
         $this->set('user', $user);
     }
 
-    public function listAll() {
+    public function listAllAction() {
         $users = TableRegistry::get('Users');
         $query = $users->find();
         $query->select(['id', 'username', 'email']);

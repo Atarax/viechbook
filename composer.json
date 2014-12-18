@@ -22,7 +22,10 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"App\\": "src"
+			"Viechbook\\": "app/Viechbook"
+		},
+		"psr-0": {
+			"IndexController\\": "app/Viechbook/Controller"
 		}
 	},
 	"autoload-dev": {
