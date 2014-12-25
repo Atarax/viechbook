@@ -1,2 +1,2 @@
 cd /home/cite/viechbook
-bin/cake theViech
+php app/Viechbook/Shell/TheViechShell.php

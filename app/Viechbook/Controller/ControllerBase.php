@@ -13,6 +13,7 @@ use Phalcon\Mvc\Controller;
  * @property \Phalcon\Http\Request request
  * @property \Phalcon\Http\Response response
  * @property \Phalcon\Session session
+ * @property \Phalcon\Security security
  * @property \Phalcon\Flash\Direct flash
  * @property \Phalcon\Mvc\Dispatcher dispatcher
  * @property \Phalcon\View view

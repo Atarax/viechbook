@@ -6,11 +6,10 @@ use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Acl\Resource;
 use Phalcon\Acl\Role;
 use Phalcon\Events\Event,
-	Phalcon\Mvc\User\Plugin,
 	Phalcon\Mvc\Dispatcher,
 	Phalcon\Acl;
 
-class Security extends Plugin
+class Security extends PluginBase
 {
 
 	public function beforeDispatch(Event $event, Dispatcher $dispatcher){}
@@ -72,7 +71,9 @@ class Security extends Plugin
 		$privateResources = array(
 			'pages' => array('users'),
 			'index' => array('index'),
-			'users' => array('listAll'),
+			'messages' => array('get_by_conversation'),
+			'users' => array('edit', 'list_all', 'get_notifications', 'profile'),
+			'conversations' => array('list_all', 'get_participants', 'add_message', 'clear_notifications'),
 		);
 		foreach ($privateResources as $resource => $actions) {
 			$acl->addResource(new Resource($resource), $actions);
@@ -84,8 +85,8 @@ class Security extends Plugin
 
 		//Public area resources (frontend)
 		$publicResources = array(
-			'users' => array('add'),
-			'session' => array('login', 'start', 'logout')
+			'users' => array('add', 'messages'),
+			'session' => array('login', 'logout', 'start')
 		);
 
 		foreach ($publicResources as $resource => $actions) {

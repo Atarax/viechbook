@@ -9,6 +9,7 @@
 use Phalcon\Loader;
 use Viechbook\Plugin\Security;
 
+
 try {
 	/** load composer autoloader */
 	require_once(__DIR__ . '/../../vendor/autoload.php');
@@ -63,7 +64,10 @@ try {
 			"host" => $config->database->host,
 			"username" => $config->database->username,
 			"password" => $config->database->password,
-			"dbname" => $config->database->name
+			"dbname" => $config->database->name,
+			"options" => [
+				PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+			]
 		));
 	});
 
@@ -99,4 +103,5 @@ try {
 
 } catch(\Phalcon\Exception $e) {
 	echo "PhalconException: ", $e->getMessage();
+	file_put_contents('/home/cite/viechbook/logs/phalcon_errors.log', $e->getMessage() . '/n', FILE_APPEND );
 }
