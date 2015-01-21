@@ -31,7 +31,7 @@
                     "title": "Name",
                     "data": "username",
                     "render": function( data, type, row ) {
-                        return "<a href='/Conversations/addMessageByReceiver/" + row.id + "'>" + row.username + "</a>";
+                        return "<a href='/conversations/add_message_by_receiver/" + row.id + "'>" + row.username + "</a>";
                     }
                 },
                 {

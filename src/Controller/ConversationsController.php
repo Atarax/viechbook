@@ -19,22 +19,33 @@ use ZMQContext;
  */
 class ConversationsController extends AppController {
 
+<<<<<<< Updated upstream:src/Controller/ConversationsController.php
     /**
      * basically sends a message to a given receiver, taking into account that there might not exists a conversation yet
      * @param $receiverId
      */
     public function addMessageByReceiver($receiverId) {
         $currentUser = $this->Auth->user();
+=======
+	/**
+	 * basically sends a message to a given receiver, taking into account that there might not exists a conversation yet
+	 * @param $receiverId
+	 * @throws Exception
+	 */
+    public function add_message_by_receiverAction($receiverId) {
+        $auth = $this->session->get('auth');
+>>>>>>> Stashed changes:app/Viechbook/Controller/ConversationsController.php
 
         /** @var User $sender */
-        $sender = $this->Conversations->Users->findById($currentUser['id'])->contain( ['Conversations'] )->first();
-        /** @var User $receiver */
-        $receiver = $this->Conversations->Users->findById($receiverId)->contain( ['Conversations'] )->first();
+        $sender = Users::findFirst($auth['id']);
+
+		/** @var User $receiver */
+        $receiver = Users::findFirst($receiverId);
 
         if( is_null($receiver) ) {
-            throw new NotFoundException(__('Receiver for message not found! (maybe improper id given)'));
+            throw new Exception(__('Receiver for message not found! (maybe improper id given)'));
         }
-        if( $this->request->is('post') ) {
+        if( $this->request->isPost() ) {
 
             /**
              * check if we already have a conversation with the receiver
@@ -47,10 +58,10 @@ class ConversationsController extends AppController {
 
             $this->createMessage($commonConversation, $sender);
 
-            $this->Flash->success(__('The message has been sent!'));
+            $this->flash->success(__('The message has been sent!'));
         }
 
-        $this->set('receiver', $receiver);
+		$this->view->setVar('receiver', $receiver);
     }
 
     /**
@@ -145,11 +156,11 @@ class ConversationsController extends AppController {
         die(json_encode(true));
     }
 
-    /**
-     * @param User $receiver
-     * @param User $sender
-     * @return Conversation a common conversation which is not a group conversation (should be exactly one)
-     */
+	/**
+	 * @param Users $receiver
+	 * @param Users $sender
+	 * @return Conversations a common conversation which is not a group conversation (should be exactly one)
+	 */
     private function getCommonConversation(User $receiver,User $sender){
         $commonConversation = null;
 
