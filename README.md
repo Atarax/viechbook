@@ -176,13 +176,9 @@ cd viechbook/
 adjust values in app/config.ini and in app/environment.ihi
 enable short tags!!
 
-## Ratchet-server (theViech) setup:
+# Ratchet-server (theViech) setup:
+# -------------------
 
-To add a function to the initialization procedure:
-Write a script that performs the desired function.
-Test the script to make certain it behaves as expected. Be sure any environment variables used in the script are defined at startup.
-Name the file so that it begins with the uppercase letter ``P'', ``S'', ``I'', or ``K'' followed by a two-digit number indicating the order in which it should be executed relative to the other files in the directory, and ends with a name that describes the script's function. For example, S80lp handles print service startup. It will be executed after any script that begins with S79, and before any that begins with S81. You must follow this naming convention to ensure that your script is executed at the proper time.
-Note that a set of scripts whose names start with P77, P78, and P79 will be executed concurrently. S80lp will not start until they have all exited.
+sudo ./installTheViechService.sh
 
-Copy the script into the /etc/rc2.d directory so that it is executed by rc2 when the system enters (or leaves) multiuser mode.
 
