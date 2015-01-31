@@ -66,8 +66,10 @@ class SessionController extends ControllerBase
 		$this->session->set('auth', null);
 
 		$this->dispatcher->forward(array(
-			'controller' => 'session',
-			'action' => 'login'
+			'controller' => 'index',
+			'action' => 'index'
 		));
+
+		return;
 	}
 }

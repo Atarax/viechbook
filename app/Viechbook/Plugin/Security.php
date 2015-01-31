@@ -5,9 +5,9 @@ namespace Viechbook\Plugin;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Acl\Resource;
 use Phalcon\Acl\Role;
-use Phalcon\Events\Event,
-	Phalcon\Mvc\Dispatcher,
-	Phalcon\Acl;
+use Phalcon\Events\Event;
+use Phalcon\Mvc\Dispatcher;
+use	Phalcon\Acl;
 
 class Security extends PluginBase
 {
@@ -70,7 +70,6 @@ class Security extends PluginBase
 		//Private area resources (backend)
 		$privateResources = array(
 			'pages' => array('users'),
-			'index' => array('index'),
 			'messages' => array('get_by_conversation'),
 			'users' => array('edit', 'list_all', 'get_notifications', 'profile'),
 			'conversations' => array('list_all', 'get_participants', 'add_message','add_message_by_receiver', 'clear_notifications'),
@@ -85,6 +84,7 @@ class Security extends PluginBase
 
 		//Public area resources (frontend)
 		$publicResources = array(
+			'index' => array('index'),
 			'users' => array('add', 'messages'),
 			'session' => array('login', 'logout', 'start')
 		);
