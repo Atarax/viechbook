@@ -73,7 +73,7 @@ class Security extends PluginBase
 			'index' => array('index'),
 			'messages' => array('get_by_conversation'),
 			'users' => array('edit', 'list_all', 'get_notifications', 'profile'),
-			'conversations' => array('list_all', 'get_participants', 'add_message', 'clear_notifications'),
+			'conversations' => array('list_all', 'get_participants', 'add_message','add_message_by_receiver', 'clear_notifications'),
 		);
 		foreach ($privateResources as $resource => $actions) {
 			$acl->addResource(new Resource($resource), $actions);

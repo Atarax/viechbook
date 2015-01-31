@@ -43,7 +43,7 @@
 
                 <div class="box-footer flat padded">
                     <div class="input-group addon-right">
-                        <input type="text" id="chat-input" autocomplete="off" placeholder="type here..."/>
+                        <input type="text" id="chat-input" style="width:95%" autocomplete="off" placeholder="type here..."/>
                         <ul class="input-group-addon">
                             <li>
                         <span class="pull-right">
@@ -275,12 +275,14 @@ function addBoxNewsElement(conversationId, elementId, title, text, notificate, t
 
 function sendMessage(conversationId) {
 	var content = $("#chat-input").val();
+	$("#chat-input").val("");
 
 	$.post("/conversations/add_message/" + conversationId,{
 		content: content
 	}, function() {
 		updateChatBox(conversationId);
-		$("#chat-input").val("");
+		updateConversationsBox();
+		clearNotifications();
 	});
 }
 </script>

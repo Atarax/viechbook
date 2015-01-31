@@ -14,6 +14,9 @@ try {
 	/** load composer autoloader */
 	require_once(__DIR__ . '/../../vendor/autoload.php');
 
+	/** load environment constants */
+	require_once('environment.php');
+
 	/**  read the configuration */
 	$config = new Phalcon\Config\Adapter\Ini('../app/config/config.ini');
 

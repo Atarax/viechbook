@@ -1,6 +1,7 @@
 <?php
 
 namespace Viechbook\Controller;
+use Phalcon\Mvc\View;
 use Viechbook\Model\Users;
 
 /**
@@ -25,7 +26,6 @@ class UsersController extends ControllerBase {
 			$user->setPassword( $password );
 			$user->setModified();
 
-
 			$success = $user->save();
 
             if($success) {
@@ -35,6 +35,7 @@ class UsersController extends ControllerBase {
 					'controller' => 'index',
 					'action' => 'index'
 				));
+
             }
 
 			$this->flash->error( $user->getMessages() );
@@ -43,8 +44,6 @@ class UsersController extends ControllerBase {
 
 
     public function editAction($id = null) {
-		var_dump($_FILES);
-		die();
 		$user = Users::findFirst($id);
 		$auth = $this->session->get('auth');
 
@@ -55,19 +54,37 @@ class UsersController extends ControllerBase {
 			throw new Exception(__('User not found or unproper userid given!'));
 		}
 
-		/*
-		if( $this->request->is('post') || $this->request->is('put') ) {
-			$user
-			$usersTable->patchEntity($user, $this->request->data);
 
+
+		if( $this->request->isPost() ) {
+
+			$user->setEmail( $this->request->getPost('email') );
+			$user->save();
+
+			$errors = $user->getMessages();
+
+			if( !empty($errors) ) {
+				$this->flash->error( $errors );
+			}
+			else {
+				$this->flash->success('Successfully updated your profile!');
+				$this->dispatcher->forward([
+					'action' => 'profile',
+					'params' => [$id]
+				]);
+			}
+			//$user
+			/*
 			if ($usersTable->save($user)) {
 				$this->Flash->success(__('Your profile has been updated!'));
 				//return $this->redirect(array('controller' => 'pages', 'action' => 'users'));
 			}
 			$this->Flash->error(__('The user could not be saved. Please, try again.'));
+			*/
 		}
-		*/
-        $this->view->setVar('user', $user->toArray());
+
+		//$this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
+        $this->view->setVar('user', $user);
     }
 
     public function messagesAction() {}

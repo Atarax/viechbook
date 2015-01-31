@@ -89,6 +89,7 @@
 		<?php echo $this->tag->image( array("img/soundviech.jpg", 'style' => "max-width: 95%; height: auto;") ); ?>
 	</a>
 	<ul class="nav navbar-collapse collapse navbar-collapse-primary">
+
 		<li class="">
 			<a href="/pages/users">
 				<i class="icon-user icon-2x"></i>
@@ -124,7 +125,7 @@
 
 	var viech = new theViech();
 
-	var connection = new ab.Session('ws://localhost:8088',
+	var connection = new ab.Session('<?php echo RATCHET_SERVER_ADRESS; ?>',
 		function() {
 			connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
 				viech.receive(data);

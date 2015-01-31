@@ -4,9 +4,13 @@
  * User: atarax
  * Date: 4/27/14
  * Time: 12:43 AM
+ *
  */
 namespace Viechbook\Model;
 
+/**
+ * @property boolean isGroup
+ */
 class Conversations extends ModelBase {
 	public $id;
 
@@ -43,6 +47,20 @@ class Conversations extends ModelBase {
 			'conversation_id',
 			['alias' => 'messages']
 		);
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getIsGroup() {
+		return $this->isGroup;
+	}
+
+	/**
+	 * @param boolean $isGroup
+	 */
+	public function setIsGroup($isGroup) {
+		$this->isGroup = $isGroup;
 	}
 
 	/**

@@ -36,13 +36,14 @@ class SessionController extends ControllerBase
 
 				$this->_registerSession($user);
 
-				$this->flash->success('Welcome ' . $user->username);
+				$this->flash->success('Welcome ' . $user->getUsername());
 
-				//Forward to the 'invoices' controller if the user is valid
-				return $this->dispatcher->forward(array(
+				$this->dispatcher->forward(array(
 					'controller' => 'index',
 					'action' => 'index'
 				));
+
+				return;
 			}
 
 			$this->flash->error('Wrong email/password');

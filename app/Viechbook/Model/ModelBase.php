@@ -11,6 +11,7 @@ use Phalcon\Mvc\Model\Behavior\Timestampable;
  * Time: 19:33
  *
  * @method mixed[] toArray()
+ *
  */
 
 
@@ -25,7 +26,7 @@ class ModelBase extends Model {
 	 */
 	public function save($data = null, $witelist = null) {
 		$this->setModified();
-		parent::save();
+		parent::save($data, $witelist);
 	}
 
 	public function initialize() {

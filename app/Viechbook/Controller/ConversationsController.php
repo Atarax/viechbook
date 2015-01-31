@@ -2,8 +2,10 @@
 namespace Viechbook\Controller;
 
 use Cake\Network\Exception\NotFoundException;
+use Exception;
 use Viechbook\Library\TheViechNotifier;
 use Viechbook\Model\Conversations;
+use Viechbook\Model\ConversationsUsers;
 use Viechbook\Model\Messages;
 use Viechbook\Model\Notifications;
 use Viechbook\Model\Users;
@@ -21,36 +23,40 @@ class ConversationsController extends ControllerBase {
 	/**
 	 * basically sends a message to a given receiver, taking into account that there might not exists a conversation yet
 	 * @param $receiverId
-	 * @throws NotFoundException
+	 * @throws Exception
 	 */
-    public function addMessageByReceiver($receiverId) {
-        $currentUser = $this->Auth->user();
+    public function add_message_by_receiverAction($receiverId) {
+        $auth = $this->session->get('auth');
 
-        /** @var User $sender */
-        $sender = $this->Conversations->Users->findById($currentUser['id'])->contain( ['Conversations'] )->first();
-        /** @var User $receiver */
-        $receiver = $this->Conversations->Users->findById($receiverId)->contain( ['Conversations'] )->first();
+        /** @var Users $sender	*/
+        $sender = Users::findFirst($auth['id']);
+		/** @var Users $receiver */
+        $receiver = Users::findFirst($receiverId);
 
         if( is_null($receiver) ) {
-            throw new NotFoundException(__('Receiver for message not found! (maybe improper id given)'));
+            throw new Exception( 'Receiver for message not found! (maybe improper id given)' );
         }
-        if( $this->request->is('post') ) {
 
-            /**
-             * check if we already have a conversation with the receiver
-             */
+        if( $this->request->isPost() ) {
+            /** check if we already have a conversation with the receiver */
             $commonConversation = $this->getCommonConversation($receiver, $sender);
 
             if( is_null($commonConversation) ) {
-                $commonConversation = $this->createNewConversation($sender, $receiver);
+				$commonConversation = $this->createNewConversation($sender, $receiver);
             }
 
-            $this->createMessage($commonConversation, $sender);
+            $this->createMessage($commonConversation->getId(), $sender->getId());
 
-            $this->Flash->success(__('The message has been sent!'));
-        }
+            $this->flash->success( 'The message has been sent!' );
 
-        $this->set('receiver', $receiver);
+			$this->dispatcher->forward(array(
+				'controller' => 'index',
+				'action' => 'index'
+			));
+
+		}
+
+		$this->view->setVar('receiver', $receiver);
     }
 
     /**
@@ -64,7 +70,7 @@ class ConversationsController extends ControllerBase {
 
         $conversationsResult = [];
 
-        foreach($currentUser->getConversations() as $conversation) {
+        foreach($currentUser->getConversations(['order' => 'Viechbook\\Model\\Conversations.modified desc']) as $conversation) {
 
 			$messages = $conversation->getUserMessages();
 
@@ -138,47 +144,75 @@ class ConversationsController extends ControllerBase {
         die(json_encode(true));
     }
 
-    /**
-     * @param User $receiver
-     * @param User $sender
-     * @return Conversation a common conversation which is not a group conversation (should be exactly one)
-     */
-    private function getCommonConversation(User $receiver,User $sender){
+	/**
+	 * @param Users $receiver
+	 * @param Users $sender
+	 * @return Conversations a common conversation which is not a group conversation (should be exactly one)
+	 */
+    private function getCommonConversation(Users $receiver,Users $sender){
         $commonConversation = null;
+		/*
+		$user = Users::findFirst(array(
+			"username = :username: AND password = :password: ",
+			"bind" => array('username' => $username, 'password' => $password)
+		));*/
 
-        foreach($receiver->conversations as $receiverConversation) {
-            foreach($sender->conversations as $senderConversation) {
-                if( $senderConversation->get('id') == $receiverConversation->get('id') && !$senderConversation->get('isGroup') ) {
-                    /**
-                     * they already had a conversation which is no group conversation
-                     */
-                    $commonConversation = $senderConversation;
+		$receiverConversations = ConversationsUsers::find([
+			'user_id = :user_id: ',
+			'bind' => ['user_id' => $receiver->getId()]
+		]);
+
+		$senderConversations = ConversationsUsers::find([
+			'user_id = :user_id: ',
+			'bind' => ['user_id' => $sender->getId()]
+		]);
+
+		foreach($receiverConversations as $receiverConversation) {
+
+            foreach($senderConversations as $senderConversation) {
+
+                if( $senderConversation->getConversation_id() == $receiverConversation->getConversation_id() ) {
+					/** find it and check if its a group-conversation */
+					$possibleConversation = Conversations::findFirst( $senderConversation->getConversation_id() );
+
+					if( !$possibleConversation->getIsGroup() ) {
+						/** found one! */
+						$commonConversation = $possibleConversation;
+						break;
+					}
                 }
             }
+
+			/** stop searching */
+			if( !is_null($commonConversation) ) {
+				break;
+			}
         }
+
         return $commonConversation;
     }
 
     /**
-     * @param User $sender
-     * @param User $receiver
-     * @return Conversation
+     * @param Users $sender
+     * @param Users $receiver
+     * @return Conversations
      */
     private function createNewConversation($sender, $receiver) {
-        /**
-         * link new conversation to both users
-         */
-        $newConversation = new Conversation();
+        /** create new conversation */
+		$newConversation = new Conversations();
 
-        $newConversation->set('isGroup', false);
-        $newConversation->users = [
-            $sender,
-            $receiver
-        ];
+        $newConversation->setIsGroup(false);
+		$newConversation->save();
 
-        $this->Conversations->save($newConversation);
+		/** link new conversation to both users */
+		foreach( [$sender, $receiver] as $user ) {
+			$link = new ConversationsUsers();
+			$link->setUser_id( $user->getId() );
+			$link->setConversation_id( $newConversation->getId() );
+			$link->save();
+		}
 
-        return $newConversation;
+		return $newConversation;
     }
 
     /**
@@ -194,6 +228,10 @@ class ConversationsController extends ControllerBase {
 		$message->setRead(0);
 
         $message->save();
+
+		/** after also set the conversation modified, makes ordering simpler */
+		$conversation = Conversations::findFirst($commonConversationId);
+		$conversation->save();
 	}
 
     /**

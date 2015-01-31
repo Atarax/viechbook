@@ -26,4 +26,4 @@ class ControllerBase extends Controller{
 
 		$this->view->setVar('currentUser', $currentUser);
 	}
-} 
+}
