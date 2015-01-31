@@ -178,14 +178,6 @@ function updateConversationsBox() {
 	$.getJSON( "/conversations/list_all", function( response ) {
 		var conversations = response.conversations;
 
-		if(conversations.length == 0) {
-			addBoxNewsElement(
-				'conversations',
-				'No Conversations :(',
-				'Maybe you should talk to someone :P'
-			);
-		}
-
 		var conversationsContainer = $("#conversations");
 		conversationsContainer.html('');
 

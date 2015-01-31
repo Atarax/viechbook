@@ -24,7 +24,6 @@ class UsersController extends ControllerBase {
 			$user->setEmail( $this->request->getPost('email') );
 			$user->setUsername( $this->request->getPost('username') );
 			$user->setPassword( $password );
-			$user->setModified();
 
 			$user->save();
 

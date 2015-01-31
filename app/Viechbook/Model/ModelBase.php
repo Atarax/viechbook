@@ -1,8 +1,10 @@
 <?php
 
 namespace Viechbook\Model;
+use Phalcon\Exception;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Behavior\Timestampable;
+use Viechbook\Model\Exception\SaveFailed;
 
 /**
  * Created by PhpStorm.
@@ -19,16 +21,6 @@ class ModelBase extends Model {
 	public $created;
 	public $modified;
 
-	/**
-	 * @param null $data
-	 * @param null $witelist
-	 * @return bool|void
-	 */
-	public function save($data = null, $witelist = null) {
-		$this->setModified();
-		parent::save($data, $witelist);
-	}
-
 	public function initialize() {
 		$this->addBehavior(new Timestampable(
 			array(
@@ -42,6 +34,7 @@ class ModelBase extends Model {
 				)*/
 			)
 		));
+
 	}
 
 	/**
@@ -75,4 +68,24 @@ class ModelBase extends Model {
 		$this->created = $created;
 	}
 
+
+	/**
+	 * check if the save went dine
+	 *
+	 * @throws Exception
+	 */
+	public function onValidationFails() {
+		$errors = $this->getMessages();
+
+		$message = 'Model method save of class: \'' . get_class($this) . '\' failed due to followin reasons: ';
+		$message .= implode(",\n", $errors);
+
+		if( !empty($errors) ) {
+			throw new SaveFailed( $message );
+		}
+	}
+
+	public function beforeValidation() {
+		$this->setModified();
+	}
 }
