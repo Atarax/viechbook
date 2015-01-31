@@ -71,7 +71,7 @@ class Security extends PluginBase
 		$privateResources = array(
 			'pages' => array('users'),
 			'messages' => array('get_by_conversation'),
-			'users' => array('edit', 'list_all', 'get_notifications', 'profile'),
+			'users' => array('edit', 'list_all', 'get_notifications', 'profile', 'messages'),
 			'conversations' => array('list_all', 'get_participants', 'add_message','add_message_by_receiver', 'clear_notifications'),
 		);
 		foreach ($privateResources as $resource => $actions) {
@@ -85,7 +85,6 @@ class Security extends PluginBase
 		//Public area resources (frontend)
 		$publicResources = array(
 			'index' => array('index'),
-			'users' => array('add', 'messages'),
 			'session' => array('login', 'logout', 'start')
 		);
 

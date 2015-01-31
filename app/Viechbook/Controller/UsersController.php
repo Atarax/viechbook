@@ -75,17 +75,8 @@ class UsersController extends ControllerBase {
 					'params' => [$id]
 				]);
 			}
-			//$user
-			/*
-			if ($usersTable->save($user)) {
-				$this->Flash->success(__('Your profile has been updated!'));
-				//return $this->redirect(array('controller' => 'pages', 'action' => 'users'));
-			}
-			$this->Flash->error(__('The user could not be saved. Please, try again.'));
-			*/
 		}
 
-		//$this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
         $this->view->setVar('user', $user);
     }
 

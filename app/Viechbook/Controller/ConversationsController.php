@@ -50,9 +50,10 @@ class ConversationsController extends ControllerBase {
 
             $this->flash->success( 'The message has been sent!' );
 
-			$this->dispatcher->forward(array(
-				'controller' => 'index',
-				'action' => 'index'
+			return $this->dispatcher->forward(array(
+				'controller' => 'users',
+				'action' => 'messages',
+				'parameters' => [$commonConversation->getId()]
 			));
 
 		}
@@ -153,11 +154,6 @@ class ConversationsController extends ControllerBase {
 	 */
     private function getCommonConversation(Users $receiver,Users $sender){
         $commonConversation = null;
-		/*
-		$user = Users::findFirst(array(
-			"username = :username: AND password = :password: ",
-			"bind" => array('username' => $username, 'password' => $password)
-		));*/
 
 		$receiverConversations = ConversationsUsers::find([
 			'user_id = :user_id: ',
