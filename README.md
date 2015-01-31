@@ -156,6 +156,11 @@ cd viechbook/
 ./composer.phar update
 ./composer.phar install
 
+# Application Configuration
+# -------------------
+
+adjust values in app/config.ini and in app/environment.ihi
+enable short tags
 
 ## Ratchet-server (theViech) setup:
 
@@ -167,9 +172,3 @@ Note that a set of scripts whose names start with P77, P78, and P79 will be exec
 
 Copy the script into the /etc/rc2.d directory so that it is executed by rc2 when the system enters (or leaves) multiuser mode.
 
-
-
-## Configuration
-
-Read and edit `config/app.php` and setup the 'Datasources' and any other
-configuration relevant for your application.
