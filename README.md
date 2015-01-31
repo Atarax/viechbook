@@ -55,6 +55,11 @@ This is an unstable repository and should be treated as an alpha.
 
 # Requirements: Ubuntu 12.04 Server, SSH-Root Access
 
+
+# strang ovh stuff
+
+sudo ifconfig lo 127.0.0.1 netmask 255.0.0.0 up
+
 # Kill Apache2 if existent
 # -------------------
 
@@ -70,15 +75,15 @@ sudo apt-get install python-software-properties
 sudo add-apt-repository ppa:ondrej/php5
 sudo apt-get update
 
-sudo apt-get install mysql-server mysql-client php5 php5-fpm php5-mysql nginx git php5-dev libpcre3-dev gcc make libpcre3-dev php-pear pkg-config libtool build-essential autoconf automake uuid-dev php5-zmq
+sudo apt-get install mysql-server mysql-client php5 php5-fpm php5-mysql nginx git php5-dev libpcre3-dev gcc make libpcre3-dev php-pear pkg-config libtool build-essential autoconf automake uuid-dev 
 
 
 # Compile Phalcon:
 # -------------------
 
-git clone --depth=1 git://github.com/phalcon/cphalcon.git
-cd cphalcon/build
-sudo ./install
+	git clone --depth=1 git://github.com/phalcon/cphalcon.git
+	cd cphalcon/build
+	sudo ./install
 
 # Add a file called 30-phalcon.ini in /etc/php5/conf.d/ with this content:
 # extension=phalcon.so
@@ -96,7 +101,7 @@ cd
 wget http://download.zeromq.org/zeromq-4.0.5.tar.gz
 tar -xvf zeromq-4.0.5.tar.gz 
 cd zeromq-4.0.5
-./configure
+./configure	
 make
 sudo make install
 
@@ -173,12 +178,21 @@ cd viechbook/
 # Application Configuration
 # -------------------
 
-adjust values in app/config.ini and in app/environment.ihi
+adjust values in app/config.ini and in app/environment.ini
 enable short tags!!
 
 # Ratchet-server (theViech) setup:
 # -------------------
 
 sudo ./installTheViechService.sh
+
+# Ratchet-server (theViech) setup:
+# -------------------
+
+# seems to be necessary for ovh.net vm configuration (ubuntu 12.02)
+
+sudo update-rc.d nginx defaults
+sudo update-rc.d mysql defaults
+sudo update-rc.d php5-fpm defaults	
 
 
