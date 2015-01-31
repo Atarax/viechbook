@@ -63,7 +63,14 @@ sudo apt-get remove apache2*
 # Install Packages:
 # -------------------
 
-sudo apt-get install mysql-server mysql-client php5 php5-fpm php5-mysql nginx git php5-dev libpcre3-dev gcc make php5-dev libpcre3-dev
+# preparation for php 5.5 instead of 5.3
+sudo apt-get update
+
+sudo apt-get install python-software-properties
+sudo add-apt-repository ppa:ondrej/php5
+sudo apt-get update
+
+sudo apt-get install mysql-server mysql-client php5 php5-fpm php5-mysql nginx git php5-dev libpcre3-dev gcc make libpcre3-dev php-pear pkg-config libtool build-essential autoconf automake uuid-dev php5-zmq
 
 
 # Compile Phalcon:
@@ -78,6 +85,25 @@ sudo ./install
 
 echo 'extension=phalcon.so' | sudo tee /etc/php5/fpm/conf.d/30-phalcon.ini > /dev/null
 sudo service php5-fpm restart
+
+
+# Install zero-mq:
+# -------------------
+
+# http://php.net/manual/de/zmq.setup.php
+
+cd
+wget http://download.zeromq.org/zeromq-4.0.5.tar.gz
+tar -xvf zeromq-4.0.5.tar.gz 
+cd zeromq-4.0.5
+./configure
+make
+sudo make install
+
+sudo sed -i 'extension=zmq.so' /etc/php5/fpm/php.ini
+sudo sed -i 'extension=zmq.so' /etc/php5/cli/php.ini
+sudo service php5-fpm restart
+
 
 
 # Configure Nginx:
@@ -104,25 +130,32 @@ sudo service php5-fpm restart
 		 }
 	}
 
-# be sure that listen ist set to this 'listen = /var/run/php5-fpm.sock' in '/etc/php5/fpm/pool.d/www.conf' 
+# Configure Fpm:
+# -------------------
 
+# set following value
 
+# listen = /var/run/php5-fpm.sock
 
-Install zero-mq:
--------------------
-http://php.net/manual/de/zmq.setup.php
+# listen.owner = www-data
+# listen.group = www-data
+# listen.mode = 0660
 
+sudo service php5-fpm restart
 
-1. Download [Composer](http://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar install`.
+# Clone code
+# -------------------
 
-If Composer is installed globally, run
-```bash
-composer create-project --prefer-dist -s dev cakephp/app [app_name]
-```
+git clone https://github.com/Atarax/viechbook.git
+cd viechbook/
 
-You should now be able to visit the path to where you installed the app and see
-the setup traffic lights.
+# Run composer
+# -------------------
+
+./composer.phar self-update
+./composer.phar update
+./composer.phar install
+
 
 ## Ratchet-server (theViech) setup:
 
