@@ -26,16 +26,19 @@ class UsersController extends ControllerBase {
 			$user->setPassword( $password );
 			$user->setModified();
 
-			$success = $user->save();
+			$user->save();
 
-            if($success) {
+			$errors = $user->getMessages();
+
+            if( empty($errors) ) {
 				$this->flash->success( 'The user has been saved' );
 
-				return $this->dispatcher->forward(array(
-					'controller' => 'index',
-					'action' => 'index'
+				$this->dispatcher->forward(array(
+					'controller' => 'session',
+					'action' => 'login'
 				));
 
+				return;
             }
 
 			$this->flash->error( $user->getMessages() );

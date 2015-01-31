@@ -109,26 +109,40 @@ sudo service php5-fpm restart
 # Configure Nginx:
 # -------------------
 
-	server {
-		 server_name viechbook.dev;
-		 listen   80;
+server {
+    listen   80;
+    server_name viechbook.stage;
 
-		 # root directive should be global
-		 root   /home/cite/viechbook/webroot;
-		 index  index.php;
+    index index.php index.html index.htm;
+    set $root_path '/home/cite/viechbook/webroot/';
+    root $root_path;
 
-		 location / {
-		     try_files $uri $uri/ /index.php?$args;
-		 }
+    try_files $uri $uri/ @rewrite;
 
-		 location ~ \.php$ {
-		     try_files $uri =404;
-		     include /etc/nginx/fastcgi_params;
-		     fastcgi_pass    unix:/var/run/php5-fpm.sock;
-		     fastcgi_index   index.php;
-		     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-		 }
-	}
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?_url=/$1;
+    }
+
+    location ~ \.php {
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_index /index.php;
+
+        include /etc/nginx/fastcgi_params;
+
+        fastcgi_split_path_info       ^(.+\.php)(/.+)$;
+        fastcgi_param PATH_INFO       $fastcgi_path_info;
+        fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    location ~* ^/(css|img|js|flv|swf|download)/(.+)$ {
+        root $root_path;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
 
 # Configure Fpm:
 # -------------------
@@ -160,7 +174,7 @@ cd viechbook/
 # -------------------
 
 adjust values in app/config.ini and in app/environment.ihi
-enable short tags
+enable short tags!!
 
 ## Ratchet-server (theViech) setup:
 
