@@ -72,6 +72,7 @@ class ConversationsController extends ControllerBase {
 
         foreach($currentUser->getConversations(['order' => 'Viechbook\\Model\\Conversations.modified desc']) as $conversation) {
 
+			// TODO make more efficient by using query parameters $messages
 			$messages = $conversation->getUserMessages();
 
             /** @var Messages $lastMessage

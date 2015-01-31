@@ -31,12 +31,12 @@ class MessagesController extends ControllerBase {
     public function get_by_conversationAction($conversationId = null) {
 		/** @var Messages[] $messages */
 		$messages = Messages::find( ['conversation_id=' . $conversationId ] );
-		$users = [];
 
+		$users = [];
 		$result = [];
 
 		foreach($messages as $index => $message) {
-			/** @var Message $message */
+			/** @var Messages $message */
 			$userId = $message->getUserId();
 
 			/** @var Users  $user */
@@ -47,7 +47,6 @@ class MessagesController extends ControllerBase {
 				$user = $users[$userId];
 			}
 
-			$row = new \stdClass();
 			$row = $message->toArray();
 
 			$row['user'] = $user->toArray();
@@ -55,7 +54,7 @@ class MessagesController extends ControllerBase {
 			$result[] = $row;
 		}
 
-        echo json_encode( $result);
+        echo json_encode($result);
 
 		// Only output json
 		$this->view->setRenderLevel(View::LEVEL_NO_RENDER);

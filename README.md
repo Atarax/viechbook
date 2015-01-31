@@ -53,8 +53,65 @@ This is an unstable repository and should be treated as an alpha.
 
 ## Installation
 
+# Requirements: Ubuntu 12.04 Server, SSH-Root Access
+
+# Kill Apache2 if existent
+# -------------------
+
+sudo apt-get remove apache2*
+
+# Install Packages:
+# -------------------
+
+sudo apt-get install mysql-server mysql-client php5 php5-fpm php5-mysql nginx git php5-dev libpcre3-dev gcc make php5-dev libpcre3-dev
+
+
+# Compile Phalcon:
+# -------------------
+
+git clone --depth=1 git://github.com/phalcon/cphalcon.git
+cd cphalcon/build
+sudo ./install
+
+# Add a file called 30-phalcon.ini in /etc/php5/conf.d/ with this content:
+# extension=phalcon.so
+
+echo 'extension=phalcon.so' | sudo tee /etc/php5/fpm/conf.d/30-phalcon.ini > /dev/null
+sudo service php5-fpm restart
+
+
+# Configure Nginx:
+# -------------------
+
+	server {
+		 server_name viechbook.dev;
+		 listen   80;
+
+		 # root directive should be global
+		 root   /home/cite/viechbook/webroot;
+		 index  index.php;
+
+		 location / {
+		     try_files $uri $uri/ /index.php?$args;
+		 }
+
+		 location ~ \.php$ {
+		     try_files $uri =404;
+		     include /etc/nginx/fastcgi_params;
+		     fastcgi_pass    unix:/var/run/php5-fpm.sock;
+		     fastcgi_index   index.php;
+		     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		 }
+	}
+
+# be sure that listen ist set to this 'listen = /var/run/php5-fpm.sock' in '/etc/php5/fpm/pool.d/www.conf' 
+
+
+
 Install zero-mq:
+-------------------
 http://php.net/manual/de/zmq.setup.php
+
 
 1. Download [Composer](http://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
 2. Run `php composer.phar install`.

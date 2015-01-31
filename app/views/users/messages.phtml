@@ -1,3 +1,6 @@
+<script src="/vendor/timeago/js/jquery.timeago.js"></script>
+<script src="/vendor/jcrop/js/jquery.Jcrop.min.js"></script>
+
 <div class="area-top clearfix">
     <div class="pull-left header">
         <h3 class="title">
@@ -43,7 +46,7 @@
 
                 <div class="box-footer flat padded">
                     <div class="input-group addon-right">
-                        <input type="text" id="chat-input" style="width:95%" autocomplete="off" placeholder="type here..."/>
+                        <input type="text" id="chat-input" style="width:95%;" autocomplete="off" placeholder="type here..."/>
                         <ul class="input-group-addon">
                             <li>
                         <span class="pull-right">
@@ -146,12 +149,19 @@ function updateChatBox( conversationId ) {
 				"html": "<strong>" + message.user.username + "</strong>"
 			});
 
+			var timeSpan = $("<span/>", {
+				"class": "time",
+				"text":  jQuery.timeago( message.created )
+			});
+
+			nameSpan.append(timeSpan);
+
 			infoDiv.append(nameSpan);
 
 			li.append(infoDiv);
 
 			var escaped = $("<div/>").text(message.content).html();
-			infoDiv.after( escaped );
+			infoDiv.after( escaped ); 
 
 
 			chatBox.append(li);
