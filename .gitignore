@@ -4,4 +4,4 @@ logs/
 vendor/
 plugins/
 *~
-
+app/config/environment.php
