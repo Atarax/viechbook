@@ -18,6 +18,7 @@ use Viechbook\Model\Exception\SaveFailed;
 
 
 class ModelBase extends Model {
+	public $id;
 	public $created;
 	public $modified;
 

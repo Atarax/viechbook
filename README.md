@@ -58,7 +58,8 @@ This is an unstable repository and should be treated as an alpha.
 
 # strang ovh stuff
 
-sudo ifconfig lo 127.0.0.1 netmask 255.0.0.0 up
+add line "ifconfig lo 127.0.0.1 netmask 255.0.0.0 up" to /etc/rc.local
+
 
 # Kill Apache2 if existent
 # -------------------
@@ -171,7 +172,7 @@ cd viechbook/
 # Run composer
 # -------------------
 
-./composer.phar self-update
+./composer.phar self-update	
 ./composer.phar update
 ./composer.phar install
 

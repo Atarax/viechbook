@@ -11,12 +11,9 @@ use Phalcon\Mvc\Model;
  */
 
 class Messages extends ModelBase {
-	public $id;
 	public $content;
 	public $user_id;
 	public $conversation_id;
-	public $modified;
-	public $created;
 	public $read;
 
 	/**

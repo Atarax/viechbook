@@ -1,7 +1,9 @@
 <?php
 
 namespace Viechbook\Controller;
+use Phalcon\Mvc\Model\Query;
 use Phalcon\Mvc\View;
+use Viechbook\Model\SecurityTokens;
 use Viechbook\Model\Users;
 
 /**
@@ -46,6 +48,7 @@ class UsersController extends ControllerBase {
 
 
     public function editAction($id = null) {
+		/** @var Users $user */
 		$user = Users::findFirst($id);
 		$auth = $this->session->get('auth');
 
@@ -81,6 +84,42 @@ class UsersController extends ControllerBase {
     }
 
     public function messagesAction() {}
+
+	public function reset_passwordAction($tokenValue) {
+
+		if( $this->request->isPost() ) {
+			// Instantiate the Query
+			$token = SecurityTokens::findFirst([
+				'token = :token:',
+				'bind' => ['token' => $tokenValue]
+			]);
+
+			if($token) {
+				$userId = intval($token->getPayload());
+				$user = Users::findFirst($userId);
+
+				$password = $this->security->hash( $this->request->getPost('password') );
+
+				$user->setPassword($password);
+				$user->save();
+
+				$token->delete();
+
+				$this->flash->success('Successfully updated password!');
+
+				$this->dispatcher->forward([
+					'controller' => 'session',
+					'action' => 'login'
+				]);
+			}
+			else {
+				$this->flash->error('Invalid token, sorry!');
+			}
+		}
+
+		$this->view->setRenderLevel(View::LEVEL_LAYOUT);
+		$this->view->setVar('token', $tokenValue);
+	}
 
     public function profileAction($id) {
         $user = Users::findFirst($id);

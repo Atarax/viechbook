@@ -14,7 +14,6 @@ use Phalcon\Mvc\Model\ValidationFailed;
  * @property boolean isGroup
  */
 class Conversations extends ModelBase {
-	public $id;
 
 	/**
 	 * @return int
