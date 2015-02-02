@@ -55,6 +55,7 @@ class SessionController extends ControllerBase
 
 	public function loginAction() {
 		// Shows only the view related to the action
+		$this->flash->notice('Our Security Component has changed, so you need to update your password, i have sent you a link. If you have done this already, ignore this message, thanks!');
 		$this->view->setRenderLevel(View::LEVEL_LAYOUT);
 	}
 
