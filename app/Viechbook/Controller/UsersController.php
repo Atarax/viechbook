@@ -17,33 +17,48 @@ class UsersController extends ControllerBase {
 
     public function index() {}
 
-    public function addAction() {
+    public function addAction($token) {
         if ($this->request->isPost()) {
-            $user = new Users();
+			/** @var SecurityTokens $token */
+			$token = SecurityTokens::findFirst([
+				'token = :token:',
+				'bind' => ['token' => $token]
+			]);
 
-			$password = $this->security->hash( $this->request->getPost('password') );
+			/**
+			 * Only users with token are allowed to register
+			 */
+			if($token && $token->getPayload() == 'signup') {
 
-			$user->setEmail( $this->request->getPost('email') );
-			$user->setUsername( $this->request->getPost('username') );
-			$user->setPassword( $password );
+				$user = new Users();
 
-			$user->save();
+				$password = $this->security->hash( $this->request->getPost('password') );
 
-			$errors = $user->getMessages();
+				$user->setEmail( $this->request->getPost('email') );
+				$user->setUsername( $this->request->getPost('username') );
+				$user->setPassword( $password );
 
-            if( empty($errors) ) {
-				$this->flash->success( 'The user has been saved' );
+				$user->save();
 
-				$this->dispatcher->forward(array(
-					'controller' => 'session',
-					'action' => 'login'
-				));
+				$errors = $user->getMessages();
 
-				return;
-            }
+				if( empty($errors) ) {
+					/** success! */
+					$token->delete();
 
-			$this->flash->error( $user->getMessages() );
+					$this->flash->success( 'Welcome to Viechbook' );
+				}
+			}
+
+			$this->dispatcher->forward(array(
+				'controller' => 'session',
+				'action' => 'login'
+			));
+
+			return;
         }
+
+		$this->view->setVar('token', $token);
     }
 
 
