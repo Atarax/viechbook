@@ -128,7 +128,12 @@ class UsersController extends ControllerBase {
 		]);
 
 		if( !$token ) {
-			throw new Exception('Invalid token, sorry!');
+			$this->flash->error('Invalid token, sorry!');
+
+			$this->dispatcher->forward([
+				'controller' => 'index',
+				'action' => 'index'
+			]);
 		}
 
 		$userId = intval($token->getPayload());
