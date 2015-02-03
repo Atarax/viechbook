@@ -134,6 +134,8 @@ class UsersController extends ControllerBase {
 				'controller' => 'index',
 				'action' => 'index'
 			]);
+
+			return;
 		}
 
 		$userId = intval($token->getPayload());
