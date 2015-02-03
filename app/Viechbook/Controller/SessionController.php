@@ -40,9 +40,10 @@ class SessionController extends ControllerBase
 
 					return;
 				}
+				else {
+					$this->flash->error('Wrong email/password');
+				}
 			}
-
-			$this->flash->error('Wrong email/password');
 		}
 
 		//Forward to the login form again
