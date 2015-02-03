@@ -1,6 +1,7 @@
 <?php
 
 namespace Viechbook\Controller;
+use Phalcon\Exception;
 use Phalcon\Mvc\Model\Query;
 use Phalcon\Mvc\View;
 use Viechbook\Model\SecurityTokens;
@@ -61,6 +62,25 @@ class UsersController extends ControllerBase {
 		$this->view->setVar('token', $token);
     }
 
+	public function get_password_reset_linksAction() {
+		$currentUser = $this->session->get('auth');
+
+		if($currentUser['id'] != 1) {
+			die();
+		}
+		$users = Users::find();
+
+		/** @var Users $user */
+		foreach($users as $user) {
+			$token = new SecurityTokens();
+			$token->setPayload($user->getId());
+			$token->save();
+
+			echo '<a href="https://viechbook.com/users/reset_password/' . $token->getToken() . '">' . $user->getUsername() . '</a><br>';
+		}
+
+		die();
+	}
 
     public function editAction($id = null) {
 		/** @var Users $user */
@@ -101,39 +121,39 @@ class UsersController extends ControllerBase {
     public function messagesAction() {}
 
 	public function reset_passwordAction($tokenValue) {
+		// Instantiate the Query
+		$token = SecurityTokens::findFirst([
+			'token = :token:',
+			'bind' => ['token' => $tokenValue]
+		]);
+
+		if( !$token ) {
+			throw new Exception('Invalid token, sorry!');
+		}
+
+		$userId = intval($token->getPayload());
+		$user = Users::findFirst($userId);
 
 		if( $this->request->isPost() ) {
-			// Instantiate the Query
-			$token = SecurityTokens::findFirst([
-				'token = :token:',
-				'bind' => ['token' => $tokenValue]
+
+			$password = $this->security->hash( $this->request->getPost('password') );
+
+			$user->setPassword($password);
+			$user->save();
+
+			$token->delete();
+
+			$this->flash->success('Successfully updated password!');
+
+			$this->dispatcher->forward([
+				'controller' => 'session',
+				'action' => 'login'
 			]);
-
-			if($token) {
-				$userId = intval($token->getPayload());
-				$user = Users::findFirst($userId);
-
-				$password = $this->security->hash( $this->request->getPost('password') );
-
-				$user->setPassword($password);
-				$user->save();
-
-				$token->delete();
-
-				$this->flash->success('Successfully updated password!');
-
-				$this->dispatcher->forward([
-					'controller' => 'session',
-					'action' => 'login'
-				]);
-			}
-			else {
-				$this->flash->error('Invalid token, sorry!');
-			}
 		}
 
 		$this->view->setRenderLevel(View::LEVEL_LAYOUT);
 		$this->view->setVar('token', $tokenValue);
+		$this->view->setVar('user', $user);
 	}
 
     public function profileAction($id) {

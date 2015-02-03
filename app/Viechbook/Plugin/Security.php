@@ -69,9 +69,9 @@ class Security extends PluginBase
 
 		//Private area resources (backend)
 		$privateResources = array(
-			'pages' => array('users'),
-			'messages' => array('get_by_conversation'),
-			'users' => array('edit', 'list_all', 'get_notifications', 'profile', 'messages', 'add'),
+			'pages' 		=> array('users'),
+			'messages' 		=> array('get_by_conversation'),
+			'users' 		=> array('edit', 'list_all', 'get_notifications', 'profile', 'messages', 'add', 'get_password_reset_links'),
 			'conversations' => array('list_all', 'get_participants', 'add_message','add_message_by_receiver', 'clear_notifications'),
 		);
 		foreach ($privateResources as $resource => $actions) {

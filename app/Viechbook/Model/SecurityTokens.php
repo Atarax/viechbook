@@ -16,6 +16,13 @@ class SecurityTokens extends ModelBase {
 
 	public $token;
 	public $payload;
+	const TOKEN_LENGTH = 32;
+
+	public function beforeValidationOnCreate() {
+		if($this->token == null) {
+			$this->setToken( self::getRandomTokenString() );
+		}
+	}
 
 	/**
 	 * @return String
@@ -45,5 +52,9 @@ class SecurityTokens extends ModelBase {
 	 */
 	public function setToken($token) {
 		$this->token = $token;
+	}
+
+	public function getRandomTokenString() {
+		return substr( sha1( time() ), -self::TOKEN_LENGTH);
 	}
 }
