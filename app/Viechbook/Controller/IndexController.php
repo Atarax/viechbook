@@ -9,11 +9,24 @@ namespace Viechbook\Controller;
  */
 
 class IndexController extends ControllerBase {
+	/**
+	 * @return void
+	 */
 	public function indexAction() {
-		// default index
-		return $this->dispatcher->forward(array(
-			'controller' => 'pages',
-			'action' => 'users'
-		));
+
+		if( $this->session->get('auth') ){
+
+			$this->dispatcher->forward(array(
+				'controller' => 'pages',
+				'action' => 'users'
+			));
+		}
+		else {
+
+			$this->dispatcher->forward(array(
+				'controller' => 'session',
+				'action' => 'login'
+			));
+		}
 	}
 } 

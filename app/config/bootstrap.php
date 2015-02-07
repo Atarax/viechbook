@@ -74,6 +74,8 @@ try {
 		));
 	});
 
+	$dispatcher = null;
+
 	// set custom dispatcher for security-handling
 	$di->set('dispatcher',
 		/**
@@ -105,6 +107,10 @@ try {
 	echo $application->handle()->getContent();
 
 } catch(\Phalcon\Exception $e) {
-	echo "PhalconException: ", $e->getMessage();
+
+	if(VIECHBOOK_ENV != 'LIVE') {
+		echo "PhalconException: ", $e->getMessage();
+	}
+
 	file_put_contents('/home/cite/viechbook/logs/phalcon_errors.log', $e->getMessage() . '/n', FILE_APPEND );
 }

@@ -161,7 +161,7 @@ function updateChatBox( conversationId ) {
 			li.append(infoDiv);
 
 			var escaped = $("<div/>").text(message.content).html();
-			infoDiv.after( escaped ); 
+			infoDiv.after( escaped );
 
 
 			chatBox.append(li);
@@ -177,14 +177,6 @@ var currentConversationId = null;
 function updateConversationsBox() {
 	$.getJSON( "/conversations/list_all", function( response ) {
 		var conversations = response.conversations;
-
-		if(conversations.length == 0) {
-			addBoxNewsElement(
-				'conversations',
-				'No Conversations :(',
-				'Maybe you should talk to someone :P'
-			);
-		}
 
 		var conversationsContainer = $("#conversations");
 		conversationsContainer.html('');

@@ -7,12 +7,13 @@
  *
  */
 namespace Viechbook\Model;
+use Phalcon\Exception;
+use Phalcon\Mvc\Model\ValidationFailed;
 
 /**
  * @property boolean isGroup
  */
 class Conversations extends ModelBase {
-	public $id;
 
 	/**
 	 * @return int
@@ -75,6 +76,22 @@ class Conversations extends ModelBase {
 	 */
 	public function getUsers($parameters=null) {
 		return $this->getRelated('users', $parameters);
+	}
+
+	/**
+	 * check if the save went dine
+	 *
+	 * @throws Exception
+	 */
+	public function afterSave() {
+		$errors = $this->getMessages();
+
+		$message = 'Model method save of class: \'' . get_class($this) . '\' failed due to followin reasons: ';
+		$message .= implode(",\n", $errors);
+
+		if( !empty($errors) ) {
+			throw new ValidationFailed( $message );
+		}
 	}
 
 }

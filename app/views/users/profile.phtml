@@ -45,13 +45,13 @@
                     <i class="icon-comments-alt"></i>
                 </a>
             </li>
-            <? if($user['id'] == $currentUser['id']) { ?>
+            <?php if($user['id'] == $currentUser['id']) { ?>
                 <li class="action-nav-button">
                     <a href="/users/edit/<?php echo $user['id'] ?>" class="tip" title="" data-original-title="Edit">
                         <i class="icon-edit"></i>
                     </a>
                 </li>
-            <? } ?>
+            <?php } ?>
 
         </ul>
 	</div>

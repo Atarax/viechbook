@@ -7,6 +7,7 @@ use Viechbook\Library\TheViechNotifier;
 use Viechbook\Model\Conversations;
 use Viechbook\Model\ConversationsUsers;
 use Viechbook\Model\Messages;
+use Viechbook\Model\ModelBase;
 use Viechbook\Model\Notifications;
 use Viechbook\Model\Users;
 use ZMQContext;
@@ -42,16 +43,17 @@ class ConversationsController extends ControllerBase {
             $commonConversation = $this->getCommonConversation($receiver, $sender);
 
             if( is_null($commonConversation) ) {
-				$commonConversation = $this->createNewConversation($sender, $receiver);
+				$commonConversation = $this->createConversation($sender, $receiver);
             }
 
             $this->createMessage($commonConversation->getId(), $sender->getId());
 
             $this->flash->success( 'The message has been sent!' );
 
-			$this->dispatcher->forward(array(
-				'controller' => 'index',
-				'action' => 'index'
+			return $this->dispatcher->forward(array(
+				'controller' => 'users',
+				'action' => 'messages',
+				'parameters' => [$commonConversation->getId()]
 			));
 
 		}
@@ -152,11 +154,6 @@ class ConversationsController extends ControllerBase {
 	 */
     private function getCommonConversation(Users $receiver,Users $sender){
         $commonConversation = null;
-		/*
-		$user = Users::findFirst(array(
-			"username = :username: AND password = :password: ",
-			"bind" => array('username' => $username, 'password' => $password)
-		));*/
 
 		$receiverConversations = ConversationsUsers::find([
 			'user_id = :user_id: ',
@@ -198,11 +195,11 @@ class ConversationsController extends ControllerBase {
      * @param Users $receiver
      * @return Conversations
      */
-    private function createNewConversation($sender, $receiver) {
+    private function createConversation($sender, $receiver) {
         /** create new conversation */
 		$newConversation = new Conversations();
 
-        $newConversation->setIsGroup(false);
+        $newConversation->setIsGroup(0);
 		$newConversation->save();
 
 		/** link new conversation to both users */

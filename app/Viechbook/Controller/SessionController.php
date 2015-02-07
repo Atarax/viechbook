@@ -25,25 +25,21 @@ class SessionController extends ControllerBase
 			$username = $this->request->getPost('username');
 			$password = $this->request->getPost('password');
 
-			$password = sha1($password);
+			$user = Users::findFirstByUsername($username);
 
-			//Find the user in the database
-			$user = Users::findFirst(array(
-				"username = :username: AND password = :password: ",
-				"bind" => array('username' => $username, 'password' => $password)
-			));
-			if ($user != false) {
+			if($user) {
+				if ($this->security->checkHash($password, $user->password)) {
+					$this->_registerSession($user);
 
-				$this->_registerSession($user);
+					$this->flash->success('Welcome ' . $user->getUsername());
 
-				$this->flash->success('Welcome ' . $user->getUsername());
+					$this->dispatcher->forward(array(
+						'controller' => 'index',
+						'action' => 'index'
+					));
 
-				$this->dispatcher->forward(array(
-					'controller' => 'index',
-					'action' => 'index'
-				));
-
-				return;
+					return;
+				}
 			}
 
 			$this->flash->error('Wrong email/password');
@@ -66,8 +62,10 @@ class SessionController extends ControllerBase
 		$this->session->set('auth', null);
 
 		$this->dispatcher->forward(array(
-			'controller' => 'session',
-			'action' => 'login'
+			'controller' => 'index',
+			'action' => 'index'
 		));
+
+		return;
 	}
 }
