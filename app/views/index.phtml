@@ -85,7 +85,7 @@
 <div class="primary-sidebar">
 
 	<!-- Main nav -->
-	<a class="navbar-brand" href="#" style="padding-top:0px;">
+	<a class="navbar-brand" href="#" style="padding-top:0px; width: 160px; height: 160px;">
 		<?php echo $this->tag->image( array("img/soundviech.jpg", 'style' => "max-width: 95%; height: auto;") ); ?>
 	</a>
 	<ul class="nav navbar-collapse collapse navbar-collapse-primary">
@@ -99,65 +99,10 @@
 	</ul>
 </div>
 
-<div class="main-content">
-	<div class="container padded">
-		<?php echo $this->getContent() ?>
-	</div>
-</div>
-
 <script type="text/javascript">
-	var theViech = function() {
-		var registrations = [];
-
-		this.register = function(type, callback) {
-			registrations.push( {type: type, callback: callback} );
-		};
-
-		this.receive = function(message) {
-			$.each(registrations, function (index, registration) {
-				if( registration.type == message.type ) {
-					registration.callback(message);
-				}
-			});
-		};
-	};
-
-
-	var viech = new theViech();
-
-	var connection = new ab.Session('<?php echo RATCHET_SERVER_ADRESS; ?>',
-		function() {
-			connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
-				viech.receive(data);
-				console.log('New article published to category "' + topic + '" : ' + data);
-			});
-
-			console.log('Connected to the big viech...');
-		},
-		function() {
-			console.warn('WebSocket connection closed');
-		},
-		{'skipSubprotocolCheck': true}
-	);
-
-	$(document).ready( function() {
-		updateUserMenuNotifications();
-	});
-
-	/**
-	 * @TODO make register take an array instead or both?
-	 **/
-	viech.register(<?= Notifications::TYPE_NOTIFICATION_CHANGED ?> , function() {
-		updateUserMenuNotifications();
-	});
-
-	viech.register(<?= Notifications::TYPE_NEW_MESSAGE ?> , function() {
-		updateUserMenuNotifications();
-	});
-
 	var updateUserMenuNotifications = function() {
 		$.getJSON( "/users/get_notifications/" , function( notifications ) {
-			var totalNotifications = 0;
+			var totalNotifications;
 			var totalUpdatedConversations = 0;
 
 			$.each( notifications, function(index, notification) {
@@ -176,7 +121,6 @@
 			$("#profile-conversation-notification-count").text(totalUpdatedConversations > 0 ? totalUpdatedConversations : '');
 
 			/**
-			 * CAAAARE! we are setting the title here xD
 			 */
 			var title;
 
@@ -189,7 +133,70 @@
 
 			$(document).prop('title', title);
 		});
-	}
+	};
+
+	var theViech = function() {
+		var registrations = [];
+
+		this.register = function(type, callback) {
+			registrations.push( {type: type, callback: callback} );
+		};
+
+		this.receive = function(message) {
+			$.each(registrations, function (index, registration) {
+				if( registration.type == message.type ) {
+					registration.callback(message);
+				}
+			});
+		};
+	};
+
+	var viech;
+	var connection;
+
+	$(document).ready( function() {
+
+		viech = new theViech();
+
+		connection = new ab.Session('<?php echo RATCHET_SERVER_ADRESS; ?>',
+			function() {
+				connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
+					viech.receive(data);
+					console.log('New article published to category "' + topic + '" : ' + data);
+				});
+
+				console.log('Connected to the big viech...');
+			},
+			function() {
+				console.warn('WebSocket connection closed');
+			},
+			{'skipSubprotocolCheck': true}
+		);
+
+		updateUserMenuNotifications();
+
+		/**
+		 * @TODO make register take an array instead or both?
+		 **/
+		viech.register(<?= Notifications::TYPE_NOTIFICATION_CHANGED ?> , function() {
+			updateUserMenuNotifications();
+		});
+
+		viech.register(<?= Notifications::TYPE_NEW_MESSAGE ?> , function() {
+			updateUserMenuNotifications();
+		});
+
+
+	});
+
 </script>
+
+<div class="main-content">
+	<div class="container padded">
+		<?php echo $this->getContent() ?>
+	</div>
+</div>
+
+
 </body>
 </html>
