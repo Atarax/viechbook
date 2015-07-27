@@ -1,6 +1,6 @@
 <?php
 
-namespace Viechbook\Model;
+namespace Parvati\Model;
 use Phalcon\Exception;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Behavior\Timestampable;
@@ -17,7 +17,7 @@ use Viechbook\Model\Exception\SaveFailed;
  */
 
 
-class ModelBase extends Model {
+class ParvatiModelBase extends Model {
 	public $id;
 	public $created;
 	public $modified;

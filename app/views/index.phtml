@@ -102,7 +102,7 @@
 <script type="text/javascript">
 	var updateUserMenuNotifications = function() {
 		$.getJSON( "/users/get_notifications/" , function( notifications ) {
-			var totalNotifications = 0;
+			var totalNotifications;
 			var totalUpdatedConversations = 0;
 
 			$.each( notifications, function(index, notification) {
