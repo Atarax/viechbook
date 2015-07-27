@@ -86,7 +86,7 @@ class Security extends PluginBase
 		//Public area resources (frontend)
 		$publicResources = array(
 			'index' => array('index'),
-			'users' => array('reset_password'),
+			'users' => array('reset_password', 'add'),
 			'session' => array('login', 'logout', 'start')
 		);
 
