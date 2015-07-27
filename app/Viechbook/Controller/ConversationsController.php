@@ -24,6 +24,7 @@ class ConversationsController extends ControllerBase {
 	/**
 	 * basically sends a message to a given receiver, taking into account that there might not exists a conversation yet
 	 * @param $receiverId
+	 * @return int
 	 * @throws Exception
 	 */
     public function add_message_by_receiverAction($receiverId) {
@@ -47,6 +48,7 @@ class ConversationsController extends ControllerBase {
             }
 
             $this->createMessage($commonConversation->getId(), $sender->getId());
+			$this->notifyParticipants($commonConversation, Notifications::TYPE_NEW_MESSAGE);
 
             $this->flash->success( 'The message has been sent!' );
 
