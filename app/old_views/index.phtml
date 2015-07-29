@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0">
+
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-57298752-1', 'auto');
+		ga('send', 'pageview');
+
+	</script>
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,800">
+
+	<!-- Use title if it's in the page YAML frontmatter -->
+	<title>Viechbook</title>
+
+	<link href="/vendor/core-admin-template/stylesheets/application.css" media="screen" rel="stylesheet" type="text/css" />
+
+	<script src="/vendor/core-admin-template/javascripts/application.js" type="text/javascript"></script>
+	<script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
+	<script src="https://autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
+
+
+</head>
+
+
+
+<body>
+<nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+	<!-- Brand and toggle get grouped for better mobile display -->
+	<div class="navbar-header">
+		<a class="navbar-brand" href="/" style="margin-left: 37px;">Viechbook</a>
+	</div>
+
+	<div style="text-align: center; padding-top: 15px; position: fixed; left:45%; display: block; text-align: center;">
+		The mission is the message is sound...
+	</div>
+
+	<!-- Collect the nav links, forms, and other content for toggling -->
+	<div class="collapse navbar-collapse navbar-collapse-top">
+		<div class="navbar-right">
+
+			<ul class="nav navbar-nav navbar-left">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle dropdown-avatar" data-toggle="dropdown">
+              <span>
+                <?php use Viechbook\Model\Notifications;
+
+				echo $this->tag->image( array('img/avatar1.jpg', 'class' => 'menu-avatar') ) ?><span><?php echo $currentUser["username"] ?><i class="icon-caret-down"></i></span>
+                <span id="profile-notification-count" class="badge badge-dark-red"></span>
+              </span>
+					</a>
+					<ul class="dropdown-menu">
+
+						<!-- the first element is the one with the big avatar, add a with-image class to it -->
+						<?php /*
+                        <li><a href="#"><i class="icon-user"></i> <span>Profile</span></a></li>
+                        <li><a href="#"><i class="icon-cog"></i> <span>Settings</span></a></li>
+ 						*/ ?>
+						<li><a href="/users/messages"><i class="icon-envelope"></i> <span>Messages</span> <span id="profile-conversation-notification-count" class="label label-dark-red pull-right"></span></a></li>
+						<li><a href="/users/profile/<?php echo $currentUser['id'] ?>"><i class="icon-user"></i> <span>Profile</span></a></li>
+						<li><a href="/session/logout"><i class="icon-off"></i> <span>Logout</span></a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+
+
+
+
+	</div><!-- /.navbar-collapse -->
+
+
+</nav>
+<div class="sidebar-background">
+	<div class="primary-sidebar-background"></div>
+</div>
+
+<div class="primary-sidebar">
+
+	<!-- Main nav -->
+	<a class="navbar-brand" href="#" style="padding-top:0px; width: 160px; height: 160px;">
+		<?php echo $this->tag->image( array("img/soundviech.jpg", 'style' => "max-width: 95%; height: auto;") ); ?>
+	</a>
+	<ul class="nav navbar-collapse collapse navbar-collapse-primary">
+
+		<li class="">
+			<a href="/pages/users">
+				<i class="icon-user icon-2x"></i>
+				<span>Users</span>
+			</a>
+		</li>
+	</ul>
+</div>
+
+<script type="text/javascript">
+	var updateUserMenuNotifications = function() {
+		$.getJSON( "/users/get_notifications/" , function( notifications ) {
+			var totalNotifications;
+			var totalUpdatedConversations = 0;
+
+			$.each( notifications, function(index, notification) {
+				if( notification.type == <?= Notifications::TYPE_NEW_MESSAGE ?> ) {
+					totalUpdatedConversations++;
+				}
+			});
+
+			/**
+			 * only got these atm
+			 * @type {number}
+			 */
+			totalNotifications = totalUpdatedConversations;
+
+			$("#profile-notification-count").text( totalNotifications > 0 ? totalNotifications : '' );
+			$("#profile-conversation-notification-count").text(totalUpdatedConversations > 0 ? totalUpdatedConversations : '');
+
+			/**
+			 */
+			var title;
+
+			if(totalNotifications > 0) {
+				title  = '(' + totalNotifications + ') Viechbook';
+			}
+			else {
+				title = 'Viechbook';
+			}
+
+			$(document).prop('title', title);
+		});
+	};
+
+	var theViech = function() {
+		var registrations = [];
+
+		this.register = function(type, callback) {
+			registrations.push( {type: type, callback: callback} );
+		};
+
+		this.receive = function(message) {
+			$.each(registrations, function (index, registration) {
+				if( registration.type == message.type ) {
+					registration.callback(message);
+				}
+			});
+		};
+	};
+
+	var viech;
+	var connection;
+
+	$(document).ready( function() {
+
+		viech = new theViech();
+
+		connection = new ab.Session('<?php echo RATCHET_SERVER_ADRESS; ?>',
+			function() {
+				connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
+					viech.receive(data);
+					console.log('New article published to category "' + topic + '" : ' + data);
+				});
+
+				console.log('Connected to the big viech...');
+			},
+			function() {
+				console.warn('WebSocket connection closed');
+			},
+			{'skipSubprotocolCheck': true}
+		);
+
+		updateUserMenuNotifications();
+
+		/**
+		 * @TODO make register take an array instead or both?
+		 **/
+		viech.register(<?= Notifications::TYPE_NOTIFICATION_CHANGED ?> , function() {
+			updateUserMenuNotifications();
+		});
+
+		viech.register(<?= Notifications::TYPE_NEW_MESSAGE ?> , function() {
+			updateUserMenuNotifications();
+		});
+
+
+	});
+
+</script>
+
+<div class="main-content">
+	<div class="container padded">
+		<?php echo $this->getContent() ?>
+	</div>
+</div>
+
+
+</body>
+</html>

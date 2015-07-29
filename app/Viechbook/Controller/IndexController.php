@@ -14,14 +14,7 @@ class IndexController extends ControllerBase {
 	 */
 	public function indexAction() {
 
-		if( $this->session->get('auth') ){
-
-			$this->dispatcher->forward(array(
-				'controller' => 'pages',
-				'action' => 'users'
-			));
-		}
-		else {
+		if( !$this->session->get('auth') ){
 
 			$this->dispatcher->forward(array(
 				'controller' => 'session',

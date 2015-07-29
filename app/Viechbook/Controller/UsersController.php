@@ -176,7 +176,10 @@ class UsersController extends ControllerBase {
     public function list_allAction() {
         $users = Users::find();
 
-        die( json_encode( ['data' => $users->toArray()]) );
+		$this->view->disable();
+
+		echo json_encode( ['data' => $users->toArray()]);
+//		echo json_encode( ['data' => $users->toArray()]);
     }
 
     public function get_notificationsAction() {
