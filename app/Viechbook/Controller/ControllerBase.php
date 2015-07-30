@@ -22,8 +22,20 @@ use Phalcon\Mvc\Controller;
 
 class ControllerBase extends Controller{
 	public function beforeExecuteRoute($dispatcher) {
+		/** set current user */
 		$currentUser = $this->session->get('auth');
-
 		$this->view->setVar('currentUser', $currentUser);
+
+		/** css resources */
+		$this->assets
+			->addCss('/vendor/bootstrap/css/bootstrap.min.css')
+			->addCss('css/index.css');
+
+		/** js resources */
+		$this->assets
+			->addJs('https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js', true)
+			->addJs('/vendor/bootstrap/js/bootstrap.min.js')
+			->addJs('/vendor/bootstrap/js/bootstrap.min.js')
+			->addJs('https://autobahn.s3.amazonaws.com/js/autobahn.min.js');
 	}
 }
