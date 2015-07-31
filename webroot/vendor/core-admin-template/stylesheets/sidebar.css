@@ -20,7 +20,7 @@
 /* line 25, /home/andrei/core-admin-release/core-admin/source/stylesheets/sidebar.scss */
 .primary-sidebar {
   width: 200px;
-  float: left;
+  float: right;
   position: absolute; }
   /* line 30, /home/andrei/core-admin-release/core-admin/source/stylesheets/sidebar.scss */
   .primary-sidebar .nav {
