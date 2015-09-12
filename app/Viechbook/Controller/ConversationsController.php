@@ -220,10 +220,15 @@ class ConversationsController extends ControllerBase {
      * @param int $senderId
      */
     private function createMessage($commonConversationId, $senderId) {
+		$content = $this->request->getPost('content');
+		if( empty( trim($content) ) ) {
+			return;
+		}
+
         $message = new Messages();
 
 		$message->setConversationId($commonConversationId);
-		$message->setContent( $this->request->getPost('content') );
+		$message->setContent($content);
         $message->setUserId($senderId);
 		$message->setRead(0);
 
