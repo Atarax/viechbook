@@ -28,7 +28,8 @@ class ControllerBase extends Controller{
 
 		/** css resources */
 		$this->assets
-			->addCss('/vendor/bootstrap/css/bootstrap.min.css');
+			->addCss('/vendor/bootstrap/css/bootstrap.min.css')
+			->addCss('/css/viechbook.css');
 
 		/** js resources */
 		$this->assets
