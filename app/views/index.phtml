@@ -5,7 +5,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<?php $this->assets->outputCss() ?>
+	<?php use Viechbook\Model\Notifications;
+
+	$this->assets->outputCss() ?>
 
 	<title>Viechbook</title>
 </head>
@@ -13,21 +15,19 @@
 <body>
 
 <div class="chat-containerbar-bottom">
-	<div class="container-fluid chat-message-window" style="bottom:0;">
-		<div class="panel panel-default navbar-right" style="height:100%;">
-			<div class="glyphicon glyphicon-remove-sign" style="position:absolute; top:8px; right:7px;"></div>
-			<div class="panel-heading" style="width:100%; font-size: 12px; font-weight: bold; height:28px; padding-top:7px;">
-				Lorem
-			</div>
-			<div class="panel-body" style="font-size: 12px; padding-top:7px;height:73%; overflow:auto;">
-				<div class="chat-message-bubble-left">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. </div>
-				<div class="chat-message-bubble-right">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. </div>
-				<div class="chat-message-bubble-right">Lorem ipsum</div>
-			</div>
-			<div style="height:1px; border-top:solid 1px; border-color:#cfcfcf;"></div>
-			<div style="font-size: 11px; padding-left:2px; height:57px;">
-				<textarea style="overflow-y: scroll; padding-top:2px; padding-left:2px; width:100%; height:100%; resize:none; border:none;"></textarea>
-			</div>
+	<div class="panel panel-default chat-conversation-window">
+		<div class="glyphicon glyphicon-remove-sign chat-conversation-window-close-button"></div>
+		<div class="panel-heading chat-conversation-window-headline">
+			Lorem
+		</div>
+		<div class="panel-body chat-conversation-window-message-containter">
+			<div class="chat-message-bubble-left">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. </div>
+			<div class="chat-message-bubble-right">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. </div>
+			<div class="chat-message-bubble-right">Lorem ipsum</div>
+		</div>
+		<div"></div>
+		<div class="chat-conversation-window-bottom-bar">
+			<textarea class="chat-message-editor-textarea"></textarea>
 		</div>
 	</div>
 </div>
@@ -179,25 +179,8 @@
 			},
 			autoSelect: true
 		});
-		/*
-		 input.change(function() {
-		 var current = input.typeahead("getActive");
+	});
 
-		 console.debug(input);
-		 if (current) {
-		 console.log(current);
-		 // Some item from your model is active!
-		 if (current.name == input.val()) {
-		 // This means the exact match is found. Use toLowerCase() if you want case insensitive match.
-		 } else {
-		 // This means it is only a partial match, you can either add a new item
-		 // or take the active if you don't want new items
-		 }
-		 } else {
-		 // Nothing is active so it is a new value (or maybe empty value)
-		 }
-		 });*/
-	})
 
 </script>
 
@@ -213,17 +196,12 @@
 				}
 			});
 
-			/**
-			 * only got these atm
-			 * @type {number}
-			 */
+
 			totalNotifications = totalUpdatedConversations;
 
 			$("#profile-notification-count").text( totalNotifications > 0 ? totalNotifications : '' );
 			$("#profile-conversation-notification-count").text(totalUpdatedConversations > 0 ? totalUpdatedConversations : '');
 
-			/**
-			 */
 			var title;
 
 			if(totalNotifications > 0) {
@@ -257,7 +235,7 @@
 	var connection;
 
 	$(document).ready( function() {
-
+		console.debug('wtf');
 		viech = new theViech();
 
 		connection = new ab.Session('<?php echo RATCHET_SERVER_ADRESS; ?>',
@@ -277,9 +255,6 @@
 
 		updateUserMenuNotifications();
 
-		/**
-		 * @TODO make register take an array instead or both?
-		 **/
 		viech.register(<?= Notifications::TYPE_NOTIFICATION_CHANGED ?> , function() {
 			updateUserMenuNotifications();
 		});
@@ -290,7 +265,6 @@
 
 
 	});
-
 </script>
 
 </body>

@@ -35,7 +35,6 @@ class ControllerBase extends Controller{
 		$this->assets
 			->addJs('https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js', true)
 			->addJs('/vendor/bootstrap/js/bootstrap.min.js')
-			->addJs('/vendor/bootstrap/js/bootstrap.min.js')
 			->addJs('https://autobahn.s3.amazonaws.com/js/autobahn.min.js')
 			->addJs('/vendor/typeahead/js/bootstrap3-typeahead.min.js');
 
