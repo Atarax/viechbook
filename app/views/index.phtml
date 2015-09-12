@@ -14,22 +14,19 @@
 
 <body>
 
-<div class="chat-containerbar-bottom">
-	<div class="panel panel-default chat-conversation-window">
-		<div class="glyphicon glyphicon-remove-sign chat-conversation-window-close-button"></div>
-		<div class="panel-heading chat-conversation-window-headline">
-			Lorem
-		</div>
-		<div class="panel-body chat-conversation-window-message-containter">
-			<div class="chat-message-bubble-left">Lorem ipsum dolor sit amet, consetetur sadipscing elitr</div>
-			<div class="chat-message-bubble-right">Sed diam nonumy eirmod tempor invidunt ut labore</div>
-			<div class="chat-message-bubble-right">Lorem ipsum</div>
-		</div>
-		<div class="chat-conversation-window-breadcrumb"></div>
-		<div class="chat-conversation-window-bottom-bar">
-			<textarea class="chat-message-editor-textarea"></textarea>
-		</div>
+<div id="chat-conversation-window-dummy" class="panel panel-default chat-conversation-window" style="display: none;">
+	<div class="glyphicon glyphicon-remove-sign chat-conversation-window-close-button" onclick="$(this).parent().remove();"></div>
+	<div class="panel-heading chat-conversation-window-headline">
 	</div>
+	<div class="panel-body chat-conversation-window-message-containter">
+	</div>
+	<div class="chat-conversation-window-breadcrumb"></div>
+	<div class="chat-conversation-window-bottom-bar">
+		<textarea class="chat-dummy-textarea chat-message-editor-textarea"></textarea>
+	</div>
+</div>
+
+<div id="chat-window-containter" class="chat-containerbar-bottom">
 </div>
 
 <nav class="navbar navbar-default navbar-static-top viechbook-nav-top">
@@ -67,7 +64,7 @@
 </nav>
 
 <div class="container chat-people">
-	<ul class="nav nav-pills nav-stacked">
+	<ul id="chat-people-list" class="nav nav-pills nav-stacked">
 		<li role="presentation"><a href="#">User1</a></li>
 		<li role="presentation"><a href="#">User2</a></li>
 		<li role="presentation"><a href="#">User3</a></li>
@@ -158,6 +155,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		openConversationWindow(1, 'Alpha-Viech');
 
 		var input = $('.typeahead');
 
@@ -261,18 +259,23 @@
 		viech.register(<?php echo  Viechbook\Model\Notifications::TYPE_NEW_MESSAGE ?>, function() {
 			updateConversationsBox();
 		})
-		viech.register(<?php echo  Viechbook\Model\Notifications::TYPE_NEW_MESSAGE ?>, function() {
+		viech.register(<?php echo  Viechbook\Model\Notifications::TYPE_NEW_MESSAGE ?>, function(message) {
 			if(currentConversationId != null) {
 				updateChatBox(currentConversationId);
 			}
 		})
 	});
+
 	function updateChatBox( conversationId ) {
 		currentConversationId = conversationId;
+
 		$.getJSON( "/messages/get_by_conversation/" + conversationId, function( messages ) {
-			var chatBox = $("#chat-box");
+			var chatWindow = $("#chat-conversation-window-" + conversationId);
+			var chatBox = chatWindow.children(".chat-conversation-window-message-containter");
+
 			chatBox.html("");
 			var foreignParticipants = [];
+			/*
 			$("#send-button").off();
 			$("#send-button").click( function() {
 				sendMessage(conversationId);
@@ -283,13 +286,17 @@
 					sendMessage(conversationId);
 				}
 			});
+			*/
+			/*
 			$("#chat-input").focus( function() {
 				clearNotifications(conversationId);
-			});
+			});*/
+
 			// set title
+			/*
 			$.getJSON( "/conversations/get_participants/" + conversationId, function( users ) {
 				$.each( users, function(index, user) {
-					if( user.id != <?php echo  $currentUser['id'] ?> ) {
+					if( user.id != <?php // echo  $currentUser['id'] ?> ) {
 						foreignParticipants.push(user.username);
 					}
 				});
@@ -300,13 +307,16 @@
 					$("#chat-box-title").text("Chat");
 				}
 			});
+			*/
+
 			// display messages
 			$.each(messages, function (index, message) {
 				var areWeSender = message.user_id == <?php echo  $currentUser['id'] ?>;
-				var liClass = areWeSender ? "arrow-box-right gray" : "arrow-box-left";
-				var li = $("<li/>", {
-					"class" : liClass
+				var bubbleClass = areWeSender ? "chat-message-bubble-right" : "chat-message-bubble-left";
+				var bubble = $("<div/>", {
+					"class" : "chat-message-bubble " + bubbleClass
 				});
+				/*
 				if(!areWeSender) { // if not we are sender ! xD
 					var avatarDiv = $("<div/>", {
 						"class" : "avatar"
@@ -318,6 +328,8 @@
 					li.append(avatarDiv);
 					avatarDiv.append(avatarImg);
 				}
+				*/
+				/*
 				var infoDiv = $("<div/>", {
 					"class": "info"
 				});
@@ -329,23 +341,31 @@
 					"class": "time",
 					"text":  jQuery.timeago( message.created )
 				});
+				*/
+				/*
 				nameSpan.append(timeSpan);
 				infoDiv.append(nameSpan);
-				li.append(infoDiv);
+				bubble.append(infoDiv);
+				*/
 				var escaped = $("<div/>").text(message.content).html();
-				infoDiv.after( escaped );
-				chatBox.append(li);
+
+				bubble.html( escaped );
+				chatBox.append(bubble);
 			});
-			var chatBoxDiv = chatBox.parent();
-			chatBoxDiv.scrollTop( chatBoxDiv.prop("scrollHeight") );
+
+			chatBox.scrollTop( chatBox.prop("scrollHeight") );
 		});
 	}
 	var currentConversationId = null;
+
 	function updateConversationsBox() {
 		$.getJSON( "/conversations/list_all", function( response ) {
 			var conversations = response.conversations;
-			var conversationsContainer = $("#conversations");
+			var peopleListId = "chat-people-list";
+			var conversationsContainer = $("#" + peopleListId);
+
 			conversationsContainer.html('');
+
 			$.each(conversations, function( index, conversation) {
 				var users = [];
 				var showNotifyTooltip = false;
@@ -354,11 +374,12 @@
 				 **/
 				$.each(conversation.withUsers, function(index, user) {
 					users.push(user.username);
-				} )
+				} );
 				var usernames = users.join(",");
 				/**
 				 * check if conversation got new messages
 				 **/
+				/*
 				$.each(response.notifications, function(index, notification) {
 					if(notification.type == <?php echo  Viechbook\Model\Notifications::TYPE_NEW_MESSAGE ?>) {
 						var content = $.parseJSON(notification.content);
@@ -367,17 +388,16 @@
 						}
 					}
 				});
-				addBoxNewsElement(
+				*/
+				addChatConversation(
 					conversation.id,
-					'conversations',
-					usernames,
-					conversation.lastMessage.content,
-					showNotifyTooltip,
-					'updateChatBox(' + conversation.id + '); clearNotifications("' + conversation.id + '");'
+					peopleListId,
+					usernames
 				);
 			});
 		});
 	}
+
 	function clearNotifications(conversationId) {
 		$.getJSON( "/conversations/clear_notifications/" + conversationId, function( response ) {
 			if(response == true) {
@@ -387,51 +407,90 @@
 	}
 	/**
 	 * add a news element to a box container
-	 * @param elementId the id of the container
+	 * @param conversationId
+ 	 * @param elementId the id of the container
 	 * @param title the title of the element
-	 * @param text the element text
-	 * @param titleOnClick here you can pass an onclick-javascript event as string (ugly)
 	 * @returns {*|jQuery|HTMLElement} the created element
 	 */
-	function addBoxNewsElement(conversationId, elementId, title, text, notificate, titleOnClick) {
-		if(titleOnClick == undefined) titleOnClick = '';
-		var sectionDiv = $("<div/>", {
-			"class" : 'box-section'
+	function addChatConversation(conversationId, elementId, title) {
+		var li = $("<li/>", {
+			"role" : 'presentation'
 		});
-		var contentDiv = $("<div/>", {
-			"class" : 'box-content'
-		});
-		var titleDiv = $("<div/>", {
-			"class" : 'news-title'
-		});
-		var notificationSpan = $('<span/>', {
-			id : 'notification-for-conversation-' + conversationId,
-			class : 'label label-dark-red pull-right',
-			text : notificate ? '!' : ''
-		});
-		titleDiv.append("<a href='#' onclick='" + titleOnClick + "'>" + title + "</a>");
-		titleDiv.append(notificationSpan);
-		var textDiv = $("<div/>", {
-			"class" : 'news-text',
-			"text" : text
-		});
+
+		li.append("<a href='#' onclick='openConversationWindow(" + conversationId + ",\"" + title + "\")'>" + title + "</a>");
+
 		var newsContainer = $('#'+elementId);
-		contentDiv.append(titleDiv);
-		contentDiv.append(textDiv);
-		sectionDiv.append(contentDiv);
-		newsContainer.append(sectionDiv);
-		return sectionDiv;
+		newsContainer.append(li);
 	}
+
 	function sendMessage(conversationId) {
-		var content = $("#chat-input").val();
-		$("#chat-input").val("");
+		var chatInput = $("#chat-message-conversation-" + conversationId);
+		var content = chatInput.val();
+		chatInput.val("");
+
 		$.post("/conversations/add_message/" + conversationId,{
 			content: content
 		}, function() {
 			updateChatBox(conversationId);
-			updateConversationsBox();
-			clearNotifications();
 		});
+	}
+
+	function openConversationWindow(conversationId, title) {
+		/** first check if the window is not already open */
+		var found = false;
+
+		$('.chat-conversation-window').each(function(index, element) {
+			element = $(element);
+
+			var id = element.attr('id');
+			var foundId = 'chat-conversation-window-' + conversationId;
+
+			if(id == foundId) {
+				/** already open, set the focus on the textfield */
+				$("#chat-message-conversation-" + conversationId).focus();
+				found = true;
+			}
+
+			/** exit foreach loop */
+			return true;
+		});
+
+		if(found) {
+			/** nothing to to anymore */
+			return
+		}
+
+		/** create new chat-window */
+		var dummy = $('#chat-conversation-window-dummy').clone();
+
+		/** set the values of the dummy correctly */
+		dummy.attr('id', 'chat-conversation-window-' + conversationId);
+
+		/** set the correct id of the textarea, so we can identify the message-content later */
+		var newTextAreaId = ("chat-message-conversation-" + conversationId);
+		var textarea = dummy.children('.chat-conversation-window-bottom-bar').children('textarea');
+		$(textarea[0]).attr('id', newTextAreaId);
+
+		/** and also the callback to the sendMessage function */
+		$(textarea[0]).keyup( function(event) {
+			var charCode = (typeof event.which === "number") ? event.which : event.keyCode;
+			/** 13 -> enter key */
+			if(charCode == 13) {
+				sendMessage(conversationId);
+			}
+		});
+
+		/** set the conversation-title */
+		dummy.children('.chat-conversation-window-headline').html(title);
+
+		/** load messages etc */
+		updateChatBox(conversationId);
+
+		/** add it to the chat-window-container */
+		var container = $("#chat-window-containter");
+		container.append(dummy);
+
+		dummy.show();
 	}
 </script>
 

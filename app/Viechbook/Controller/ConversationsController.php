@@ -144,7 +144,7 @@ class ConversationsController extends ControllerBase {
            		$this->createMessage($conversation->getId(), $currentUser['id']);
         	}
 
-        $this->notifyParticipants($conversation, Notifications::TYPE_NEW_MESSAGE);
+        $this->notifyParticipants($conversation, Notifications::TYPE_NEW_MESSAGE, ['conversation_id' => $conversationId]);
 
         die(json_encode(true));
     }
