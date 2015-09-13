@@ -33,6 +33,9 @@ class SessionController extends ControllerBase
 
 					$this->flash->success('Welcome ' . $user->getUsername());
 
+					$this->response->redirect();
+					$this->response->send();
+
 					$this->dispatcher->forward(array(
 						'controller' => 'index',
 						'action' => 'index'
@@ -61,10 +64,8 @@ class SessionController extends ControllerBase
 	public function logoutAction() {
 		$this->session->set('auth', null);
 
-		$this->dispatcher->forward(array(
-			'controller' => 'index',
-			'action' => 'index'
-		));
+		$this->response->redirect();
+		$this->response->send();
 
 		return;
 	}
