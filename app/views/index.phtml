@@ -15,7 +15,7 @@
 <body>
 
 <div id="chat-conversation-window-dummy" class="panel panel-default chat-conversation-window" style="display: none;">
-	<div class="glyphicon glyphicon-remove-sign chat-conversation-window-close-button" onclick="$(this).parent().remove();"></div>
+	<div class="glyphicon glyphicon-remove-sign chat-conversation-window-close-button"></div>
 	<div class="panel-heading chat-conversation-window-headline">
 	</div>
 	<div class="panel-body chat-conversation-window-message-containter">
@@ -456,6 +456,13 @@
 
 		/** set the values of the dummy correctly */
 		dummy.attr('id', 'chat-conversation-window-' + conversationId);
+
+		/** construct the close-button-logic */
+		var closeButton = dummy.children('.chat-conversation-window-close-button');
+
+		closeButton.click(function() {
+			closeConversationWindow(conversationId);
+		});
 
 		/** set the correct id of the textarea, so we can identify the message-content later */
 		var newTextAreaId = ("chat-message-conversation-" + conversationId);
