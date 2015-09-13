@@ -11,7 +11,6 @@ use Viechbook\Model\Messages;
 use Phalcon\Mvc\Model\Query;
 use Viechbook\Model\Notifications;
 use Viechbook\Model\Users;
-use ZMQContext;
 
 /**
  * Created by PhpStorm.
@@ -88,7 +87,93 @@ class ConversationsController extends ControllerBase {
 		return ['conversation_id' => $commonConversation->id, 'conversation_name' => $converstaionName];
 	}
 
-    /**
+	public function open_conversation_windowAction($conversationId) {
+		$this->setJsonResponse();
+
+		$userSettings = $this->currentUser->getSettings();
+		$openWindows = $userSettings->openWindows;
+		/** normalize */
+		if( empty($openWindows) ) {
+			$openWindows = '';
+		}
+
+		/** check if the window is open */
+		if($openWindows != '') {
+			$openWindows = explode(',', $openWindows);
+		}
+		else {
+			$openWindows = [];
+		}
+
+		/** search for the conversation */
+		$match = array_search($conversationId, $openWindows);
+
+		if( $match === false ) {
+			/** only insert when not already inside */
+			$openWindows[] = $conversationId;
+			$userSettings->openWindows = implode(',', $openWindows);
+
+			$userSettings->save();
+			return [true];
+		}
+
+		return [false];
+	}
+
+	public function close_conversation_windowAction($conversationId) {
+		$this->setJsonResponse();
+
+		$userSettings = $this->currentUser->getSettings();
+		$openWindows = $userSettings->openWindows;
+
+		/** check if the window is open */
+		if( !empty($openWindows) ) {
+			$openWindows = explode(',', $openWindows);
+			$match = array_search($conversationId, $openWindows);
+
+			if( $match !== false ) {
+				/** remove from array and save */
+				unset($openWindows[$match]);
+				$userSettings->openWindows = implode(',', $openWindows);
+
+				$userSettings->save();
+				return [true];
+			}
+		}
+
+		return [false];
+	}
+
+	public function get_open_conversation_windowsAction() {
+		$this->setJsonResponse();
+
+		$userSettings = $this->currentUser->getSettings();
+		$openWindows = $userSettings->openWindows;
+		$result = [];
+
+		if( !empty($openWindows) ) {
+			$openWindows = explode(',', $openWindows);
+
+			foreach($openWindows as $openWindow) {
+				$conversation = Conversations::findFirst($openWindow);
+				$users = $conversation->getUsers();
+				$title = [];
+
+				foreach($users as $user) {
+					if($user->id == $this->currentUser->id) {
+						continue;
+					}
+					$title[] = $user->getUsername();
+				}
+
+				$result[] = ['conversation_id' => $conversation->id, 'title' => implode(',', $title)];
+			}
+		}
+
+		return $result;
+	}
+
+	/**
      * return all Conversations for current User as json
      */
     public function list_allAction() {
