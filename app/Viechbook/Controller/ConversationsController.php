@@ -1,13 +1,14 @@
 <?php
 namespace Viechbook\Controller;
 
-use Cake\Network\Exception\NotFoundException;
 use Exception;
+use Phalcon\Db;
+use Phalcon\Mvc\View;
 use Viechbook\Library\TheViechNotifier;
 use Viechbook\Model\Conversations;
 use Viechbook\Model\ConversationsUsers;
 use Viechbook\Model\Messages;
-use Viechbook\Model\ModelBase;
+use Phalcon\Mvc\Model\Query;
 use Viechbook\Model\Notifications;
 use Viechbook\Model\Users;
 use ZMQContext;
@@ -63,14 +64,36 @@ class ConversationsController extends ControllerBase {
 		$this->view->setVar('receiver', $receiver);
     }
 
+	public function get_or_create_by_userAction($userId) {
+		$this->setJsonResponse();
+		$receiver = Users::findFirst($userId);
+
+		$commonConversation = $this->getCommonConversation($receiver, $this->currentUser);
+
+		if(!$commonConversation) {
+			$commonConversation = $this->createConversation($this->currentUser, $receiver);
+		}
+
+		/** find out with whom we got a conversation */
+		$withUsers = [];
+
+		/** @var Users $user */
+		foreach($commonConversation->getUsers() as $user) {
+			if( $user->getId() != $this->currentUser->id ) {
+				$withUsers[] = $user->getUsername();
+			}
+		}
+		$converstaionName = implode(',', $withUsers);
+
+		return ['conversation_id' => $commonConversation->id, 'conversation_name' => $converstaionName];
+	}
+
     /**
      * return all Conversations for current User as json
      */
     public function list_allAction() {
-		$auth = $this->session->get('auth');
-
 		/** @var Users $currentUser */
-		$currentUser = Users::findFirst($auth['id']);
+		$currentUser = $this->currentUser;
 
         $conversationsResult = [];
 
@@ -90,7 +113,7 @@ class ConversationsController extends ControllerBase {
 
             /** @var Users $user */
             foreach($conversation->getUsers() as $user) {
-				if( $user->getId() != $auth['id'] ) {
+				if( $user->getId() != $currentUser->id ) {
                     $withUsers[] = array( 'id' => $user->getId(), 'username' => $user->getUsername() );
                 }
             }
@@ -155,41 +178,20 @@ class ConversationsController extends ControllerBase {
 	 * @return Conversations a common conversation which is not a group conversation (should be exactly one)
 	 */
     private function getCommonConversation(Users $receiver,Users $sender){
-        $commonConversation = null;
-
-		$receiverConversations = ConversationsUsers::find([
-			'user_id = :user_id: ',
-			'bind' => ['user_id' => $receiver->getId()]
+		$statement = $this->db->prepare('SELECT conversation_id FROM viechbook.conversations_users WHERE user_id = :queryUser OR user_id = :currentUser GROUP BY conversation_id HAVING count(conversation_id) > 1;');
+		$statement->execute([
+			'queryUser' => $receiver->id,
+			'currentUser' => $sender->id
 		]);
 
-		$senderConversations = ConversationsUsers::find([
-			'user_id = :user_id: ',
-			'bind' => ['user_id' => $sender->getId()]
-		]);
+		$result = $statement->fetch(Db::FETCH_ASSOC);
 
-		foreach($receiverConversations as $receiverConversation) {
+		$commonConversation = null;
+		if( !empty($result) ) {
+			$commonConversation = Conversations::findFirst($result['conversation_id']);
+		}
 
-            foreach($senderConversations as $senderConversation) {
-
-                if( $senderConversation->getConversation_id() == $receiverConversation->getConversation_id() ) {
-					/** find it and check if its a group-conversation */
-					$possibleConversation = Conversations::findFirst( $senderConversation->getConversation_id() );
-
-					if( !$possibleConversation->getIsGroup() ) {
-						/** found one! */
-						$commonConversation = $possibleConversation;
-						break;
-					}
-                }
-            }
-
-			/** stop searching */
-			if( !is_null($commonConversation) ) {
-				break;
-			}
-        }
-
-        return $commonConversation;
+		return $commonConversation;
     }
 
     /**
