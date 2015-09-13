@@ -19,18 +19,18 @@ class UsersController extends ControllerBase {
     public function index() {}
 
     public function addAction($token) {
-        if ($this->request->isPost()) {
-			/** @var SecurityTokens $token */
-			$token = SecurityTokens::findFirst([
-				'token = :token:',
-				'bind' => ['token' => $token]
-			]);
+		/** @var SecurityTokens $token */
+		$token = SecurityTokens::findFirst([
+			'token = :token:',
+			'bind' => ['token' => $token]
+		]);
 
-			/**
-			 * Only users with token are allowed to register
-			 */
-			if($token && $token->getPayload() == 'signup') {
+		/**
+		 * Only users with token are allowed to register
+		 */
+		if($token && $token->getPayload() == 'signup') {
 
+			if ($this->request->isPost()) {
 				$user = new Users();
 
 				$password = $this->security->hash( $this->request->getPost('password') );
@@ -49,18 +49,28 @@ class UsersController extends ControllerBase {
 
 					$this->flash->success( 'Welcome to Viechbook' );
 				}
+
+
+				$this->dispatcher->forward(array(
+					'controller' => 'session',
+					'action' => 'login'
+				));
+
+				return;
 			}
 
+			$this->view->setRenderLevel(View::LEVEL_LAYOUT);
+			$this->view->setVar('token', $token);
+		}
+		else {
+			$this->flash->error('Invalid token!');
 			$this->dispatcher->forward(array(
-				'controller' => 'session',
-				'action' => 'login'
+				'controller' => 'index',
+				'action' => 'index'
 			));
+		}
 
-			return;
-        }
-
-		$this->view->setVar('token', $token);
-    }
+	}
 
 	public function get_password_reset_linksAction() {
 		$currentUser = $this->session->get('auth');
@@ -153,9 +163,11 @@ class UsersController extends ControllerBase {
 			$this->flash->success('Successfully updated password!');
 
 			$this->dispatcher->forward([
-				'controller' => 'session',
-				'action' => 'login'
+				'controller' => 'index',
+				'action' => 'index'
 			]);
+
+			return;
 		}
 
 		$this->view->setRenderLevel(View::LEVEL_LAYOUT);
