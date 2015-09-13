@@ -206,7 +206,7 @@
 	var connection;
 	$(document).ready( function() {
 		viech = new theViech();
-		ab.debug(true, true);
+		//ab.debug(true, true);
 		connection = new ab.Session('<?php echo RATCHET_SERVER_ADRESS; ?>',
 			function() {
 				connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
