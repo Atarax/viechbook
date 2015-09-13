@@ -25,7 +25,7 @@
 
             <div class="box-content">
 
-				<?php echo $this->tag->form( array('users/add', 'class' => 'form-horizontal fill-up validatable') ); ?>
+				<?php echo $this->tag->form( array('users/add/' . $token->token, 'class' => 'form-horizontal fill-up validatable') ); ?>
 
 					<div class="padded">
 
@@ -63,7 +63,7 @@
                         <button type="submit" class="btn btn-blue">Save changes</button>
                         <button type="button" class="btn btn-default">Cancel</button>
                     </div>
-				
+
 				<?php echo $this->tag->endForm(); ?>
 
             </div>
