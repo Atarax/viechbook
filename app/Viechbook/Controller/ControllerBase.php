@@ -39,7 +39,7 @@ class ControllerBase extends Controller{
 			->addJs('/vendor/typeahead/js/bootstrap3-typeahead.min.js');
 
 		if(VIECHBOOK_ENV == 'LIVE') {
-			$this->assets('/js/gasnippet.js');
+			$this->addJs('/js/gasnippet.js');
 		}
 	}
 }
