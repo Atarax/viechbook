@@ -1,6 +1,9 @@
 <?php
 namespace Viechbook\Controller;
+use Phalcon\Exception;
 use Phalcon\Mvc\View;
+use Viechbook\Model\Conversations;
+use Viechbook\Model\ConversationsUsers;
 use Viechbook\Model\Messages;
 use Viechbook\Model\Users;
 
@@ -29,6 +32,13 @@ class MessagesController extends ControllerBase {
     }
 
     public function get_by_conversationAction($conversationId = null) {
+		/** check for permissions to see the messages */
+		$link = ConversationsUsers::findFirst(['conversation_id' => $conversationId, 'user_id' => $this->currentUser->id]);
+
+		if( !is_object($link) ){
+			throw new Exception('Not allowed to acces that conversation!');
+		}
+
 		/** @var Messages[] $messages */
 		$messages = Messages::find( ['conversation_id=' . $conversationId ] );
 

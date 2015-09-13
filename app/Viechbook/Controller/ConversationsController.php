@@ -11,6 +11,7 @@ use Viechbook\Model\Messages;
 use Phalcon\Mvc\Model\Query;
 use Viechbook\Model\Notifications;
 use Viechbook\Model\Users;
+use Viechbook\Model\UserSettings;
 
 /**
  * Created by PhpStorm.
@@ -91,6 +92,11 @@ class ConversationsController extends ControllerBase {
 		$this->setJsonResponse();
 
 		$userSettings = $this->currentUser->getSettings();
+		if( empty($userSettings) ) {
+			$userSettings = new UserSettings();
+			$userSettings->user_id = $this->currentUser->getId();
+		}
+
 		$openWindows = $userSettings->openWindows;
 		/** normalize */
 		if( empty($openWindows) ) {
