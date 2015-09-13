@@ -438,7 +438,12 @@
 		});
 	}
 
-	function openConversationWindow(conversationId, title, notifyServer = true) {
+	function openConversationWindow(conversationId, title, notifyServer) {
+		/** default value */
+		if(notifyServer == null) {
+			notifyServer = true;
+		}
+
 		/** first check if the window is not already open */
 		var found = false;
 
