@@ -16,6 +16,13 @@ class Users extends ModelBase {
 	public function initialize() {
 		parent::initialize();
 
+		$this->hasOne(
+			'id',
+			'Viechbook\Model\UserSettings',
+			'user_id',
+			['alias' => 'settings']
+		);
+
 		$this->hasMany(
 			'id',
 			'Viechbook\Model\Messages',
@@ -116,19 +123,5 @@ class Users extends ModelBase {
 	 */
 	public function getNotifications($parameters=null) {
 		return $this->getRelated('notifications', $parameters);
-	}
-
-	public function getSettings() {
-		$settings = UserSettings::findFirst([
-			'user_id' => $this->id
-		]);
-
-		/** if no settings exist yet, create them */
-		if( empty($settings) ) {
-			$settings = new UserSettings();
-			$settings->user_id = $this->id;
-		}
-
-		return $settings;
 	}
 }
