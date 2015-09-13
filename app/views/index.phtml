@@ -117,9 +117,19 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+
+		/** get open chat windows */
+		 $.getJSON('/conversations/get_open_conversation_windows', function (response) {
+			 for(var i in response) {
+				 var conversation = response[i];
+				 openConversationWindow(conversation.conversation_id, conversation.title, false);
+			 }
+		});
+
 		//new WebSocket("<?php echo RATCHET_SERVER_ADRESS; ?>", "one");
 		//openConversationWindow(1, 'Alpha-Viech');
 
+		var preProcessed = [];
 		var input = $('.typeahead');
 
 		input.typeahead({
@@ -411,6 +421,9 @@
 		var conversationWindow = $("#chat-conversation-window-" + conversationId);
 		conversationWindow.hide();
 		$('.chat-message-editor-textarea').focus();
+
+		/** notify server */
+		$.getJSON('/conversations/close_conversation_window/' + conversationId );
 	}
 
 	function sendMessage(conversationId) {
@@ -425,7 +438,7 @@
 		});
 	}
 
-	function openConversationWindow(conversationId, title) {
+	function openConversationWindow(conversationId, title, notifyServer = true) {
 		/** first check if the window is not already open */
 		var found = false;
 
@@ -501,6 +514,12 @@
 		/** show-time and focus */
 		dummy.show();
 		$("#chat-message-conversation-" + conversationId).focus();
+
+		/** notify server if necessary */
+		if(notifyServer) {
+			$.getJSON('/conversations/open_conversation_window/' + conversationId );
+		}
+
 
 	}
 </script>

@@ -117,4 +117,18 @@ class Users extends ModelBase {
 	public function getNotifications($parameters=null) {
 		return $this->getRelated('notifications', $parameters);
 	}
+
+	public function getSettings() {
+		$settings = UserSettings::findFirst([
+			'user_id' => $this->id
+		]);
+
+		/** if no settings exist yet, create them */
+		if( empty($settings) ) {
+			$settings = new UserSettings();
+			$settings->user_id = $this->id;
+		}
+
+		return $settings;
+	}
 }
