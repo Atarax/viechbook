@@ -45,6 +45,9 @@
 			</div>
 		</form>
 
+		<div class="navbar-header navbar-left">
+			<a class="navbar-brand"><?php echo $currentUser['username'] ?></a>
+		</div>
 		<!-- <p class="navbar-text">The Mission Is The Message Is Sound</p> -->
 
 		<div class="navbar-header navbar-right">
@@ -135,9 +138,13 @@
 
 					return process(preProcessed);
 				});
+			},
+			updater:function (item) {
+				/** open chat window for user */
+				openConversationWindowByUser(item.id);
+
+				return item;
 			}
-		}).on('typeahead:selected', function(event, selection) {
-			alert('fff');
 		});
 
 	});
@@ -231,6 +238,7 @@
 	function openConversationWindowByUser(userId) {
 		$.getJSON( "/conversations/get_or_create_by_user/" + userId, function( response ) {
 			openConversationWindow(response.conversation_id, response.conversation_name);
+			updateConversationsBox();
 		});
 	}
 
@@ -344,23 +352,25 @@
 					users.push(user.username);
 				} );
 				var usernames = users.join(",");
+
 				/**
 				 * check if conversation got new messages
 				 **/
-				/*
 				$.each(response.notifications, function(index, notification) {
 					if(notification.type == <?php echo  Viechbook\Model\Notifications::TYPE_NEW_MESSAGE ?>) {
 						var content = $.parseJSON(notification.content);
+						console.debug(content);
 						if( content.conversation_id == conversation.id ) {
 							showNotifyTooltip = true;
 						}
 					}
 				});
-				*/
+
 				addChatConversation(
 					conversation.id,
 					peopleListId,
-					usernames
+					usernames,
+					showNotifyTooltip
 				);
 			});
 		});
@@ -372,6 +382,8 @@
 				$('#notification-for-conversation-' + conversationId).text('');
 			}
 		});
+
+		updateConversationsBox()
 	}
 	/**
 	 * add a news element to a box container
@@ -380,15 +392,25 @@
 	 * @param title the title of the element
 	 * @returns {*|jQuery|HTMLElement} the created element
 	 */
-	function addChatConversation(conversationId, elementId, title) {
+	function addChatConversation(conversationId, elementId, title, showNotifyBadge) {
 		var li = $("<li/>", {
 			"role" : 'presentation'
 		});
 
 		li.append("<a href='#' onclick='openConversationWindow(" + conversationId + ",\"" + title + "\")'>" + title + "</a>");
 
+		if(showNotifyBadge){
+			li.children().append("<span class='badge'>!</span>");
+		}
+
 		var newsContainer = $('#'+elementId);
 		newsContainer.append(li);
+	}
+
+	function closeConversationWindow(conversationId) {
+		var conversationWindow = $("#chat-conversation-window-" + conversationId);
+		conversationWindow.hide();
+		$('.chat-message-editor-textarea').focus();
 	}
 
 	function sendMessage(conversationId) {
@@ -414,7 +436,8 @@
 			var foundId = 'chat-conversation-window-' + conversationId;
 
 			if(id == foundId) {
-				/** already open, set the focus on the textfield */
+				/** already open, so show and set the focus on the textfield */
+				$("#chat-conversation-window-" + conversationId).show();
 				$("#chat-message-conversation-" + conversationId).focus();
 				found = true;
 			}
@@ -437,15 +460,25 @@
 		/** set the correct id of the textarea, so we can identify the message-content later */
 		var newTextAreaId = ("chat-message-conversation-" + conversationId);
 		var textarea = dummy.children('.chat-conversation-window-bottom-bar').children('textarea');
-		$(textarea[0]).attr('id', newTextAreaId);
+		textarea = $(textarea[0]);
+
+		textarea.attr('id', newTextAreaId);
 
 		/** and also the callback to the sendMessage function */
-		$(textarea[0]).keyup( function(event) {
+		textarea.keyup( function(event) {
 			var charCode = (typeof event.which === "number") ? event.which : event.keyCode;
 			/** 13 -> enter key */
 			if(charCode == 13) {
 				sendMessage(conversationId);
 			}
+			/** escape - close window */
+			else if(charCode == 27){
+				closeConversationWindow(conversationId);
+			}
+		});
+
+		textarea.on('focus', function(){
+			clearNotifications(conversationId);
 		});
 
 		/** set the conversation-title */
