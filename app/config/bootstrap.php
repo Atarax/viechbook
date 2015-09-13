@@ -112,5 +112,5 @@ try {
 		echo "PhalconException: ", $e->getMessage();
 	}
 
-	file_put_contents('../logs/phalcon_errors.log', $e->getMessage() . '/n', FILE_APPEND );
+	file_put_contents('../logs/phalcon_errors.log', $e->getMessage() . "\n", FILE_APPEND );
 }

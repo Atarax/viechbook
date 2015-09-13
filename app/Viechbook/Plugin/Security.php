@@ -73,7 +73,7 @@ class Security extends PluginBase
 			'parvati' 		=> array('index'),
 			'messages' 		=> array('get_by_conversation'),
 			'users' 		=> array('edit', 'list_all', 'get_notifications', 'profile', 'messages', 'add', 'get_password_reset_links'),
-			'conversations' => array('list_all', 'get_participants', 'add_message','add_message_by_receiver', 'clear_notifications'),
+			'conversations' => array('list_all', 'get_participants', 'add_message','add_message_by_receiver', 'clear_notifications', 'get_or_create_by_user'),
 		);
 		foreach ($privateResources as $resource => $actions) {
 			$acl->addResource(new Resource($resource), $actions);

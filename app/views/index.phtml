@@ -135,9 +135,11 @@
 
 					return process(preProcessed);
 				});
-			},
-			autoSelect: true
+			}
+		}).on('typeahead:selected', function(event, selection) {
+			alert('fff');
 		});
+
 	});
 </script>
 
@@ -225,6 +227,12 @@
 			}
 		})
 	});
+
+	function openConversationWindowByUser(userId) {
+		$.getJSON( "/conversations/get_or_create_by_user/" + userId, function( response ) {
+			openConversationWindow(response.conversation_id, response.conversation_name);
+		});
+	}
 
 	function updateChatBox( conversationId ) {
 		currentConversationId = conversationId;
