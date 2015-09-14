@@ -16,10 +16,8 @@
 
 <div id="chat-conversation-window-dummy" class="panel panel-default chat-conversation-window" style="display: none;">
 	<div class="glyphicon glyphicon-remove-sign chat-conversation-window-close-button"></div>
-	<div class="panel-heading chat-conversation-window-headline">
-	</div>
-	<div class="panel-body chat-conversation-window-message-containter">
-	</div>
+	<div class="panel-heading chat-conversation-window-headline"></div>
+	<div class="panel-body chat-conversation-window-message-containter"></div>
 	<div class="chat-conversation-window-breadcrumb"></div>
 	<div class="chat-conversation-window-bottom-bar">
 		<textarea class="chat-dummy-textarea chat-message-editor-textarea"></textarea>
@@ -216,7 +214,6 @@
 				console.log('Connected to the big viech...');
 			},
 			function(something) {
-				console.debug(something);
 				console.warn('WebSocket connection closed');
 			},
 			{'skipSubprotocolCheck': true}
@@ -247,11 +244,40 @@
 		})
 	});
 
+	function toggleMinimizeMaximizeWindow(conversationId) {
+		var conversationWindow = $('#chat-conversation-window-' + conversationId);
+		console.debug(conversationWindow);
+		/** check if open or closed */
+		if( conversationWindow.hasClass('chat-conversation-window-closed') ) {
+			/** open */
+			conversationWindow.addClass('chat-conversation-window');
+			conversationWindow.removeClass('chat-conversation-window-closed');
+		}
+		else {
+			/** close */
+			conversationWindow.addClass('chat-conversation-window-closed');
+			conversationWindow.removeClass('chat-conversation-window');
+		}
+	}
+
 	function replaceEmojis(text) {
 		for(var i in EMOJI_MAPPING) {
+			var emojiKey = EMOJI_MAPPING[i][0];
 			var emojiCode = EMOJI_MAPPING[i][1];
+			var emojiSpan = '<span class="emoji ' + emojiCode + '"></span>';
 
-			text = text.replace(EMOJI_MAPPING[i][0], '<span class="emoji ' + emojiCode + '"></span>')
+			/** to be perfect we check the beginning and the end separately and only replace smileys surrounded by whitespaces */
+			if(text.substring(0, emojiKey.length) == emojiKey) {
+				text = emojiSpan + text.substring(emojiKey.length - 1, text.length - emojiKey.length);
+			}
+			/** the end-check */
+			var endOffset = text.length - emojiKey.length - 2;
+
+			if(text.substring(endOffset, endOffset + emojiKey.length + 1) == ' ' + emojiKey) {
+				text = text.substring(0, text.length - emojiKey.length - 1) + emojiSpan;
+			}
+
+			text = text.replace(' ' + emojiKey + ' ', emojiSpan)
 		}
 		return text;
 	}
@@ -381,7 +407,7 @@
 				$.each(response.notifications, function(index, notification) {
 					if(notification.type == <?php echo  Viechbook\Model\Notifications::TYPE_NEW_MESSAGE ?>) {
 						var content = $.parseJSON(notification.content);
-						console.debug(content);
+
 						if( content.conversation_id == conversation.id ) {
 							showNotifyTooltip = true;
 						}
@@ -459,13 +485,19 @@
 		/** first check if the window is not already open */
 		var found = false;
 
-		$('.chat-conversation-window').each(function(index, element) {
+		$('.chat-conversation-window,.chat-conversation-window-closed').each(function(index, element) {
 			element = $(element);
 
 			var id = element.attr('id');
 			var foundId = 'chat-conversation-window-' + conversationId;
 
 			if(id == foundId) {
+				/** check if minimized */
+				if( element.hasClass('chat-conversation-window-closed') ) {
+					/** then maximize */
+					toggleMinimizeMaximizeWindow(conversationId);
+				}
+
 				/** already open, so show and set the focus on the textfield */
 				$("#chat-conversation-window-" + conversationId).show();
 				$("#chat-message-conversation-" + conversationId).focus();
@@ -494,17 +526,25 @@
 			closeConversationWindow(conversationId);
 		});
 
+		/** make click on head minimize the window */
+		var headline = dummy.children('.chat-conversation-window-headline');
+		headline.on('click', function() {
+			console.debug('gooo');
+			toggleMinimizeMaximizeWindow(conversationId);
+		});
+
+
 		/** set the correct id of the textarea, so we can identify the message-content later */
 		var newTextAreaId = ("chat-message-conversation-" + conversationId);
 		var textarea = dummy.children('.chat-conversation-window-bottom-bar').children('textarea');
 		textarea = $(textarea[0]);
 
 		textarea.attr('id', newTextAreaId);
-		console.debug('test');
+
 		/** and also the callback to the sendMessage function */
 		textarea.keyup( function(event) {
 			var charCode = (typeof event.which === "number") ? event.which : event.keyCode;
-			console.debug(charCode);
+
 			/** 13 -> enter key */
 			if(charCode == 13) {
 				sendMessage(conversationId);
