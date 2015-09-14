@@ -247,6 +247,15 @@
 		})
 	});
 
+	function replaceEmojis(text) {
+		for(var i in EMOJI_MAPPING) {
+			var emojiCode = EMOJI_MAPPING[i][1];
+
+			text = text.replace(EMOJI_MAPPING[i][0], '<span class="emoji ' + emojiCode + '"></span>')
+		}
+		return text;
+	}
+
 	function openConversationWindowByUser(userId) {
 		$.getJSON( "/conversations/get_or_create_by_user/" + userId, function( response ) {
 			openConversationWindow(response.conversation_id, response.conversation_name);
@@ -336,8 +345,9 @@
 				bubble.append(infoDiv);
 				*/
 				var escaped = $("<div/>").text(message.content).html();
+				var withEmojisReplaced = replaceEmojis(escaped);
 
-				bubble.html( escaped );
+				bubble.html( withEmojisReplaced );
 				chatBox.append(bubble);
 			});
 
