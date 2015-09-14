@@ -63,6 +63,7 @@ class ControllerBase extends Controller{
 		/** css resources */
 		$this->assets
 			->addCss('/vendor/bootstrap/css/bootstrap.min.css')
+			->addCss('/css/emoji.css')
 			->addCss('/css/viechbook.css');
 
 		/** js resources */
@@ -70,7 +71,8 @@ class ControllerBase extends Controller{
 			->addJs('https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js', true)
 			->addJs('/vendor/bootstrap/js/bootstrap.min.js')
 			->addJs('https://autobahn.s3.amazonaws.com/js/autobahn.min.js')
-			->addJs('/vendor/typeahead/js/bootstrap3-typeahead.min.js');
+			->addJs('/vendor/typeahead/js/bootstrap3-typeahead.min.js')
+			->addJS('/js/emojiMapping.js');
 
 		if(VIECHBOOK_ENV == 'LIVE') {
 			$this->assets->addJs('/js/gasnippet.js');
