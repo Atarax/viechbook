@@ -23,13 +23,21 @@
     bottom: 0;
 }
 
+.chat-conversation-window-closed {
+    width: 240px;
+    float: right;
+    padding-right: 0px;
+    margin-top: 290px;
+    bottom: 0;
+}
+
 .chat-containerbar-bottom {
     position:fixed;
     bottom:0;
     right:106px;
     z-index:50;
     height:320px;
-    padding-right:15px;
+       padding-right:15px;
 }
 
 .chat-message-bubble-left {
