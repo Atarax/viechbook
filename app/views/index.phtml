@@ -490,16 +490,23 @@
 		textarea = $(textarea[0]);
 
 		textarea.attr('id', newTextAreaId);
-
+		console.debug('test');
 		/** and also the callback to the sendMessage function */
 		textarea.keyup( function(event) {
 			var charCode = (typeof event.which === "number") ? event.which : event.keyCode;
+			console.debug(charCode);
 			/** 13 -> enter key */
 			if(charCode == 13) {
 				sendMessage(conversationId);
 			}
+		});
+
+		/** esc somehow only works on keydown */
+		dummy.on('keydown', function(event) {
+			var charCode = (typeof event.which === "number") ? event.which : event.keyCode;
+
 			/** escape - close window */
-			else if(charCode == 27){
+			if(charCode == 27){
 				closeConversationWindow(conversationId);
 			}
 		});
