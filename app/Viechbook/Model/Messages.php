@@ -1,6 +1,7 @@
 <?php
 namespace Viechbook\Model;
 use Phalcon\Mvc\Model;
+use Phalcon\Paginator\Adapter\QueryBuilder;
 
 /**
  * Created by PhpStorm.
@@ -105,6 +106,5 @@ class Messages extends ModelBase {
 	public function setContent($content) {
 		$this->content = $content;
 	}
-
 
 }
