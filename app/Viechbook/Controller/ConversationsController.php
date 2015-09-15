@@ -83,6 +83,10 @@ class ConversationsController extends ControllerBase {
 				$withUsers[] = $user->getUsername();
 			}
 		}
+		/** if $withUsers is empty, we have a conversation with ourself */
+		if( empty($withUsers) ) {
+			$withUsers[] = ['id' => $this->currentUser->id, 'username' => $this->currentUser->username];
+		}
 		$converstaionName = implode(',', $withUsers);
 
 		return ['conversation_id' => $commonConversation->id, 'conversation_name' => $converstaionName];
@@ -188,7 +192,15 @@ class ConversationsController extends ControllerBase {
 
         $conversationsResult = [];
 
-        foreach($currentUser->getConversations(['order' => 'Viechbook\\Model\\Conversations.modified desc']) as $conversation) {
+		/** we also track which conversations we already got because the converstaion with ourself would be twice in there */
+		$conversationsTouched = [];
+
+		foreach($currentUser->getConversations(['order' => 'Viechbook\\Model\\Conversations.modified desc']) as $conversation) {
+			$conversationId = $conversation->getId();
+
+			if( isset($conversationsTouched[$conversationId]) ) {
+				continue;
+			}
 
 			// TODO make more efficient by using query parameters $messages
 			$messages = $conversation->getUserMessages();
@@ -208,9 +220,15 @@ class ConversationsController extends ControllerBase {
                     $withUsers[] = array( 'id' => $user->getId(), 'username' => $user->getUsername() );
                 }
             }
+			/** if $withUsers is empty, we have a conversation with ourself */
+			if( empty($withUsers) ) {
+				$withUsers[] = ['id' => $this->currentUser->id, 'username' => $this->currentUser->username];
+			}
 
-            $conversationsResult[] = array(
-                'id' => $conversation->getId(),
+			$conversationsTouched[$conversationId] = 1;
+
+			$conversationsResult[] = array(
+                'id' => $conversationId,
                 'lastMessage' => $lastMessage,
                 'withUsers' => $withUsers
             );
