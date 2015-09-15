@@ -2,7 +2,7 @@
 namespace Viechbook\Controller;
 use Phalcon\Exception;
 use Phalcon\Mvc\View;
-use Viechbook\Model\Conversations;
+use Phalcon\Paginator\Adapter\QueryBuilder;
 use Viechbook\Model\ConversationsUsers;
 use Viechbook\Model\Messages;
 use Viechbook\Model\Users;
@@ -31,7 +31,7 @@ class MessagesController extends ControllerBase {
              */
     }
 
-    public function get_by_conversationAction($conversationId = null) {
+    public function get_by_conversationAction($conversationId, $currentPageNumber = 0) {
 		/** check for permissions to see the messages */
 		$link = ConversationsUsers::findFirst(['conversation_id' => $conversationId, 'user_id' => $this->currentUser->id]);
 
@@ -39,13 +39,26 @@ class MessagesController extends ControllerBase {
 			throw new Exception('Not allowed to acces that conversation!');
 		}
 
-		/** @var Messages[] $messages */
-		$messages = Messages::find( ['conversation_id=' . $conversationId ] );
+		$builder = $this->modelsManager->createBuilder()
+			->from('Viechbook\Model\Messages')
+			->where('conversation_id = ' . intval($conversationId))
+			->orderBy('id DESC');
+
+
+		$paginator = new QueryBuilder(
+			array(
+				"builder"  => $builder,
+				"limit" => 40,
+				"page"  => $currentPageNumber
+			)
+		);
 
 		$users = [];
 		$result = [];
 
-		foreach($messages as $index => $message) {
+		$page = $paginator->getPaginate();
+
+		foreach($page->items as $index => $message) {
 			/** @var Messages $message */
 			$userId = $message->getUserId();
 
@@ -64,6 +77,8 @@ class MessagesController extends ControllerBase {
 			$result[] = $row;
 		}
 
+		/** order asc is fine for pagination but we need the messages in chronological order */
+		$result = array_reverse($result);
         echo json_encode($result);
 
 		// Only output json
