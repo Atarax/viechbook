@@ -12,7 +12,7 @@ namespace Viechbook\Model;
  */
 class Notifications extends ModelBase {
     const TYPE_NEW_MESSAGE = 1;
-    const TYPE_NOTIFICATION_CHANGED = 2;
+    const TYPE_NOTIFICATIONS_CHANGED = 2;
 
 	public $user_id;
 	public $content;

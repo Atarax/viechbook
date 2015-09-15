@@ -15,15 +15,20 @@
 <script type="text/javascript">
 	var VIECHBOOK = {
 		currentUser: {
-			id: <?php echo $currentUser['id'] ?>,
-			username: '<?php echo  $currentUser['username'] ?>'
+			id				:	<?php echo $currentUser['id'] ?>,
+			username		:	'<?php echo  $currentUser['username'] ?>',
+		},
+		websocketAddress:	'<?php echo RATCHET_SERVER_ADRESS ?>',
+		constants: {
+			NOTIFICATION_NEW_MESSAGE: <?php echo Notifications::TYPE_NEW_MESSAGE ?>,
+			NOTIFICATION_UPDATED: <?php echo Notifications::TYPE_NOTIFICATIONS_CHANGED ?>
 		}
 	}
 </script>
 
 <body>
 
-<div id="chat-conversation-window-dummy" class="panel panel-default chat-conversation-window" style="display: none;">
+<div id="chat-conversation-window-dummy" class="panel panel-default chat-conversation-window chat-conversation-window-open" style="display: none;">
 	<div class="glyphicon glyphicon-remove-sign chat-conversation-window-close-button"></div>
 	<div class="panel-heading chat-conversation-window-headline"></div>
 	<div class="panel-body chat-conversation-window-message-containter"></div>
@@ -63,7 +68,7 @@
 
 			<div class="btn-group">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span class="glyphicon glyphicon-off">&nbsp;<span class="caret"></span>
+					<span class="glyphicon glyphicon-off">&nbsp;</span><span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
 					<li><a href="/session/logout">Logout</a></li>
@@ -123,18 +128,22 @@
 <?php $this->assets->outputJs() ?>
 
 <script type="text/javascript">
+	/** globals */
+	var viechbookChat;
+	var viech;
+	var connection;
+
 	$(document).ready(function() {
+		viechbookChat = new ViechbookChat();
+		viechbookChat.updateConversationsBox();
 
 		/** get open chat windows */
 		 $.getJSON('/conversations/get_open_conversation_windows', function (response) {
 			 for(var i in response) {
 				 var conversation = response[i];
-				 openConversationWindow(conversation.conversation_id, conversation.title, false);
+				 viechbookChat.openConversationWindow(conversation.conversation_id, conversation.title, false);
 			 }
 		});
-
-		//new WebSocket("<?php echo RATCHET_SERVER_ADRESS; ?>", "one");
-		//openConversationWindow(1, 'Alpha-Viech');
 
 		var preProcessed = [];
 		var input = $('.typeahead');
@@ -158,16 +167,24 @@
 			},
 			updater:function (item) {
 				/** open chat window for user */
-				openConversationWindowByUser(item.id);
+				viechbookChat.openConversationWindowByUser(item.id);
 
 				return item;
 			}
 		});
 
 	});
-</script>
 
-<script type="text/javascript">
+	function clearNotifications(conversationId) {
+		$.getJSON( "/conversations/clear_notifications/" + conversationId, function( response ) {
+			if(response == true) {
+				$('#notification-for-conversation-' + conversationId).text('');
+			}
+		});
+
+		viechbookChat.updateConversationsBox()
+	}
+
 	var updateUserMenuNotifications = function() {
 		$.getJSON( "/users/get_notifications/" , function( notifications ) {
 			var totalNotifications;
@@ -196,27 +213,15 @@
 			$(document).prop('title', title);
 		});
 	};
-	var theViech = function() {
-		var registrations = [];
-		this.register = function(type, callback) {
-			registrations.push( {type: type, callback: callback} );
-		};
-		this.receive = function(message) {
-			$.each(registrations, function (index, registration) {
-				if( registration.type == message.type ) {
-					registration.callback(message);
-				}
-			});
-		};
-	};
-	var viech;
-	var connection;
+
 	$(document).ready( function() {
-		viech = new theViech();
+		viech = new ViechbookConnector();
+
+		/** enable this for autobahn-debugging */
 		//ab.debug(true, true);
-		connection = new ab.Session('<?php echo RATCHET_SERVER_ADRESS; ?>',
+		connection = new ab.Session(VIECHBOOK.websocketAddress,
 			function() {
-				connection.subscribe('<?= $currentUser['id'] ?>', function(topic, data) {
+				connection.subscribe(VIECHBOOK.currentUser.id + '', function(topic, data) {
 					viech.receive(data);
 					console.log('New article published to category "' + topic + '" : ' + data);
 				});
@@ -227,14 +232,29 @@
 			},
 			{'skipSubprotocolCheck': true}
 		);
+		/*
+		connection = new ab.Session(VIECHBOOK.websocketAddress,
+			function() {
+				connection.subscribe(VIECHBOOK.currentUser.id, function(topic, data) {
+					viech.receive(data);
+					console.log('New article published to category "' + topic + '" : ' + data);
+				});
+				console.log('Connected to the big viech...');
+			},
+			function() {
+				console.warn('WebSocket connection closed');
+			},
+			{'skipSubprotocolCheck': true}
+		);
+		*/
 		updateUserMenuNotifications();
 		/**
 		 * @TODO make register take an array instead or both?
 		 **/
-		viech.register(<?= Notifications::TYPE_NOTIFICATION_CHANGED ?> , function() {
+		viech.register(VIECHBOOK.constants.NOTIFICATION_UPDATED , function() {
 			updateUserMenuNotifications();
 		});
-		viech.register(<?= Notifications::TYPE_NEW_MESSAGE ?> , function() {
+		viech.register(VIECHBOOK.constants.NOTIFICATION_NEW_MESSAGE , function() {
 			updateUserMenuNotifications();
 		});
 	});
