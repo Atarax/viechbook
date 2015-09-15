@@ -5,7 +5,7 @@
 }
 
 .chat-people {
-    width: 120px;
+    width: 148px;
     right:0;
     position: fixed;
     padding-right:0px;
@@ -21,6 +21,7 @@
     float: right;
     padding-right: 0px;
     bottom: 0;
+    margin-right: 6px;
 }
 
 .chat-conversation-window-closed {
@@ -34,7 +35,7 @@
 .chat-containerbar-bottom {
     position:fixed;
     bottom:0;
-    right:106px;
+    right:133px;
     z-index:50;
     height:320px;
        padding-right:15px;
@@ -128,4 +129,9 @@
     font-size: 12px;
     padding-left:2px;
     height:57px;
+}
+
+.chat-conversation-element {
+    cursor: pointer;
+    cursor: hand;
 }

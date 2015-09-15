@@ -412,7 +412,7 @@ class ConversationsController extends ControllerBase {
             if($content->conversation_id == $conversationId) {
                 $notification->delete();
                 $notifier = new TheViechNotifier();
-                $notifier->notify($auth['id'], Notifications::TYPE_NOTIFICATION_CHANGED);
+                $notifier->notify($auth['id'], Notifications::TYPE_NOTIFICATIONS_CHANGED);
                 // only got one notification per conversation and user
                 break;
             }

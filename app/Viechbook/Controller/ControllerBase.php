@@ -72,6 +72,7 @@ class ControllerBase extends Controller{
 			->addJs('/vendor/bootstrap/js/bootstrap.min.js')
 			->addJs('https://autobahn.s3.amazonaws.com/js/autobahn.min.js')
 			->addJs('/vendor/typeahead/js/bootstrap3-typeahead.min.js')
+			->addJS('/js/viechbookConnector.js')
 			->addJS('/js/viechbookChat.js')
 			->addJS('/js/emojiMapping.js');
 
