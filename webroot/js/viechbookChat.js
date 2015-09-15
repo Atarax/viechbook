@@ -216,7 +216,7 @@ ViechbookChat = function() {
         /** first check if the window is not already open */
         var found = false;
 
-        $('.chat-conversation-window').each(function(index, element) {
+        $('.chat-conversation-window,.chat-conversation-window-closed').each(function(index, element) {
             element = $(element);
 
             var id = element.attr('id');
