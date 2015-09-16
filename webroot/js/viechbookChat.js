@@ -159,13 +159,19 @@ ViechbookChat = function() {
             class : 'chat-conversation-element'
         });
 
-        var button = $("<a>", {
-            text: title
+        var img = $("<img>", {
+            src : '/img/soundviech.jpg',
+            class: 'chat-profile-picture'
         });
+
+        var button = $("<a>");
 
         button.click( function() {
                 that.openConversationWindow(conversationId,title);
         });
+
+        button.append(img);
+        button.append(title);
 
         li.append(button);
 

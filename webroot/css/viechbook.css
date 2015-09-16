@@ -29,10 +29,10 @@ body{
 .chat-containerbar-bottom {
     position:fixed;
     bottom:0;
-    right:133px;
+    right:180px;
     z-index:50;
     height:320px;
-       padding-right:15px;
+    padding-right:15px;
 }
 
 .chat-message-bubble-left {
@@ -126,7 +126,7 @@ body{
 }
 
 .chat-people {
-    width: 148px;
+    width: 195px;
     right:0;
     position: fixed;
     padding-right:0px;
@@ -137,10 +137,14 @@ body{
     z-index:50;
 }
 
+.chat-people>ul {
+    margin-left: -10px;
+}
+
 .chat-conversation-element {
     cursor: pointer;
     cursor: hand;
-    width: 120px;
+    width: 181px;
     text-overflow: ellipsis;
 }
 
@@ -148,4 +152,14 @@ body{
     text-overflow: ellipsis;
     overflow: hidden;
     white-space:nowrap ;
+}
+
+.chat-conversation-element>a>img {
+    margin-right:5px;
+    margin-left: -5px;
+}
+
+.chat-profile-picture {
+    width: 32px;
+    float: left;
 }
