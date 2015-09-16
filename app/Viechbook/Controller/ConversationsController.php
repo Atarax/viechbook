@@ -85,7 +85,7 @@ class ConversationsController extends ControllerBase {
 		}
 		/** if $withUsers is empty, we have a conversation with ourself */
 		if( empty($withUsers) ) {
-			$withUsers = [$this->currentUser->username];
+			$withUsers = [$this->currentUser->getUsername()];
 		}
 		$converstaionName = implode(',', $withUsers);
 
