@@ -1,3 +1,7 @@
+body{
+    background: #FBFBFB;
+}
+
 .viechbook-nav-top {
     position:fixed;
     display: block;
