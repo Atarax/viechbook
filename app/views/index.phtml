@@ -232,21 +232,7 @@
 			},
 			{'skipSubprotocolCheck': true}
 		);
-		/*
-		connection = new ab.Session(VIECHBOOK.websocketAddress,
-			function() {
-				connection.subscribe(VIECHBOOK.currentUser.id, function(topic, data) {
-					viech.receive(data);
-					console.log('New article published to category "' + topic + '" : ' + data);
-				});
-				console.log('Connected to the big viech...');
-			},
-			function() {
-				console.warn('WebSocket connection closed');
-			},
-			{'skipSubprotocolCheck': true}
-		);
-		*/
+
 		updateUserMenuNotifications();
 		/**
 		 * @TODO make register take an array instead or both?
@@ -254,8 +240,13 @@
 		viech.register(VIECHBOOK.constants.NOTIFICATION_UPDATED , function() {
 			updateUserMenuNotifications();
 		});
-		viech.register(VIECHBOOK.constants.NOTIFICATION_NEW_MESSAGE , function() {
+		viech.register(VIECHBOOK.constants.NOTIFICATION_NEW_MESSAGE , function(message) {
 			updateUserMenuNotifications();
+
+			console.debug(message);
+
+			viechbookChat.updateConversationsBox();
+			viechbookChat.updateChatBox(message.data.conversation_id);
 		});
 	});
 </script>
