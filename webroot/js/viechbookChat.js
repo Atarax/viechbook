@@ -6,7 +6,7 @@ ViechbookChat = function() {
      */
     this.toggleMinimizeMaximizeWindow = function(conversationId) {
         var conversationWindow = $('#chat-conversation-window-' + conversationId);
-        console.debug(conversationWindow);
+
         /** check if open or closed */
         if( conversationWindow.hasClass('chat-conversation-window-closed') ) {
             /** open */
@@ -26,6 +26,8 @@ ViechbookChat = function() {
      * @returns {*}
      */
     this.replaceEmojis = function(text) {
+        text = $("<div/>").html(text).text();
+
         for(var i in EMOJI_MAPPING) {
             var emojiKey = EMOJI_MAPPING[i][0];
             var emojiCode = EMOJI_MAPPING[i][1];
@@ -33,7 +35,7 @@ ViechbookChat = function() {
 
             /** to be perfect we check the beginning and the end separately and only replace smileys surrounded by whitespaces */
             if(text.substring(0, emojiKey.length) == emojiKey) {
-                text = emojiSpan + text.substring(emojiKey.length - 1, text.length - emojiKey.length);
+                text = emojiSpan + text.substring(emojiKey.length , text.length);
             }
             /** the end-check */
             var endOffset = text.length - emojiKey.length - 2;
@@ -261,7 +263,6 @@ ViechbookChat = function() {
         /** make click on head minimize the window */
         var headline = dummy.children('.chat-conversation-window-headline');
         headline.on('click', function() {
-            console.debug('gooo');
             that.toggleMinimizeMaximizeWindow(conversationId);
         });
 
