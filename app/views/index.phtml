@@ -240,11 +240,11 @@
 		 **/
 		viech.register(VIECHBOOK.constants.NOTIFICATION_UPDATED , function() {
 			updateUserMenuNotifications();
+			viechbookChat.updateConversationsBox();
 		});
+
 		viech.register(VIECHBOOK.constants.NOTIFICATION_NEW_MESSAGE , function(message) {
 			updateUserMenuNotifications();
-
-			console.debug(message);
 
 			viechbookChat.updateConversationsBox();
 			viechbookChat.updateChatBox(message.data.conversation_id);

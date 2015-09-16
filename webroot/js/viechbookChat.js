@@ -202,6 +202,7 @@ ViechbookChat = function() {
             content: content
         }, function() {
             that.updateChatBox(conversationId);
+            that.updateConversationsBox();
         });
     };
 
