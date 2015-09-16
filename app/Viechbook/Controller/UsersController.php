@@ -1,6 +1,10 @@
 <?php
 
 namespace Viechbook\Controller;
+use Phalcon\Exception;
+use Phalcon\Mvc\Model\Query;
+use Phalcon\Mvc\View;
+use Viechbook\Model\SecurityTokens;
 use Viechbook\Model\Users;
 
 /**
@@ -14,38 +18,82 @@ class UsersController extends ControllerBase {
 
     public function index() {}
 
-    public function addAction() {
-        if ($this->request->isPost()) {
-            $user = new Users();
+    public function addAction($token) {
+		/** @var SecurityTokens $token */
+		$token = SecurityTokens::findFirst([
+			'token = :token:',
+			'bind' => ['token' => $token]
+		]);
 
-			$password = $this->security->hash( $this->request->getPost('password') );
+		/**
+		 * Only users with token are allowed to register
+		 */
+		if($token && $token->getPayload() == 'signup') {
 
-			$user->setEmail( $this->request->getPost('email') );
-			$user->setUsername( $this->request->getPost('username') );
-			$user->setPassword( $password );
-			$user->setModified();
+			if ($this->request->isPost()) {
+				$user = new Users();
 
-			$success = $user->save();
+				$password = $this->security->hash( $this->request->getPost('password') );
 
-            if($success) {
-				$this->flash->success( 'The user has been saved' );
+				$user->setEmail( $this->request->getPost('email') );
+				$user->setUsername( $this->request->getPost('username') );
+				$user->setPassword( $password );
+
+				$user->save();
+
+				$errors = $user->getMessages();
+
+				if( empty($errors) ) {
+					/** success! */
+					$token->delete();
+
+					$this->flash->success( 'Welcome to Viechbook' );
+				}
+
 
 				$this->dispatcher->forward(array(
-					'controller' => 'index',
-					'action' => 'index'
+					'controller' => 'session',
+					'action' => 'login'
 				));
 
 				return;
-            }
+			}
 
-			$this->flash->error( $user->getMessages() );
-        }
-    }
+			$this->view->setRenderLevel(View::LEVEL_LAYOUT);
+			$this->view->setVar('token', $token);
+		}
+		else {
+			$this->flash->error('Invalid token!');
+			$this->dispatcher->forward(array(
+				'controller' => 'index',
+				'action' => 'index'
+			));
+		}
 
+	}
+
+	public function get_password_reset_linksAction() {
+		$currentUser = $this->session->get('auth');
+
+		if($currentUser['id'] != 1) {
+			die();
+		}
+		$users = Users::find();
+
+		/** @var Users $user */
+		foreach($users as $user) {
+			$token = new SecurityTokens();
+			$token->setPayload($user->getId());
+			$token->save();
+
+			echo '<a href="https://viechbook.com/users/reset_password/' . $token->getToken() . '">' . $user->getUsername() . '</a><br>';
+		}
+
+		die();
+	}
 
     public function editAction($id = null) {
-		var_dump($_FILES);
-		die();
+		/** @var Users $user */
 		$user = Users::findFirst($id);
 		$auth = $this->session->get('auth');
 
@@ -56,22 +104,76 @@ class UsersController extends ControllerBase {
 			throw new Exception(__('User not found or unproper userid given!'));
 		}
 
-		/*
-		if( $this->request->is('post') || $this->request->is('put') ) {
-			$user
-			$usersTable->patchEntity($user, $this->request->data);
 
-			if ($usersTable->save($user)) {
-				$this->Flash->success(__('Your profile has been updated!'));
-				//return $this->redirect(array('controller' => 'pages', 'action' => 'users'));
+
+		if( $this->request->isPost() ) {
+
+			$user->setEmail( $this->request->getPost('email') );
+			$user->save();
+
+			$errors = $user->getMessages();
+
+			if( !empty($errors) ) {
+				$this->flash->error( $errors );
 			}
-			$this->Flash->error(__('The user could not be saved. Please, try again.'));
+			else {
+				$this->flash->success('Successfully updated your profile!');
+				$this->dispatcher->forward([
+					'action' => 'profile',
+					'params' => [$id]
+				]);
+			}
 		}
-		*/
-        $this->view->setVar('user', $user->toArray());
+
+        $this->view->setVar('user', $user);
     }
 
     public function messagesAction() {}
+
+	public function reset_passwordAction($tokenValue) {
+		// Instantiate the Query
+		$token = SecurityTokens::findFirst([
+			'token = :token:',
+			'bind' => ['token' => $tokenValue]
+		]);
+
+		if( !$token ) {
+			$this->flash->error('Invalid token, sorry!');
+
+			$this->dispatcher->forward([
+				'controller' => 'index',
+				'action' => 'index'
+			]);
+
+			return;
+		}
+
+		$userId = intval($token->getPayload());
+		$user = Users::findFirst($userId);
+
+		if( $this->request->isPost() ) {
+
+			$password = $this->security->hash( $this->request->getPost('password') );
+
+			$user->setPassword($password);
+			$user->save();
+
+			$token->delete();
+
+			$this->flash->success('Successfully updated password!');
+
+			$this->dispatcher->forward([
+				'controller' => 'index',
+				'action' => 'index'
+			]);
+
+			return;
+		}
+
+		$this->view->setRenderLevel(View::LEVEL_LAYOUT);
+		$this->view->setVar('token', $tokenValue);
+		$this->view->setVar('user', $user);
+	}
 
     public function profileAction($id) {
         $user = Users::findFirst($id);
@@ -86,7 +188,10 @@ class UsersController extends ControllerBase {
     public function list_allAction() {
         $users = Users::find();
 
-        die( json_encode( ['data' => $users->toArray()]) );
+		$this->view->disable();
+
+		echo json_encode( ['data' => $users->toArray()]);
+//		echo json_encode( ['data' => $users->toArray()]);
     }
 
     public function get_notificationsAction() {

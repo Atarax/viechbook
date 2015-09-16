@@ -1,0 +1,67 @@
+<?php echo $this->getContent(); ?>
+<?php /*
+<script src="/vendor/jcrop/js/jquery.Jcrop.min.js"></script>
+<link rel="stylesheet" href="/vendor/jcrop/css/jquery.Jcrop.css" type="text/css" />
+*/ ?>
+<h3>Edit Profile</h3><br>
+
+<div class="row">
+	<div class="col-lg-6">
+
+		<div class="box">
+			<div class="box-content">
+
+				<div class="padded">
+					<?php echo $this->tag->form([
+						'users/edit/' . $currentUser['id'],
+						'id' => 'profile-form',
+						'class' => 'form-horizontal fill-up validatable',
+						'enctype' => 'multipart/form-data'
+					]); ?>
+
+						<img src="/img/avatar1.jpg" id="target" />
+
+						<div class="form-group">
+							<label class="control-label col-lg-2">Avatar</label>
+							<div class="col-lg-10">
+								<input type="file" name="avatar" class="validate[required]" id="picedit-traget" data-prompt-position="topLeft"/>
+							</div>
+						</div>
+
+
+						<div class="form-group">
+							<label class="control-label col-lg-2">Email</label>
+							<div class="col-lg-10">
+								<input type="text" class="validate[required]" name="email" value="<?= $user->getEmail(); ?>"/>
+							</div>
+						</div>
+
+
+						<div class="form-actions">
+							<button type="submit" class="btn btn-blue">Save changes</button>
+						</div>
+					<?php echo $this->tag->endForm(); ?>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+<script type="text/javascript">
+	/*
+	jQuery(function($) {
+		$('#target').Jcrop({
+			minSize: [200, 200],
+			maxSize: [200, 200],
+			setSelect:   [ 100, 100, 50, 50 ],
+			aspectRatio: 1
+		});
+	});
+	/*
+	$(document).ready( function(){
+		$('#profile-form').submit( function() {
+			this.submit();
+		});
+	});
+	*/
+</script>

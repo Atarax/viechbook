@@ -5,9 +5,9 @@ namespace Viechbook\Plugin;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Acl\Resource;
 use Phalcon\Acl\Role;
-use Phalcon\Events\Event,
-	Phalcon\Mvc\Dispatcher,
-	Phalcon\Acl;
+use Phalcon\Events\Event;
+use Phalcon\Mvc\Dispatcher;
+use	Phalcon\Acl;
 
 class Security extends PluginBase
 {
@@ -69,11 +69,21 @@ class Security extends PluginBase
 
 		//Private area resources (backend)
 		$privateResources = array(
-			'pages' => array('users'),
-			'index' => array('index'),
-			'messages' => array('get_by_conversation'),
-			'users' => array('edit', 'list_all', 'get_notifications', 'profile'),
-			'conversations' => array('list_all', 'get_participants', 'add_message','add_message_by_receiver', 'clear_notifications'),
+			'pages' 		=> array('users'),
+			'parvati' 		=> array('index'),
+			'messages' 		=> array('get_by_conversation'),
+			'users' 		=> array('edit', 'list_all', 'get_notifications', 'profile', 'messages', 'add', 'get_password_reset_links'),
+			'conversations' => array(
+				'list_all',
+				'get_participants',
+				'add_message',
+				'add_message_by_receiver',
+				'clear_notifications',
+				'get_or_create_by_user',
+				'close_conversation_window',
+				'open_conversation_window',
+				'get_open_conversation_windows'
+			),
 		);
 		foreach ($privateResources as $resource => $actions) {
 			$acl->addResource(new Resource($resource), $actions);
@@ -85,7 +95,8 @@ class Security extends PluginBase
 
 		//Public area resources (frontend)
 		$publicResources = array(
-			'users' => array('add', 'messages'),
+			'index' => array('index'),
+			'users' => array('reset_password', 'add'),
 			'session' => array('login', 'logout', 'start')
 		);
 
