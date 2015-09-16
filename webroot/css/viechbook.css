@@ -6,7 +6,18 @@ body{
     position:fixed;
     display: block;
     width: 100%;
+    /* background: rgba(13, 37, 3, 0.81); */
 }
+
+/* for header-font in different color
+.viechbook-nav-top>div>div {
+    color: #F3F3F3 !important;
+}
+
+.viechbook-nav-top>div>div>a {
+    color: #F3F3F3 !important;
+}
+*/
 
 .chat-conversation-window {
     width: 240px;
