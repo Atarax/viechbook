@@ -141,6 +141,7 @@
 		 $.getJSON('/conversations/get_open_conversation_windows', function (response) {
 			 for(var i in response) {
 				 var conversation = response[i];
+				 console.debug(response);
 				 viechbookChat.openConversationWindow(conversation.conversation_id, conversation.title, false);
 			 }
 		});

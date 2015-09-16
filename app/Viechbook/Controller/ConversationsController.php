@@ -175,6 +175,10 @@ class ConversationsController extends ControllerBase {
 					}
 					$title[] = $user->getUsername();
 				}
+				/** conversation with ourself */
+				if( empty($title) ) {
+					$title = [$this->currentUser->username];
+				}
 
 				$result[] = ['conversation_id' => $conversation->id, 'title' => implode(',', $title)];
 			}
