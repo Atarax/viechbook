@@ -186,12 +186,19 @@ class UsersController extends ControllerBase {
     }
 
     public function list_allAction() {
-        $users = Users::find();
+		$this->setJsonResponse();
+
+		$result = [];
+		$users = Users::find();
 
 		$this->view->disable();
 
-		echo json_encode( ['data' => $users->toArray()]);
-//		echo json_encode( ['data' => $users->toArray()]);
+		/** whitelist properties */
+		foreach($users->toArray() as $user) {
+			$result[] = ['id' => $user['id'], 'username' => $user['username']];
+		}
+
+		return ['data' => $result];
     }
 
     public function get_notificationsAction() {
