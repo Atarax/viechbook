@@ -8,18 +8,6 @@ body{
     width: 100%;
 }
 
-.chat-people {
-    width: 148px;
-    right:0;
-    position: fixed;
-    padding-right:0px;
-    height:100%;
-    border-left:solid 1px #CECECE;
-    margin-top:50px;
-    padding-top:10px;
-    z-index:50;
-}
-
 .chat-conversation-window {
     width: 240px;
     height: 100%;
@@ -137,7 +125,27 @@ body{
     height:57px;
 }
 
+.chat-people {
+    width: 148px;
+    right:0;
+    position: fixed;
+    padding-right:0px;
+    height:100%;
+    border-left:solid 1px #CECECE;
+    margin-top:50px;
+    padding-top:10px;
+    z-index:50;
+}
+
 .chat-conversation-element {
     cursor: pointer;
     cursor: hand;
+    width: 120px;
+    text-overflow: ellipsis;
+}
+
+.chat-conversation-element>a {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space:nowrap ;
 }
