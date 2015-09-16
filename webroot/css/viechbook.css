@@ -13,6 +13,7 @@
     border-left:solid 1px;
     margin-top:50px;
     padding-top:10px;
+    z-index:50;
 }
 
 .chat-conversation-window {
