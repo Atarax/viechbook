@@ -113,6 +113,7 @@ ViechbookChat = function() {
             $.each(conversations, function( index, conversation) {
                 var users = [];
                 var showNotifyTooltip = false;
+
                 /**
                  * create title
                  **/
@@ -138,7 +139,8 @@ ViechbookChat = function() {
                     conversation.id,
                     peopleListId,
                     usernames,
-                    showNotifyTooltip
+                    showNotifyTooltip,
+                    conversation.isOnline
                 );
             });
         });
@@ -151,7 +153,7 @@ ViechbookChat = function() {
      * @param title the title of the element
      * @returns {*|jQuery|HTMLElement} the created element
      */
-    this.addChatConversationElement = function(conversationId, elementId, title, showNotifyBadge) {
+    this.addChatConversationElement = function(conversationId, elementId, title, showNotifyBadge, isOnline) {
         var that = this;
 
         var li = $("<li>", {
@@ -160,7 +162,7 @@ ViechbookChat = function() {
         });
 
         var img = $("<img>", {
-            src : '/img/soundviech.jpg',
+            src : '/img/phi.jpg',
             class: 'chat-profile-picture'
         });
 
@@ -171,7 +173,21 @@ ViechbookChat = function() {
         });
 
         button.append(img);
-        button.append(title);
+
+        var textDiv = $('<div>', {
+            class: 'conversation-element-text',
+            html: title
+        });
+
+        button.append(textDiv);
+
+        var onlineStatusDiv = $('<div>', {
+           class: 'conversation-element-online-status'
+        });
+
+        if(isOnline) {
+            button.append(onlineStatusDiv);
+        }
 
         li.append(button);
 
@@ -215,6 +231,92 @@ ViechbookChat = function() {
     };
 
 
+    function createNewConversationWindow(conversationId, that, title) {
+        /** create new chat-window */
+        var newWindow = $('<div>', {
+            class: 'panel panel-default chat-conversation-window chat-conversation-window-open',
+            id: 'chat-conversation-window-' + conversationId
+        });
+
+        /** construct the close-button-logic */
+        var closeButton = $('<div>', {
+            class: 'glyphicon glyphicon-remove-sign chat-conversation-window-close-button',
+            id: 'chat-conversation-window-close-button-' + conversationId
+        });
+
+        closeButton.click(function () {
+            that.closeConversationWindow(conversationId);
+        });
+
+        newWindow.append(closeButton);
+
+        /** make click on head minimize the window */
+        var headline = $('<div>', {
+            id: 'chat-conversation-window-headline-' + conversationId,
+            class: 'panel-heading chat-conversation-window-headline',
+            html: title
+        });
+        headline.on('click', function () {
+            that.toggleMinimizeMaximizeWindow(conversationId);
+        });
+
+        newWindow.append(headline);
+
+        container = $('<div>', {
+            id: 'chat-conversation-window-message-container' + conversationId,
+            class: 'panel-body chat-conversation-window-message-containter'
+        });
+        newWindow.append(container);
+
+        var breadcrumb = $('<div>', {
+            class: 'chat-conversation-window-breadcrumb'
+        });
+        newWindow.append(breadcrumb);
+
+        var bottomBar = $('<div>', {
+            id: 'chat-conversation-window-bottom-bar-' + conversationId,
+            class: 'chat-conversation-window-bottom-bar'
+        });
+        newWindow.append(bottomBar);
+
+        /** set the correct id of the textarea, so we can identify the message-content later */
+        var textarea = $('<textarea>', {
+            id: 'chat-message-conversation-' + conversationId,
+            class: 'chat-dummy-textarea chat-message-editor-textarea'
+        });
+        bottomBar.append(textarea);
+
+        /** and also the callback to the sendMessage function */
+        textarea.keyup(function (event) {
+            var charCode = (typeof event.which === "number") ? event.which : event.keyCode;
+
+            /** 13 -> enter key */
+            if (charCode == 13) {
+                that.sendMessage(conversationId);
+            }
+        });
+
+        /** esc somehow only works on keydown */
+        newWindow.on('keydown', function (event) {
+            var charCode = (typeof event.which === "number") ? event.which : event.keyCode;
+
+            /** escape - close window */
+            if (charCode == 27) {
+                that.closeConversationWindow(conversationId);
+            }
+        });
+
+        textarea.on('focus', function () {
+            clearNotifications(conversationId);
+        });
+
+        /** add it to the chat-window-container */
+        var container = $("#chat-window-containter");
+        container.append(newWindow);
+
+        return newWindow;
+    }
+
     this.openConversationWindow = function(conversationId, title, notifyServer) {
         var that = this;
 
@@ -253,69 +355,14 @@ ViechbookChat = function() {
             return
         }
 
-        /** create new chat-window */
-        var dummy = $('#chat-conversation-window-dummy').clone();
-
-        /** set the values of the dummy correctly */
-        dummy.attr('id', 'chat-conversation-window-' + conversationId);
-
-        /** construct the close-button-logic */
-        var closeButton = dummy.children('.chat-conversation-window-close-button');
-
-        closeButton.click(function() {
-            that.closeConversationWindow(conversationId);
-        });
-
-        /** make click on head minimize the window */
-        var headline = dummy.children('.chat-conversation-window-headline');
-        headline.on('click', function() {
-            that.toggleMinimizeMaximizeWindow(conversationId);
-        });
-
-
-        /** set the correct id of the textarea, so we can identify the message-content later */
-        var newTextAreaId = ("chat-message-conversation-" + conversationId);
-        var textarea = dummy.children('.chat-conversation-window-bottom-bar').children('textarea');
-        textarea = $(textarea[0]);
-
-        textarea.attr('id', newTextAreaId);
-
-        /** and also the callback to the sendMessage function */
-        textarea.keyup( function(event) {
-            var charCode = (typeof event.which === "number") ? event.which : event.keyCode;
-
-            /** 13 -> enter key */
-            if(charCode == 13) {
-                that.sendMessage(conversationId);
-            }
-        });
-
-        /** esc somehow only works on keydown */
-        dummy.on('keydown', function(event) {
-            var charCode = (typeof event.which === "number") ? event.which : event.keyCode;
-
-            /** escape - close window */
-            if(charCode == 27){
-                that.closeConversationWindow(conversationId);
-            }
-        });
-
-        textarea.on('focus', function(){
-            clearNotifications(conversationId);
-        });
-
-        /** set the conversation-title */
-        dummy.children('.chat-conversation-window-headline').html(title);
+        /** window not open already, build a new one */
+        var newWindow = createNewConversationWindow(conversationId, that, title);
 
         /** load messages etc */
         this.updateChatBox(conversationId);
 
-        /** add it to the chat-window-container */
-        var container = $("#chat-window-containter");
-        container.append(dummy);
-
         /** show-time and focus */
-        dummy.show();
+        newWindow.show();
         $("#chat-message-conversation-" + conversationId).focus();
 
         /** notify server if necessary */

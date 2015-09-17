@@ -124,4 +124,39 @@ class Users extends ModelBase {
 	public function getNotifications($parameters=null) {
 		return $this->getRelated('notifications', $parameters);
 	}
+
+	/**  */
+	public function getSettings($parameters=null) {
+		return $this->getRelated('settings', $parameters);
+	}
+
+
+	public function wasActive() {
+		$actionInterval = date('Y-m-d H:i:s', time() - (60 * 3));
+
+		$query = UserSettings::query()
+			->where(
+				'modified > :modified: AND user_id = :user_id:'
+			)
+			->bind([
+				'modified' => $actionInterval,
+				'user_id' => $this->id
+			]);
+
+		$result = $query->execute()->getFirst();
+
+		return !empty($result);
+	}
+	/**
+	 *
+	 */
+	public function trackActivity() {
+		/** @var UserSettings $settings */
+		$settings = $this->getSettings();
+
+		$id = $this->getId();
+		$id2 = $settings->user_id;
+		$settings->setModified();
+		$settings->save();
+	}
 }
