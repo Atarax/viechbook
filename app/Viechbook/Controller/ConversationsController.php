@@ -4,6 +4,7 @@ namespace Viechbook\Controller;
 use Exception;
 use Phalcon\Db;
 use Phalcon\Mvc\View;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Viechbook\Library\TheViechNotifier;
 use Viechbook\Model\Conversations;
 use Viechbook\Model\ConversationsUsers;
@@ -150,6 +151,9 @@ class ConversationsController extends ControllerBase {
 		return [false];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function get_open_conversation_windowsAction() {
 		$this->setJsonResponse();
 
@@ -165,12 +169,21 @@ class ConversationsController extends ControllerBase {
 				$users = $conversation->getUsers();
 				$title = [];
 
+				/** security-check */
+				$allowed = false;
+
 				foreach($users as $user) {
 					if($user->id == $this->currentUser->id) {
+						$allowed = true;
 						continue;
 					}
 					$title[] = $user->getUsername();
 				}
+
+				if(!$allowed) {
+					throw new AccessDeniedException('you are not allowed to see that conversation!');
+				}
+
 				/** conversation with ourself */
 				if( empty($title) ) {
 					$title = [$this->currentUser->username];
@@ -298,10 +311,32 @@ class ConversationsController extends ControllerBase {
 	 * @return Conversations a common conversation which is not a group conversation (should be exactly one)
 	 */
     private function getCommonConversation(Users $receiver,Users $sender){
-		$statement = $this->db->prepare('SELECT conversation_id FROM viechbook.conversations_users WHERE user_id = :queryUser OR user_id = :currentUser GROUP BY conversation_id HAVING count(conversation_id) > 1;');
+		$statement = $this->db->prepare(
+			'SELECT conversation_id
+			FROM viechbook.conversations_users
+			WHERE user_id IN (?,?)
+			GROUP BY conversation_id
+			HAVING COUNT(conversation_id) > 1'
+		);
+
+
+		$receiverConversations = $receiver->getConversations();
+
+		$commonConversation = null;
+		foreach($receiverConversations as $conversation) {
+			if($conversation->isGroup) {
+					continue;
+			}
+			foreach($conversation->getUsers() as $user) {
+				if($user->getId() == $sender->getId()) {
+					$commonConversation = $conversation;
+				}
+			}
+		}
+		/*
+
 		$statement->execute([
-			'queryUser' => $receiver->id,
-			'currentUser' => $sender->id
+			$receiver->getId(), $sender->getId()
 		]);
 
 		$result = $statement->fetch(Db::FETCH_ASSOC);
@@ -310,7 +345,7 @@ class ConversationsController extends ControllerBase {
 		if( !empty($result) ) {
 			$commonConversation = Conversations::findFirst($result['conversation_id']);
 		}
-
+*/
 		return $commonConversation;
     }
 

@@ -114,9 +114,10 @@ class Users extends ModelBase {
 	/**
 	 * @return \Viechbook\Model\Conversations[]
 	 */
+	/*
 	public function getConversations($parameters=null) {
 		return $this->getRelated('conversations', $parameters);
-	}
+	}*/
 
 	/**
 	 * @return \Viechbook\Model\Notifications[]
