@@ -28,21 +28,11 @@
 
 <body>
 
-<div id="chat-conversation-window-dummy" class="panel panel-default chat-conversation-window chat-conversation-window-open" style="display: none;">
-	<div class="glyphicon glyphicon-remove-sign chat-conversation-window-close-button"></div>
-	<div class="panel-heading chat-conversation-window-headline"></div>
-	<div class="panel-body chat-conversation-window-message-containter"></div>
-	<div class="chat-conversation-window-breadcrumb"></div>
-	<div class="chat-conversation-window-bottom-bar">
-		<textarea class="chat-dummy-textarea chat-message-editor-textarea"></textarea>
-	</div>
-</div>
-
 <div id="chat-window-containter" class="chat-containerbar-bottom">
 </div>
 <nav class="navbar navbar-default navbar-static-top viechbook-nav-top">
 	<div class="container-fluid">
-		<div class="col-md-2" href="#"></div><div class="col-md-4" href="#"><div class="navbar-header navbar-brand navbar-left" href="#">
+		<div class="col-md-2"></div><div class="col-md-4" href="#"><div class="navbar-header navbar-brand navbar-left">
 				<img style="max-width:100%; max-height:100%;" alt="Brand" src="/img/soundviech.jpg">
 			</div><div class="navbar-header navbar-left">
 				<a class="navbar-brand">Viechbook</a>
@@ -129,7 +119,6 @@
 		 $.getJSON('/conversations/get_open_conversation_windows', function (response) {
 			 for(var i in response) {
 				 var conversation = response[i];
-				 console.debug(response);
 				 viechbookChat.openConversationWindow(conversation.conversation_id, conversation.title, false);
 			 }
 		});

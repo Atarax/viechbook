@@ -214,6 +214,7 @@ class ConversationsController extends ControllerBase {
              */
             $messageCount = count($messages);
             $lastMessage = $conversation->getUserMessages()[ $messageCount - 1 ];
+			$isOnline = false;
 
             /** find out with whom we got a conversation */
             $withUsers = array();
@@ -222,11 +223,16 @@ class ConversationsController extends ControllerBase {
             foreach($conversation->getUsers() as $user) {
 				if( $user->getId() != $currentUser->id ) {
                     $withUsers[] = array( 'id' => $user->getId(), 'username' => $user->getUsername() );
+
+					if( $user->wasActive() ) {
+						$isOnline = true;
+					}
                 }
             }
 			/** if $withUsers is empty, we have a conversation with ourself */
 			if( empty($withUsers) ) {
 				$withUsers[] = ['id' => $this->currentUser->id, 'username' => $this->currentUser->username];
+				$isOnline = true;
 			}
 
 			$conversationsTouched[$conversationId] = 1;
@@ -234,9 +240,14 @@ class ConversationsController extends ControllerBase {
 			$conversationsResult[] = array(
                 'id' => $conversationId,
                 'lastMessage' => $lastMessage,
-                'withUsers' => $withUsers
+                'withUsers' => $withUsers,
+				'isOnline' => $isOnline
             );
         }
+
+		usort($conversationsResult, function($a, $b) {
+			return $a['isOnline'] < $b['isOnline'];
+		});
 
 		$response = new \stdClass();
         $response->conversations = $conversationsResult;

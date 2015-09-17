@@ -22,6 +22,7 @@ use Viechbook\Model\Users;
  */
 
 class ControllerBase extends Controller{
+	/** @var Users $currentUser */
 	public $currentUser;
 	public $db;
 
@@ -45,6 +46,11 @@ class ControllerBase extends Controller{
 
 			$this->response->setContent($data);
 			$this->response->send();
+		}
+
+		/** track user-activity */
+		if(!$this->currentUser->wasActive()) {
+			$this->currentUser->trackActivity();
 		}
 	}
 
