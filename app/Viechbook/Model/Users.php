@@ -130,9 +130,11 @@ class Users extends ModelBase {
 		$settings = $this->getRelated('settings', $parameters);
 
 		if( empty($settings) ) {
-			$userSettings = new UserSettings();
-			$userSettings->user_id = $this->getId();
+			$settings = new UserSettings();
+			$settings->user_id = $this->getId();
 		}
+
+		return $settings;
 	}
 
 
