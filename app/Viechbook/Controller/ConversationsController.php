@@ -96,10 +96,6 @@ class ConversationsController extends ControllerBase {
 		$this->setJsonResponse();
 
 		$userSettings = $this->currentUser->getSettings();
-		if( empty($userSettings) ) {
-			$userSettings = new UserSettings();
-			$userSettings->user_id = $this->currentUser->getId();
-		}
 
 		$openWindows = $userSettings->openWindows;
 		/** normalize */

@@ -127,7 +127,12 @@ class Users extends ModelBase {
 
 	/**  */
 	public function getSettings($parameters=null) {
-		return $this->getRelated('settings', $parameters);
+		$settings = $this->getRelated('settings', $parameters);
+
+		if( empty($settings) ) {
+			$userSettings = new UserSettings();
+			$userSettings->user_id = $this->getId();
+		}
 	}
 
 
@@ -153,9 +158,6 @@ class Users extends ModelBase {
 	public function trackActivity() {
 		/** @var UserSettings $settings */
 		$settings = $this->getSettings();
-
-		$id = $this->getId();
-		$id2 = $settings->user_id;
 		$settings->setModified();
 		$settings->save();
 	}
