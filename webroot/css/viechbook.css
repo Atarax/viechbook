@@ -153,6 +153,7 @@ body{
 
 .chat-people>ul {
     margin-left: -10px;
+    margin-top: -12px;
 }
 
 .chat-conversation-element {
