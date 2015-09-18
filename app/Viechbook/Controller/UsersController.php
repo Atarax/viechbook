@@ -179,7 +179,7 @@ class UsersController extends ControllerBase {
         $user = Users::findFirst($id);
 
         if( !is_object($user) ) {
-            throw new Exception(__('User not found or unproper userid given!'));
+            throw new Exception('User not found or unproper userid given!');
         }
 
         $this->view->setVar('user', $user->toArray());
@@ -207,4 +207,67 @@ class UsersController extends ControllerBase {
 
         die( json_encode( $user->getNotifications()->toArray() ) );
     }
+
+	public function adminAction() {
+		if($this->currentUser->getId() != 1) {
+			throw new Exception('Only cite is allowed to do that!');
+		}
+
+
+		if ($this->request->isPost()) {
+			$action = $this->request->getPost('action');
+
+			if($action == 'newLinks') {
+				for($i = 0; $i < 5; $i++) {
+					$token = new SecurityTokens();
+					$token->setPayload('signup');
+					$token->save();
+				}
+			}
+			else if($action == 'resetLink') {
+				$userident = $this->request->getPost('userident');
+
+				$user = Users::findFirst( intval($userident) );
+
+				if( empty($user ) ) {
+					$user = Users::findFirstByUsername($userident);
+				}
+
+				if( empty($user ) ) {
+					throw new Exception('User not found!');
+				}
+
+				$oldToken = SecurityTokens::findFirstByPayload($user->getId());
+
+				if( $oldToken ) {
+					throw new Exception('There already exists a token!');
+				}
+
+				$token = new SecurityTokens();
+				$token->setPayload($user->getId());
+				$token->save();
+			}
+		}
+
+		$tokens = SecurityTokens::find();
+
+		$registrationTokens = [];
+		$resetPasswordTokens = [];
+
+		foreach($tokens as $token) {
+			if( $token->getPayload() == 'signup') {
+				$registrationTokens[] = $token->toArray();
+			}
+			else {
+				$user = Users::findFirst($token->getPayload());
+				$token = $token->toArray();
+				$token['username'] = $user->getUsername();
+
+				$resetPasswordTokens[] = $token;
+			}
+		}
+
+		$this->view->setVar('resetPasswordTokens', $resetPasswordTokens);
+		$this->view->setVar('registrationTokens', $registrationTokens);
+	}
 }

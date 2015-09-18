@@ -72,7 +72,16 @@ class Security extends PluginBase
 			'pages' 		=> array('users'),
 			'parvati' 		=> array('index'),
 			'messages' 		=> array('get_by_conversation'),
-			'users' 		=> array('edit', 'list_all', 'get_notifications', 'profile', 'messages', 'add', 'get_password_reset_links'),
+			'users' 		=> array(
+				'edit',
+				'list_all',
+				'get_notifications',
+				'profile',
+				'messages',
+				'add',
+				'get_password_reset_links',
+				'admin'
+			),
 			'conversations' => array(
 				'list_all',
 				'get_participants',
@@ -82,7 +91,7 @@ class Security extends PluginBase
 				'get_or_create_by_user',
 				'close_conversation_window',
 				'open_conversation_window',
-				'get_open_conversation_windows'
+				'get_open_conversation_windows',
 			),
 		);
 		foreach ($privateResources as $resource => $actions) {

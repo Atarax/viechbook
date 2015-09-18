@@ -55,6 +55,6 @@ class SecurityTokens extends ModelBase {
 	}
 
 	public function getRandomTokenString() {
-		return substr( sha1( time() ), -self::TOKEN_LENGTH);
+		return substr( sha1( time() * rand() ), -self::TOKEN_LENGTH);
 	}
 }

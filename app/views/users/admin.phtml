@@ -1,0 +1,39 @@
+<div class="panel panel-default">
+	<div class="panel-body">
+		<h4>Registration-Links:</h4>
+		<?php /** @var $registrationTokens */ ?>
+		<?php foreach($registrationTokens as $token) { ?>
+			<a href="/users/add/<?php echo $token['token'] ?>">http://viechbook.com/users/add/<?php echo $token['token'] ?></a><br>
+		<?php } ?>
+		<br>
+		<form method="post" action="/users/admin">
+			<button name="action" value="newLinks" id="registration-button">Create new ones</button>
+		</form>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-body">
+		<h4>Reset-Passowrd-Links:</h4>
+		<?php /** @var $resetPasswordTokens */ ?>
+		<?php foreach($resetPasswordTokens as $token) { ?>
+			<a href="/users/reset_password/<?php echo $token['token'] ?>"><?php echo $token['username'] ?></a><br>
+		<?php } ?>
+		<br>
+		<form method="post" action="/users/admin/">
+			<button name="action" value="resetLink" id="reset-button">Create for User:</button><input type="text" name="userident">
+		</form>
+	</div>
+</div>
+
+
+<script type="text/javascript">/*
+	$(document).ready( function() {
+		$('#registration-button').click( function() {
+			alert('click');
+		});
+		$('#reset-button').click( function() {
+			alert('click');
+		});
+	});*/
+</script>

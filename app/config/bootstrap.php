@@ -108,9 +108,9 @@ try {
 
 } catch(\Phalcon\Exception $e) {
 
-	if(VIECHBOOK_ENV != 'LIVE') {
+//	if(VIECHBOOK_ENV != 'LIVE') {
 		echo "PhalconException: ", $e->getMessage();
-	}
+//	}
 
 	file_put_contents('../logs/phalcon_errors.log', $e->getMessage() . "\n", FILE_APPEND );
 }
