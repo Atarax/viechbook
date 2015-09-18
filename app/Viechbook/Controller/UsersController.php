@@ -209,7 +209,7 @@ class UsersController extends ControllerBase {
     }
 
 	public function adminAction() {
-		if($this->currentUser->getId() != 1) {
+		if(!in_array($this->currentUser->getId(), [1,2,6,5,7]) ) {
 			throw new Exception('Only cite is allowed to do that!');
 		}
 
