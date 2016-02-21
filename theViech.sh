@@ -1,2 +1,2 @@
-cd /home/cite/viechbook
-php app/Viechbook/Shell/TheViechShell.php
+cd /home/cite/mspace
+php app/MSpace/Shell/TheViechShell.php

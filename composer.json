@@ -1,5 +1,5 @@
 {
-	"name": "phalconphp/viechbook",
+	"name": "phalconphp/mspace",
 	"description": "Soundviecher-Community",
 	"homepage": "http://phalconphp.org",
 	"type": "project",
@@ -19,7 +19,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-            "Viechbook\\": "app/Viechbook",
+            "MSpace\\": "app/MSpace",
             "Parvati\\": "app/Parvati"
 		}
 	}

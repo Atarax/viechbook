@@ -34,7 +34,7 @@ class ConversationsController extends AppController {
 	 */
     public function add_message_by_receiverAction($receiverId) {
         $auth = $this->session->get('auth');
->>>>>>> Stashed changes:app/Viechbook/Controller/ConversationsController.php
+>>>>>>> Stashed changes:app/MSpace/Controller/ConversationsController.php
 
         /** @var User $sender */
         $sender = Users::findFirst($auth['id']);

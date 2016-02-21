@@ -1,6 +1,6 @@
 <?php
 
-namespace Parvati\Model;
+namespace MSpace\Model;
 use Phalcon\Exception;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Behavior\Timestampable;
@@ -17,7 +17,7 @@ use MSpace\Model\Exception\SaveFailed;
  */
 
 
-class ParvatiModelBase extends Model {
+class ModelBase extends Model {
 	public $id;
 	public $created;
 	public $modified;
