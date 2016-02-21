@@ -7,7 +7,7 @@
  */
 
 use Phalcon\Loader;
-use Viechbook\Plugin\Security;
+use MSpace\Plugin\Security;
 
 
 try {
@@ -25,7 +25,7 @@ try {
 
 	$di->set('router', function() {
 		$router = new Phalcon\Mvc\Router();
-		$router->setDefaultNamespace('Viechbook\Controller');
+		$router->setDefaultNamespace('MSpace\Controller');
 		return $router;
 	});
 
@@ -108,9 +108,9 @@ try {
 
 } catch(\Phalcon\Exception $e) {
 
-	if(VIECHBOOK_ENV != 'LIVE') {
+//	if(MSpace_ENV != 'LIVE') {
 		echo "PhalconException: ", $e->getMessage();
-	}
+//	}
 
 	file_put_contents('../logs/phalcon_errors.log', $e->getMessage() . "\n", FILE_APPEND );
 }

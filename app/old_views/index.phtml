@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,800">
 
 	<!-- Use title if it's in the page YAML frontmatter -->
-	<title>Viechbook</title>
+	<title>MSpace</title>
 
 	<link href="/vendor/core-admin-template/stylesheets/application.css" media="screen" rel="stylesheet" type="text/css" />
 
@@ -35,7 +35,7 @@
 <nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
 	<!-- Brand and toggle get grouped for better mobile display -->
 	<div class="navbar-header">
-		<a class="navbar-brand" href="/" style="margin-left: 37px;">Viechbook</a>
+		<a class="navbar-brand" href="/" style="margin-left: 37px;">MSpace</a>
 	</div>
 
 	<div style="text-align: center; padding-top: 15px; position: fixed; left:45%; display: block; text-align: center;">
@@ -50,7 +50,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle dropdown-avatar" data-toggle="dropdown">
               <span>
-                <?php use Viechbook\Model\Notifications;
+                <?php use MSpace\Model\Notifications;
 
 				echo $this->tag->image( array('img/avatar1.jpg', 'class' => 'menu-avatar') ) ?><span><?php echo $currentUser["username"] ?><i class="icon-caret-down"></i></span>
                 <span id="profile-notification-count" class="badge badge-dark-red"></span>
@@ -125,10 +125,10 @@
 			var title;
 
 			if(totalNotifications > 0) {
-				title  = '(' + totalNotifications + ') Viechbook';
+				title  = '(' + totalNotifications + ') MSpace';
 			}
 			else {
-				title = 'Viechbook';
+				title = 'MSpace';
 			}
 
 			$(document).prop('title', title);
@@ -178,7 +178,7 @@
 		/**
 		 * @TODO make register take an array instead or both?
 		 **/
-		viech.register(<?= Notifications::TYPE_NOTIFICATION_CHANGED ?> , function() {
+		viech.register(<?= Notifications::TYPE_NOTIFICATIONS_CHANGED ?> , function() {
 			updateUserMenuNotifications();
 		});
 

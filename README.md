@@ -1,48 +1,4 @@
-# Viechbook
-
-                                                                            `...`
-                                                                          `sNNMNNmy+.
-            ./oyhhy+.                                                     +MMMMMMMMMNy-
-         .+dNNMMMMMMd`                                                    +MMMMMMMMMMMNy.
-       .omNMMMMMMMMMN-                                                    .dMMMMMMMMMMMMd-
-      /mNMMMMMMMMMMMMy`                                                 `/dNMMMMMMMMMMMMMd`
-     :NMMMMMMMMMMMMMMNd-                 .-:+oossssoo+/:.`            .omNMMMMMMMMMMMMMMMM:
-    `dMMMMMMMMMMMMMMMMMNs-`         `:+ydNNNNMMMMMMMMNNNNmho:.     `:yNMMMMMMMMMMMMMMMMMMN-
-    `dMMMMMMMMMMMMMMMMMMMNdo-`   `/ymNNMMMMMMMMMMMMMMMMMMMMMNmy/.`/hNMMMMMMMMMMMMNsshddhs:
-     /dNNNNNhmMMMMMMMMMMMMMMNh/:smNMMMMMMMMMMMMMMMMMMMMMMMMMMMMNmmNMMMMMMMMMMMMMm/` ````
-      `.--..`.yNMMMMMMMMMMMMMMNNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNy.
-              `:hNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN+`
-                `+mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd:
-                  .sNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNdhhhdmNMMMMMMMMMMMMNy.
-                    -yNMMMMMMMMMMMMNNMMMMMMMMMMMMMMMd+-`````./yNMMMMMMMMMm/`
-                     `/dMMMMMMMMMMMdhmMMmyymMMMMMMMh.         `+NMMMMMMMMs
-                       .NMMMMMMMMMMMmhhs:+dNMMMMMMN/            yMMMMMMMMm`
-                       -NMMMMMMMMMMMms:/yNMMMMMMMMN+            sMMMMMMMMM:
-                       /MMMMMMMMMMNy:+dNmhdNMMMMMMMm/`        `:mMMMMMMMMM+
-                       +MMMMMMMMMMNmmNMMMNmNMMMMMMMMNh/-.```-/yNMMMMMMMMMMo
-                       /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNmddddmNMMMMMMMMMMMM+
-                       -MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM:
-                       `mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm`
-                        /NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN+
-                        `yMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh`
-                         `hMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd.
-                          .yNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh-
-                           `omMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNs`
-                             -yNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh-
-                              `-ymMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNNy:`
-                                 .+hNNMMMMMMMMMMMMMMMMMMMMMMMNho-
-                                    -+mMMMMMMMMMMMMMMMMMMMNy/-`
-                                      /NMMMMMMMMMMMMMMMMMMo
-                                      `yMMMMMMMMMMMMMMMMMN.
-                                       .NMMMMMMMMMMMMMMMMd
-                                        oMMMMMMMMMMMMMMMMs
-                                        `dMMMMMMMMMMMMMMN:
-                                       ``oMMMMMMMMMMMMMMN.
-                                   `:shdmNMMMMMMMMMMMMMMNhy+:.`
-                                  .dNMMMMMMMNNmmmmmNNNMMMMMMMNh/
-                                  `hNMMMMMMMhsyhhhyyymMMMMMMMMMd
-                                    -+ydNNNMMMNMMMMMMMMMMMNNNms-
-                                        `.:/+osyyyyyyyyss+/:.
+# MSpace
 
 [![Build Status](https://api.travis-ci.org/cakephp/app.png)](https://travis-ci.org/cakephp/app)
 [![License](https://poser.pugx.org/cakephp/app/license.svg)](https://packagist.org/packages/cakephp/app)
@@ -117,10 +73,10 @@ sudo service php5-fpm restart
 
 server {
     listen   80;
-    server_name viechbook.stage;
+    server_name MSpace.stage;
 
     index index.php index.html index.htm;
-    set $root_path '/home/cite/viechbook/webroot/';
+    set $root_path '/home/cite/MSpace/webroot/';
     root $root_path;
 
     try_files $uri $uri/ @rewrite;
@@ -166,8 +122,8 @@ sudo service php5-fpm restart
 # Clone code
 # -------------------
 
-git clone https://github.com/Atarax/viechbook.git
-cd viechbook/
+git clone https://github.com/Atarax/MSpace.git
+cd MSpace/
 
 # Run composer
 # -------------------

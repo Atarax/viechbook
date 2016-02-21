@@ -9,5 +9,5 @@
 /**
  * should be DEV or LIVE
  */
-const VIECHBOOK_ENV = 'DEV';
-const RATCHET_SERVER_ADRESS = 'viechbook.com:8080';
+const MSpace_ENV = 'DEV';
+const RATCHET_SERVER_ADRESS = 'MSpace.com:8080';

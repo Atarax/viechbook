@@ -63,11 +63,11 @@
 $(document).ready( function() {
 	updateConversationsBox();
 
-	viech.register(<?php echo  Viechbook\Model\Notifications::TYPE_NEW_MESSAGE ?>, function() {
+	viech.register(<?php echo  MSpace\Model\Notifications::TYPE_NEW_MESSAGE ?>, function() {
 		updateConversationsBox();
 	})
 
-	viech.register(<?php echo  Viechbook\Model\Notifications::TYPE_NEW_MESSAGE ?>, function() {
+	viech.register(<?php echo  MSpace\Model\Notifications::TYPE_NEW_MESSAGE ?>, function() {
 		if(currentConversationId != null) {
 			updateChatBox(currentConversationId);
 		}
@@ -195,7 +195,7 @@ function updateConversationsBox() {
 			 * check if conversation got new messages
 			 **/
 			$.each(response.notifications, function(index, notification) {
-				if(notification.type == <?php echo  Viechbook\Model\Notifications::TYPE_NEW_MESSAGE ?>) {
+				if(notification.type == <?php echo  MSpace\Model\Notifications::TYPE_NEW_MESSAGE ?>) {
 					var content = $.parseJSON(notification.content);
 
 					if( content.conversation_id == conversation.id ) {
