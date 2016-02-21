@@ -63,11 +63,11 @@
 $(document).ready( function() {
 	updateConversationsBox();
 
-	viech.register(<?php echo  MSpace\Model\Notifications::TYPE_NEW_MESSAGE ?>, function() {
+	MSpace.register(<?php echo  MSpace\Model\Notifications::TYPE_NEW_MESSAGE ?>, function() {
 		updateConversationsBox();
 	})
 
-	viech.register(<?php echo  MSpace\Model\Notifications::TYPE_NEW_MESSAGE ?>, function() {
+	MSpace.register(<?php echo  MSpace\Model\Notifications::TYPE_NEW_MESSAGE ?>, function() {
 		if(currentConversationId != null) {
 			updateChatBox(currentConversationId);
 		}

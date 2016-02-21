@@ -1,2 +1,2 @@
 cd /home/cite/mspace
-php app/MSpace/Shell/TheViechShell.php
+php app/MSpace/Shell/MSpaceShell.php

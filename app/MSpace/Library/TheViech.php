@@ -13,7 +13,7 @@ use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\WampServerInterface;
 
 
-class TheViech implements MessageComponentInterface, WampServerInterface {
+class TheMSpace implements MessageComponentInterface, WampServerInterface {
     protected $clients;
     protected $subscribedTopics = array();
 

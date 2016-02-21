@@ -16,14 +16,14 @@
 	var MSpace = {
 		currentUser: {
 			id				:	<?php echo $currentUser['id'] ?>,
-			username		:	'<?php echo  $currentUser['username'] ?>',
+			username		:	'<?php echo  $currentUser['username'] ?>'
 		},
 		websocketAddress:	'<?php echo RATCHET_SERVER_ADRESS ?>',
 		constants: {
 			NOTIFICATION_NEW_MESSAGE: <?php echo Notifications::TYPE_NEW_MESSAGE ?>,
 			NOTIFICATION_UPDATED: <?php echo Notifications::TYPE_NOTIFICATIONS_CHANGED ?>
 		}
-	}
+	};
 </script>
 
 <body>
@@ -33,7 +33,7 @@
 <nav class="navbar navbar-default navbar-static-top MSpace-nav-top">
 	<div class="container-fluid">
 		<div class="col-md-2"></div><div class="col-md-4"><div class="navbar-header navbar-brand navbar-left">
-				<a href="/"><img style="max-width:100%; max-height:100%;" alt="Brand" src="/img/soundviech.jpg"></a>
+				<a href="/"></a>
 			</div><div class="navbar-header navbar-left">
 				<a href="/" class="navbar-brand">MSpace</a>
 			</div><form class="navbar-header navbar-form " role="search">
@@ -97,7 +97,7 @@
 <script type="text/javascript">
 	/** globals */
 	var mspaceChat;
-	var viech;
+	var MSpaceConnector;
 	var connection;
 
 	$(document).ready(function() {
@@ -172,27 +172,27 @@
 			 */
 			var title;
 			if(totalNotifications > 0) {
-				title  = '(' + totalNotifications + ') MSpace';
+				title  = '(' + totalNotifications + ') MSpaceConnector';
 			}
 			else {
-				title = 'MSpace';
+				title = 'MSpaceConnector';
 			}
 			$(document).prop('title', title);
 		});
 	};
 
 	$(document).ready( function() {
-		viech = new MSpaceConnector();
+		MSpaceConnector = new MSpaceConnector();
 
 		/** enable this for autobahn-debugging */
 		//ab.debug(true, true);
 		connection = new ab.Session(MSpace.websocketAddress,
 			function() {
 				connection.subscribe(MSpace.currentUser.id + '', function(topic, data) {
-					viech.receive(data);
+					MSpaceConnector.receive(data);
 					console.log('New article published to category "' + topic + '" : ' + data);
 				});
-				console.log('Connected to the big viech...');
+				console.log('Connected to the big MSpaceConnector...');
 			},
 			function(something) {
 				console.warn('WebSocket connection closed');
@@ -204,12 +204,12 @@
 		/**
 		 * @TODO make register take an array instead or both?
 		 **/
-		viech.register(MSpace.constants.NOTIFICATION_UPDATED , function() {
+		MSpaceConnector.register(MSpace.constants.NOTIFICATION_UPDATED , function() {
 			updateUserMenuNotifications();
 			mspaceChat.updateConversationsBox();
 		});
 
-		viech.register(MSpace.constants.NOTIFICATION_NEW_MESSAGE , function(message) {
+		MSpaceConnector.register(MSpace.constants.NOTIFICATION_NEW_MESSAGE , function(message) {
 			updateUserMenuNotifications();
 
 			mspaceChat.updateConversationsBox();

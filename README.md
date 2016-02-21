@@ -3,8 +3,6 @@
 [![Build Status](https://api.travis-ci.org/cakephp/app.png)](https://travis-ci.org/cakephp/app)
 [![License](https://poser.pugx.org/cakephp/app/license.svg)](https://packagist.org/packages/cakephp/app)
 
-A platform for the soundviecher community with [CakePHP](http://cakephp.org) 3.0.
-
 This is an unstable repository and should be treated as an alpha.
 
 ## Installation
@@ -138,12 +136,12 @@ cd MSpace/
 adjust values in app/config.ini and in app/environment.ini
 enable short tags!!
 
-# Ratchet-server (theViech) setup:
+# Ratchet-server (theMSpace) setup:
 # -------------------
 
-sudo ./installTheViechService.sh
+sudo ./installTheMSpaceService.sh
 
-# Ratchet-server (theViech) setup:
+# Ratchet-server (theMSpace) setup:
 # -------------------
 
 # seems to be necessary for ovh.net vm configuration (ubuntu 12.02)

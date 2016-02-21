@@ -14,16 +14,16 @@ use Ratchet\WebSocket\WsServer;
 use React\EventLoop\Factory;
 use React\Socket\Server;
 use React\ZMQ\Context;
-use MSpace\Library\TheViech;
+use MSpace\Library\TheMSpace;
 
 require 'vendor/autoload.php';
 
-class TheViechShell {
+class TheMSpaceShell {
     public function main() {
         $this->displayStartMessage();
 
         $loop   = Factory::create();
-        $pusher = new TheViech();
+        $pusher = new TheMSpace();
 
         // Listen for the web server to make a ZeroMQ push after an ajax request
         $context = new Context($loop);
@@ -51,19 +51,19 @@ class TheViechShell {
 
     private function displayStartMessage() {
         try{
-            $asciiViech = file_get_contents("asciiViech.txt");
-            echo $asciiViech;
+            $asciiMSpace = file_get_contents("asciiMSpace.txt");
+            echo $asciiMSpace;
         }
         catch(Exception $e){
-            echo "Notice: Viech-Art not found!\n";
+            echo "Notice: MSpace-Art not found!\n";
         }
 
-		echo "Starting The Viech (Ratchet Server)...\n";
+		echo "Starting The MSpace (Ratchet Server)...\n";
 
     }
 
 }
 
-$shell = new theViechShell();
+$shell = new theMSpaceShell();
 $shell->main();
 

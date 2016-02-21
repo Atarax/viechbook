@@ -5,7 +5,7 @@ use App\Model\Entity\Message;
 use App\Model\Entity\Notification;
 use App\Model\Entity\User;
 use App\Model\Table\ConversationsTable;
-use App\Model\TheViechNotifier;
+use App\Model\TheMSpaceNotifier;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use ZMQContext;
@@ -222,7 +222,7 @@ class ConversationsController extends AppController {
                 continue;
             }
 
-            $realTimeNotifier = new TheViechNotifier();
+            $realTimeNotifier = new TheMSpaceNotifier();
             $realTimeNotifier->notify(
                 $participant->get('id'),
                 $type,
@@ -278,7 +278,7 @@ class ConversationsController extends AppController {
 
             if($content->conversation_id == $conversationId) {
                 $notificationsTable->delete($notification);
-                $notifier = new TheViechNotifier();
+                $notifier = new TheMSpaceNotifier();
                 $notifier->notify($currentUserId, Notification::TYPE_NOTIFICATION_CHANGED);
                 // only got one notification per conversation and user
                 break;

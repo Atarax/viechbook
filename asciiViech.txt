@@ -3,53 +3,7 @@
 
 
 -------------------------------------------------------------------------------------------------
-                                    The Viech Console 1.0.a
+                                    The MSpace Console 1.0.a
 -------------------------------------------------------------------------------------------------
-                                                                            `...`
-                                                                          `sNNMNNmy+.
-            ./oyhhy+.                                                     +MMMMMMMMMNy-
-         .+dNNMMMMMMd`                                                    +MMMMMMMMMMMNy.
-       .omNMMMMMMMMMN-                                                    .dMMMMMMMMMMMMd-
-      /mNMMMMMMMMMMMMy`                                                 `/dNMMMMMMMMMMMMMd`
-     :NMMMMMMMMMMMMMMNd-                 .-:+oossssoo+/:.`            .omNMMMMMMMMMMMMMMMM:
-    `dMMMMMMMMMMMMMMMMMNs-`         `:+ydNNNNMMMMMMMMNNNNmho:.     `:yNMMMMMMMMMMMMMMMMMMN-
-    `dMMMMMMMMMMMMMMMMMMMNdo-`   `/ymNNMMMMMMMMMMMMMMMMMMMMMNmy/.`/hNMMMMMMMMMMMMNsshddhs:
-     /dNNNNNhmMMMMMMMMMMMMMMNh/:smNMMMMMMMMMMMMMMMMMMMMMMMMMMMMNmmNMMMMMMMMMMMMMm/` ````
-      `.--..`.yNMMMMMMMMMMMMMMNNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNy.
-              `:hNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN+`
-                `+mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd:
-                  .sNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNdhhhdmNMMMMMMMMMMMMNy.
-                    -yNMMMMMMMMMMMMNNMMMMMMMMMMMMMMMd+-`````./yNMMMMMMMMMm/`
-                     `/dMMMMMMMMMMMdhmMMmyymMMMMMMMh.         `+NMMMMMMMMs
-                       .NMMMMMMMMMMMmhhs:+dNMMMMMMN/            yMMMMMMMMm`
-                       -NMMMMMMMMMMMms:/yNMMMMMMMMN+            sMMMMMMMMM:
-                       /MMMMMMMMMMNy:+dNmhdNMMMMMMMm/`        `:mMMMMMMMMM+
-                       +MMMMMMMMMMNmmNMMMNmNMMMMMMMMNh/-.```-/yNMMMMMMMMMMo
-                       /MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNmddddmNMMMMMMMMMMMM+
-                       -MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM:
-                       `mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMm`
-                        /NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMN+
-                        `yMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh`
-                         `hMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMd.
-                          .yNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMh-
-                           `omMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNs`
-                             -yNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNh-
-                              `-ymMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNNy:`
-                                 .+hNNMMMMMMMMMMMMMMMMMMMMMMMNho-
-                                    -+mMMMMMMMMMMMMMMMMMMMNy/-`
-                                      /NMMMMMMMMMMMMMMMMMMo
-                                      `yMMMMMMMMMMMMMMMMMN.
-                                       .NMMMMMMMMMMMMMMMMd
-                                        oMMMMMMMMMMMMMMMMs
-                                        `dMMMMMMMMMMMMMMN:
-                                       ``oMMMMMMMMMMMMMMN.
-                                   `:shdmNMMMMMMMMMMMMMMNhy+:.`
-                                  .dNMMMMMMMNNmmmmmNNNMMMMMMMNh/
-                                  `hNMMMMMMMhsyhhhyyymMMMMMMMMMd
-                                    -+ydNNNMMMNMMMMMMMMMMMNNNms-
-                                        `.:/+osyyyyyyyyss+/:.
 
--------------------------------------------------------------------------------------------------
-                   The mission is the message is sound... [Soundviecher]
--------------------------------------------------------------------------------------------------
 

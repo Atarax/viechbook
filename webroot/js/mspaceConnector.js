@@ -1,4 +1,4 @@
-var MSpaceConnector= function() {
+var MSpaceConnector = function() {
     var registrations = [];
 
     this.register = function(type, callback) {
