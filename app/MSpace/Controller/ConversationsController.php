@@ -5,7 +5,7 @@ use Exception;
 use Phalcon\Db;
 use Phalcon\Mvc\View;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
-use MSpace\Library\TheViechNotifier;
+use MSpace\Library\TheMSpaceNotifier;
 use MSpace\Model\Conversations;
 use MSpace\Model\ConversationsUsers;
 use MSpace\Model\Messages;
@@ -410,7 +410,7 @@ class ConversationsController extends ControllerBase {
                 continue;
             }
 
-            $realTimeNotifier = new TheViechNotifier();
+            $realTimeNotifier = new TheMSpaceNotifier();
             $realTimeNotifier->notify(
                 $participant->getId(),
                 $type,
@@ -475,7 +475,7 @@ class ConversationsController extends ControllerBase {
 
             if($content->conversation_id == $conversationId) {
                 $notification->delete();
-                $notifier = new TheViechNotifier();
+                $notifier = new TheMSpaceNotifier();
                 $notifier->notify($auth['id'], Notifications::TYPE_NOTIFICATIONS_CHANGED);
                 // only got one notification per conversation and user
                 break;

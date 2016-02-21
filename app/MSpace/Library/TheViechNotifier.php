@@ -11,7 +11,7 @@ namespace MSpace\Library;
 
 use ZMQContext;
 
-class TheViechNotifier {
+class TheMSpaceNotifier {
     private $socket;
 
     public function __construct() {

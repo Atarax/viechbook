@@ -14,7 +14,7 @@ use Ratchet\WebSocket\WsServer;
 use React\EventLoop\Factory;
 use React\Socket\Server;
 use React\ZMQ\Context;
-use MSpace\Library\TheViech;
+use MSpace\Library\TheMSpace;
 use MSpace\Model\Users;
 
 require 'vendor/autoload.php';
