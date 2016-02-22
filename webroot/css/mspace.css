@@ -40,7 +40,7 @@ body{
 .chat-containerbar-bottom {
     position:fixed;
     bottom:0;
-    right:205px;
+    right:0px;
     z-index:50;
     height:320px;
     padding-right:15px;
@@ -154,6 +154,10 @@ body{
 .chat-people>ul {
     margin-left: -10px;
     margin-top: -12px;
+}
+
+.chat-people-list {
+    height: 100%;
 }
 
 .chat-conversation-element {
