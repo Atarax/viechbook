@@ -29,7 +29,15 @@
 <body>
 
 <div id="chat-window-containter" class="chat-containerbar-bottom">
+	<div class="panel panel-default chat-conversation-window chat-conversation-window-open">
+		<div class="panel-heading chat-conversation-window-headline" id="chat-conversation-window-headline-2">Chat</div>
+		<div class="panel-body chat-conversation-window-message-containter chat-people-list">
+			<ul id="chat-people-list" class="nav nav-pills nav-stacked">
+			</ul>
+		</div>
+	</div>
 </div>
+
 <nav class="navbar navbar-default navbar-static-top MSpace-nav-top">
 	<div class="container-fluid">
 		<div class="col-md-2"></div><div class="col-md-4"><div class="navbar-header navbar-brand navbar-left">
@@ -41,10 +49,6 @@
 					<input id="general-searchbar" type="text" class="form-control typeahead navbar-left" placeholder="Search">
 				</div>
 			</form></div>
-
-
-
-
 
 		<div class="col-md-2" href="#"><div class="navbar-header navbar-left">
 				<a class="navbar-brand"><?php echo $currentUser['username'] ?></a>
@@ -69,11 +73,6 @@
 
 	</div>
 </nav>
-
-<div class="container chat-people">
-	<ul id="chat-people-list" class="nav nav-pills nav-stacked">
-	</ul>
-</div>
 
 <div class="container-fluid" style="padding-top:100px ">
 	<div class="col-md-2"></div>
