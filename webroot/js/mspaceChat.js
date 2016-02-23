@@ -20,6 +20,29 @@ mspaceChat = function() {
         }
     };
 
+
+    /**
+     *
+     * @param windowId
+     * @param openState
+     * @param closedState
+     */
+    this.toggleWindowState = function(windowId, openState, closedState) {
+        var conversationWindow = $('#' + windowId);
+
+        /** check if open or closed */
+        if( conversationWindow.hasClass(closedState) ) {
+            /** open */
+            conversationWindow.addClass(openState);
+            conversationWindow.removeClass(closedState);
+        }
+        else {
+            /** close */
+            conversationWindow.addClass(closedState);
+            conversationWindow.removeClass(openState);
+        }
+    };
+
     /**
      *
      * @param text
@@ -370,5 +393,12 @@ mspaceChat = function() {
             $.getJSON('/conversations/open_conversation_window/' + conversationId );
         }
     }
+
+    var that = this;
+
+    $('#chat-people-overview-headline').on('click', function () {
+        that.toggleWindowState('chat-people-overview', 'chat-conversation-window', 'chat-conversation-window-closed');
+    });
+
 };
 
