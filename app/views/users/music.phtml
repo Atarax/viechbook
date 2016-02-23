@@ -1,0 +1,30 @@
+<?php echo $this->getContent() ?>
+
+<div class="panel panel-default">
+	<div class="panel-body">
+		<form method="post" action="/users/add_music" enctype="multipart/form-data">
+			<input name="userfile" type="file">
+			<br>
+			<input type="submit" value="Upload" id="registration-button">
+		</form>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-body">
+
+		<?php
+		foreach($tracks as $track){
+			?>
+			<div>
+				<?php echo $track ?>
+			</div>
+			<audio src="/uploads/<?php echo $track ?>" controls ></audio>
+			<br>
+
+			<?php
+		}
+		?>
+
+	</div>
+</div>

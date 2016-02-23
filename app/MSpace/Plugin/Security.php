@@ -80,7 +80,9 @@ class Security extends PluginBase
 				'messages',
 				'add',
 				'get_password_reset_links',
-				'admin'
+				'admin',
+				'music',
+				'add_music'
 			),
 			'conversations' => array(
 				'list_all',

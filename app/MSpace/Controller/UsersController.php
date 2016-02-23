@@ -175,6 +175,51 @@ class UsersController extends ControllerBase {
 		$this->view->setVar('user', $user);
 	}
 
+	public function musicAction() {
+		$files = scandir('uploads');
+		$tracks = [];
+
+		foreach($files as $file) {
+			if( strpos($file, '.mp3') !== false) {
+				$tracks[] = $file;
+			}
+		}
+
+		$this->view->setVar('tracks', $tracks);
+	}
+
+	public function add_musicAction() {
+		//Check if the user has uploaded files
+		if ($this->request->hasFiles() == true) {
+			//Print the real file names and their sizes
+			foreach ($this->request->getUploadedFiles() as $file){
+				$tempTame = $file->getTempName();
+
+				if( empty($tempTame) ) {
+					continue;
+				}
+
+				$uploadFileName = 'uploads/' . $file->getName();
+
+				if( file_exists($uploadFileName) ) {
+					$this->flash->warning('File was overwritten!');
+				}
+
+				if (move_uploaded_file($tempTame, $uploadFileName)) {
+					$this->flash->success('Successfully uploaded file!');
+				} else {
+					$this->flash->error('Error uploading file :(');
+				}
+
+			}
+		}
+
+		$this->dispatcher->forward([
+			'controller' => 'users',
+			'action' => 'music'
+		]);
+	}
+
     public function profileAction($id) {
         $user = Users::findFirst($id);
 
