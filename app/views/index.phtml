@@ -171,10 +171,10 @@
 			 */
 			var title;
 			if(totalNotifications > 0) {
-				title  = '(' + totalNotifications + ') MSpaceConnector';
+				title  = '(' + totalNotifications + ') MSpace';
 			}
 			else {
-				title = 'MSpaceConnector';
+				title = 'MSpace';
 			}
 			$(document).prop('title', title);
 		});
@@ -191,7 +191,7 @@
 					MSpaceConnector.receive(data);
 					console.log('New article published to category "' + topic + '" : ' + data);
 				});
-				console.log('Connected to the big MSpaceConnector...');
+				console.log('Connected to the MSpace...');
 			},
 			function(something) {
 				console.warn('WebSocket connection closed');
