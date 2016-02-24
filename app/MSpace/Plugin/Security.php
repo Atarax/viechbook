@@ -72,6 +72,11 @@ class Security extends PluginBase
 			'pages' 		=> array('users'),
 			'parvati' 		=> array('index'),
 			'messages' 		=> array('get_by_conversation'),
+			'soundfiles'	=> array(
+				'get_music',
+				'add_music',
+				'delete'
+				),
 			'users' 		=> array(
 				'edit',
 				'list_all',
@@ -81,9 +86,7 @@ class Security extends PluginBase
 				'add',
 				'get_password_reset_links',
 				'admin',
-				'music',
-				'get_music',
-				'add_music'
+				'music'
 			),
 			'conversations' => array(
 				'list_all',

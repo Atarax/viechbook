@@ -1,12 +1,19 @@
 /**
  * Created by cite on 24.02.16.
  */
-angular.module('mspace', []);
+var angularMspace = angular.module('mspace', []);
 
-angular.module('mspace', [])
-    .controller('get_all_tracks', function($scope, $http){
+angularMspace.controller('get_all_tracks', function($scope, $http){
 
-        $http.get('/users/get_music').then(function(tracksResponse) {
-            $scope.tracks = tracksResponse.data;
-        });
+    $http.get('/soundfiles/get_music').then(function(tracksResponse) {
+
+        $scope.tracks = tracksResponse.data;
     });
+});
+
+angularMspace.controller('delet_track', function($scope, $http){
+    $http.get('/soundfiles/delete_track').then(function(tracksResponse) {
+
+        $scope.tracks = tracksResponse.data;
+    });
+});
