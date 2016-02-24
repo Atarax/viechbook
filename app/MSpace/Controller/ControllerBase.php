@@ -78,7 +78,9 @@ class ControllerBase extends Controller{
 			->addJs('/vendor/bootstrap/js/bootstrap.min.js')
 			->addJs('https://autobahn.s3.amazonaws.com/js/autobahn.min.js')
 			->addJs('/vendor/typeahead/js/bootstrap3-typeahead.min.js')
+			->addJs('/vendor/angular/angular.min.js')
 			->addJS('/js/mspaceConnector.js')
+			->addJS('/js/angular/app.js')
 			->addJS('/js/mspaceChat.js')
 			->addJS('/js/emojiMapping.js');
 

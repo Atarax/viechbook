@@ -1,6 +1,7 @@
 <?php
 
 namespace MSpace\Controller;
+use MSpace\Model\Soundfiles;
 use Phalcon\Exception;
 use Phalcon\Mvc\Model\Query;
 use Phalcon\Mvc\View;
@@ -176,16 +177,39 @@ class UsersController extends ControllerBase {
 	}
 
 	public function musicAction() {
-		$files = scandir('uploads');
 		$tracks = [];
 
-		foreach($files as $file) {
-			if( strpos($file, '.mp3') !== false) {
-				$tracks[] = $file;
-			}
+		/** @var Soundfiles[] $soundfiles */
+		$soundfiles = Soundfiles::find();
+
+		foreach($soundfiles as $file) {
+			$newTrack = [
+				'name' => $file->getName(),
+				'filename' => $file->getFilename()
+			];
+			$tracks[] = $newTrack;
 		}
 
 		$this->view->setVar('tracks', $tracks);
+	}
+
+	public function get_musicAction() {
+		$tracks = [];
+
+		/** @var Soundfiles[] $soundfiles */
+		$soundfiles = Soundfiles::find();
+
+		foreach($soundfiles as $file) {
+			$newTrack = [
+				'name' => $file->getName(),
+				'filename' => $file->getFilename(),
+			];
+			$tracks[] = $newTrack;
+		}
+
+
+		$this->setJsonResponse();
+		return $tracks;
 	}
 
 	public function add_musicAction() {
@@ -199,13 +223,10 @@ class UsersController extends ControllerBase {
 					continue;
 				}
 
-				$uploadFileName = 'uploads/' . $file->getName();
+				$soundfile = new Soundfiles();
+				$saveResult = $soundfile->saveFromUpload($file);
 
-				if( file_exists($uploadFileName) ) {
-					$this->flash->warning('File was overwritten!');
-				}
-
-				if (move_uploaded_file($tempTame, $uploadFileName)) {
+				if($saveResult) {
 					$this->flash->success('Successfully uploaded file!');
 				} else {
 					$this->flash->error('Error uploading file :(');

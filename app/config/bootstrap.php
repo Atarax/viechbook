@@ -113,4 +113,9 @@ try {
 //	}
 
 	file_put_contents('../logs/phalcon_errors.log', $e->getMessage() . "\n", FILE_APPEND );
+
+	$response = new \Phalcon\Http\Response();
+	$response->setStatusCode(500, "OK");
+	$response->setContent("<html><body>Error</body></html>");
+	$response->send();
 }
