@@ -82,6 +82,7 @@ class Security extends PluginBase
 				'get_password_reset_links',
 				'admin',
 				'music',
+				'get_music',
 				'add_music'
 			),
 			'conversations' => array(

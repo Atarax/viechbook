@@ -14,17 +14,31 @@
 	<div class="panel-body">
 
 		<?php
-		foreach($tracks as $track){
-			?>
-			<div>
-				<?php echo $track ?>
-			</div>
-			<audio src="/uploads/<?php echo $track ?>" controls ></audio>
-			<br>
+//		/** @var array $tracks */
+//		foreach($tracks as $track){
+//			?>
+<!--			<div>-->
+<!--				--><?php //echo $track['name'] ?>
+<!--			</div>-->
+<!--			<audio src="/uploads/--><?php //echo $track['filename'] ?><!--" controls ></audio>-->
+<!--			<br>-->
+<!---->
+<!--			--><?php
+//		}
 
-			<?php
-		}
 		?>
 
 	</div>
+
+	<div class="panel-body">
+		<input type="text" ng-model="search">
+	</div>
+	<table class="table" ng-controller="get_all_tracks">
+		<tr ng-repeat="track in tracks | filter:search">
+			<td>{{track.name}}</td>
+			<td>
+				<audio src="{{track.filename}}" controls ></audio>
+			</td>
+		</tr>
+	</table>
 </div>
