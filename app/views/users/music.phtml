@@ -2,7 +2,7 @@
 
 <div class="panel panel-default">
 	<div class="panel-body">
-		<form method="post" action="/users/add_music" enctype="multipart/form-data">
+		<form method="post" action="/soundfiles/add_music" enctype="multipart/form-data">
 			<input name="userfile" type="file">
 			<br>
 			<input type="submit" value="Upload" id="registration-button">
@@ -13,20 +13,6 @@
 <div class="panel panel-default">
 	<div class="panel-body">
 
-		<?php
-//		/** @var array $tracks */
-//		foreach($tracks as $track){
-//			?>
-<!--			<div>-->
-<!--				--><?php //echo $track['name'] ?>
-<!--			</div>-->
-<!--			<audio src="/uploads/--><?php //echo $track['filename'] ?><!--" controls ></audio>-->
-<!--			<br>-->
-<!---->
-<!--			--><?php
-//		}
-
-		?>
 
 	</div>
 
@@ -39,6 +25,7 @@
 			<td>
 				<audio src="{{track.filename}}" controls ></audio>
 			</td>
+			<td><a href="/soundfiles/delete/{{track.id}}"><span class="glyphicon glyphicon-trash"></span></a></td>
 		</tr>
 	</table>
 </div>

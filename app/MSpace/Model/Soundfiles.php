@@ -37,7 +37,7 @@ class Soundfiles extends ModelBase {
 	 * @return mixed
 	 */
 	public function getFilename() {
-		return '/' . $this->directory . $this->filename;
+		return $this->directory . $this->filename;
 	}
 
 	/**

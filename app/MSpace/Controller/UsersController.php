@@ -176,70 +176,8 @@ class UsersController extends ControllerBase {
 		$this->view->setVar('user', $user);
 	}
 
-	public function musicAction() {
-		$tracks = [];
+	public function musicAction() {	}
 
-		/** @var Soundfiles[] $soundfiles */
-		$soundfiles = Soundfiles::find();
-
-		foreach($soundfiles as $file) {
-			$newTrack = [
-				'name' => $file->getName(),
-				'filename' => $file->getFilename()
-			];
-			$tracks[] = $newTrack;
-		}
-
-		$this->view->setVar('tracks', $tracks);
-	}
-
-	public function get_musicAction() {
-		$tracks = [];
-
-		/** @var Soundfiles[] $soundfiles */
-		$soundfiles = Soundfiles::find();
-
-		foreach($soundfiles as $file) {
-			$newTrack = [
-				'name' => $file->getName(),
-				'filename' => $file->getFilename(),
-			];
-			$tracks[] = $newTrack;
-		}
-
-
-		$this->setJsonResponse();
-		return $tracks;
-	}
-
-	public function add_musicAction() {
-		//Check if the user has uploaded files
-		if ($this->request->hasFiles() == true) {
-			//Print the real file names and their sizes
-			foreach ($this->request->getUploadedFiles() as $file){
-				$tempTame = $file->getTempName();
-
-				if( empty($tempTame) ) {
-					continue;
-				}
-
-				$soundfile = new Soundfiles();
-				$saveResult = $soundfile->saveFromUpload($file);
-
-				if($saveResult) {
-					$this->flash->success('Successfully uploaded file!');
-				} else {
-					$this->flash->error('Error uploading file :(');
-				}
-
-			}
-		}
-
-		$this->dispatcher->forward([
-			'controller' => 'users',
-			'action' => 'music'
-		]);
-	}
 
     public function profileAction($id) {
         $user = Users::findFirst($id);
