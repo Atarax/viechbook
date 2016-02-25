@@ -74,9 +74,7 @@ class SoundfilesController extends ControllerBase {
 
 		$soundFile->delete();
 
-		$this->dispatcher->forward([
-			'controller' => 'users',
-			'action' => 'music'
-		]);
+		$this->setJsonResponse();
+		return true;
 	}
 }
