@@ -6,3 +6,4 @@
 *~
 /app/config/environment.php
 /app/config/config.ini
+/composer.lock
