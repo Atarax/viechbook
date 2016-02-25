@@ -19,13 +19,15 @@
 	<div class="panel-body">
 		<input type="text" ng-model="search">
 	</div>
-	<table class="table" ng-controller="get_all_tracks">
-		<tr ng-repeat="track in tracks | filter:search">
-			<td>{{track.name}}</td>
-			<td>
-				<audio src="{{track.filename}}" controls ></audio>
-			</td>
-			<td><a href="/soundfiles/delete/{{track.id}}"><span class="glyphicon glyphicon-trash"></span></a></td>
+	<table class="table" ng-controller="tracklist">
+		<tr ng-hide="deleted[track.id]"  ng-repeat="track in tracks | filter:search">
+			<div>
+				<td>{{track.name}}</td>
+				<td>
+					<audio src="{{track.filename}}" controls ></audio>
+				</td>
+				<td><a href="" ng-click="deleteTrack(track.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
+			</div>
 		</tr>
 	</table>
 </div>

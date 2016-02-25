@@ -3,17 +3,28 @@
  */
 var angularMspace = angular.module('mspace', []);
 
-angularMspace.controller('get_all_tracks', function($scope, $http){
+angularMspace.controller('tracklist', function($scope, $http){
+
+    $scope.deleted = [];
 
     $http.get('/soundfiles/get_music').then(function(tracksResponse) {
 
         $scope.tracks = tracksResponse.data;
     });
+
+    $scope.deleteTrack = function(trackId) {
+        $http.get('/soundfiles/delete/' + trackId ).then(function(tracksResponse) {
+            $scope.deleted[trackId] = true;
+        });
+    };
+
+    $scope.remove = function() {
+       $scope.destroy();
+    };
 });
 
-angularMspace.controller('delet_track', function($scope, $http){
-    $http.get('/soundfiles/delete_track').then(function(tracksResponse) {
+angularMspace.directive('tracklist', [ function() {
 
-        $scope.tracks = tracksResponse.data;
-    });
-});
+}]);
+
+
