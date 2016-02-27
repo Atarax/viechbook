@@ -72,8 +72,7 @@ angularMspace.directive('musicplayer', function(musicPlayerService) {
         restrict: 'AE',
         replace: 'true',
         template: '<div>' +
-            '{{currentTrack.name}}' +
-            '<br>' +
+            '<div class="well well-sm">{{currentTrack.name}}</div>' +
             '<audio class="audio-player" controls></audio>' +
         '</div>',
         link: function(scope, elem, attrs) {

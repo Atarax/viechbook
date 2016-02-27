@@ -18,21 +18,22 @@
 
 	<div class="panel panel-default">
 			<div class="panel-body">
-				<input type="text" ng-model="search">
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon3">Search</span>
+					<input type="text"  ng-model="search" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+				</div>
 			</div>
 
 			<div class="panel-body">
-				<table class="table">
-					<tr ng-hide="deleted[track.id]"  ng-repeat="track in tracks | filter:search">
-						<div>
-							<td>{{track.name}}</td>
-							<td>
-								<a href="" ng-click="changeTrack(track)"><span class="glyphicons glyphicons-play"></span>play</a>
-								<a href="" ng-click="deleteTrack(track)"><span class="glyphicon glyphicon-trash"></span></a>
-							</td>
-						</div>
-					</tr>
-				</table>
+				<ul class="list-group">
+					<li class="list-group-item" ng-hide="deleted[track.id]"  ng-repeat="track in tracks | filter:search">
+						{{track.name}}
+						<span class="musicplayer-playlist-options">
+							<a href="" ng-click="changeTrack(track)"><span class="glyphicon glyphicon-play"></span></a>
+							<a href="" ng-click="deleteTrack(track)"><span class="glyphicon glyphicon-trash"></span></a>
+						</span>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>
