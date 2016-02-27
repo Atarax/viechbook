@@ -1,33 +1,48 @@
 <?php echo $this->getContent() ?>
+<div ng-controller="musicPlayer">
+	<div class="panel panel-default">
 
-<div class="panel panel-default">
-	<div class="panel-body">
-		<form method="post" action="/soundfiles/add_music" enctype="multipart/form-data">
-			<input name="userfile" type="file">
-			<br>
-			<input type="submit" value="Upload" id="registration-button">
-		</form>
-	</div>
-</div>
-
-<div class="panel panel-default">
-	<div class="panel-body">
-
-
-	</div>
-
-	<div class="panel-body">
-		<input type="text" ng-model="search">
-	</div>
-	<table class="table" ng-controller="tracklist">
-		<tr ng-hide="deleted[track.id]"  ng-repeat="track in tracks | filter:search">
-			<div>
-				<td>{{track.name}}</td>
-				<td>
-					<audio src="{{track.filename}}" controls ></audio>
-				</td>
-				<td><a href="" ng-click="deleteTrack(track.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form method="post" action="/soundfiles/add_music" enctype="multipart/form-data">
+					<input name="userfile" type="file">
+					<br>
+					<input type="submit" value="Upload" id="registration-button">
+				</form>
 			</div>
-		</tr>
-	</table>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div x-musicplayer></div>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+
+	<!--		<div class="panel-body">-->
+	<!--			{{tracks[0].name}}-->
+	<!--			<audio src="{{tracks[0].filename}}" controls ></audio>-->
+	<!--		</div>-->
+
+			<div class="panel-body">
+				<input type="text" ng-model="search">
+			</div>
+
+			<div class="panel-body">
+				<table class="table">
+					<tr ng-hide="deleted[track.id]"  ng-repeat="track in tracks | filter:search">
+						<div>
+							<td>{{track.name}}</td>
+							<td>
+								<a href="" ng-click="changeTrack(track)"><span class="glyphicons glyphicons-play"></span>play</a>
+								<a href="" ng-click="deleteTrack(track)"><span class="glyphicon glyphicon-trash"></span></a>
+							</td>
+						</div>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
