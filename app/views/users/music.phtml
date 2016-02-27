@@ -1,15 +1,12 @@
 <?php echo $this->getContent() ?>
 <div ng-controller="musicPlayer">
 	<div class="panel panel-default">
-
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<form method="post" action="/soundfiles/add_music" enctype="multipart/form-data">
-					<input name="userfile" type="file">
-					<br>
-					<input type="submit" value="Upload" id="registration-button">
-				</form>
-			</div>
+		<div class="panel-body">
+			<form method="post" action="/soundfiles/add_music" enctype="multipart/form-data">
+				<input name="userfile" type="file">
+				<br>
+				<input type="submit" value="Upload" id="registration-button">
+			</form>
 		</div>
 	</div>
 
@@ -20,12 +17,6 @@
 	</div>
 
 	<div class="panel panel-default">
-
-	<!--		<div class="panel-body">-->
-	<!--			{{tracks[0].name}}-->
-	<!--			<audio src="{{tracks[0].filename}}" controls ></audio>-->
-	<!--		</div>-->
-
 			<div class="panel-body">
 				<input type="text" ng-model="search">
 			</div>
