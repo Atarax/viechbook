@@ -70,7 +70,10 @@ class Security extends PluginBase
 		//Private area resources (backend)
 		$privateResources = array(
 			'pages' 		=> array('users'),
-			'parvati' 		=> array('index'),
+			'parvati' 		=> array(
+				'index',
+				'rabbit'
+			),
 			'messages' 		=> array('get_by_conversation'),
 			'soundfiles'	=> array(
 				'get_music',

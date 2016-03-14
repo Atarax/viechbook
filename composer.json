@@ -9,7 +9,8 @@
 		"mobiledetect/mobiledetectlib": "2.*",
 		"cboden/ratchet": "0.3.*",
 		"react/zmq": "0.2.*|0.3.*",
-		"phalcon/devtools": ">=2.0.6"
+		"phalcon/devtools": ">=2.0.6",
+        "php-amqplib/php-amqplib": "2.5.*"
 	},
 	"require-dev": {
 		"d11wtq/boris": "1.0.*"

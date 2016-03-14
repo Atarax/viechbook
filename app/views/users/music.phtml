@@ -2,7 +2,23 @@
 <div ng-controller="musicPlayer">
 	<div class="panel panel-default">
 		<div class="panel-body">
-			<h4>Upload New File:</h4>
+			<h4>Upload
+				<div class="panel panel-default musicplayer-edit-track-container">
+					<div class="panel-heading musicplayer-edit-track-headline">
+						Edit Track
+						<div class="musicplayer-edit-track-close-button"><span class="glyphicon glyphicon-remove"></span></div>
+					</div>
+
+					<div class="panel-body musicplayer-edit-track-content">
+						<label for="basic-url">Your vanity URL</label>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon3">https://example.com/users/</span>
+							<input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+						</div>
+					</div>
+				</div>
+				New File:
+			</h4>
 			<form method="post" action="/soundfiles/add_music" enctype="multipart/form-data">
 				<div class="input-group">
 					<span class="input-group-addon" id="basic-addon3">File:</span>
